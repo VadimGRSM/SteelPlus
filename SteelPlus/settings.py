@@ -78,8 +78,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'steeldb',
-        'USER': 'postgres',
-        'PASSWORD': 'admin',
+        'USER': 'userdb',
+        'PASSWORD': 'gL77xN75kS',
         'HOST': 'localhost',  # IP-адрес сервера
         'PORT': '5432',       # порт PostgreSQL
     }
