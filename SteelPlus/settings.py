@@ -31,14 +31,16 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'core',
-    'api',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'core',
+    'users',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -78,10 +80,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'steeldb',
-        'USER': 'postgres',
-        'PASSWORD': 'admin',
+        'USER': 'userdb',
+        'PASSWORD': 'gL77xN75kS',
         'HOST': 'localhost',  # IP-адрес сервера
-        'PORT': '5432',       # порт PostgreSQL
+           'PORT': '5432',       # порт PostgreSQL
     }
 }
 
@@ -121,6 +123,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static/'
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
