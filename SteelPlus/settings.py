@@ -83,13 +83,15 @@ DATABASES = {
         'USER': 'userdb',
         'PASSWORD': 'gL77xN75kS',
         'HOST': 'localhost',  # IP-адрес сервера
-           'PORT': '5432',       # порт PostgreSQL
+        'PORT': '5432',       # порт PostgreSQL
     }
 }
 
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+
+AUTH_USER_MODEL = 'users.User'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -126,6 +128,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static/'
 ]
+MEDIA_ROOT = BASE_DIR / 'media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
