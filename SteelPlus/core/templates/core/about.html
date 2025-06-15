@@ -1,0 +1,111 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block CSS %}
+    <link rel="stylesheet" href="{% static 'core/base/style_about.css' %}">
+{% endblock CSS %}
+
+{% block title %}
+    Сталь+ Про нас
+{% endblock title %}
+
+{% block content %}
+    <div class="hero-section">
+        <h1 class="hero-title">Про Steel Plus</h1>
+        <p class="hero-description">
+            Ми - провідна компанія в сфері розрахунку вартості металевих конструкцій, що поєднує інноваційні технології з багаторічним досвідом
+        </p>
+    </div>
+
+    <!-- Основний контент -->
+    <div class="content-wrapper">
+        <div class="content-grid">
+            <!-- Секція історії -->
+            <div class="story-section">
+                <h2 class="story-title">Наша історія</h2>
+                <p class="story-text">
+                    Steel Plus була заснована в 2010 році з метою революціонізувати підхід до розрахунку вартості металевих конструкцій в Україні.
+                </p>
+                <p class="story-text">
+                    За 15 років роботи ми допомогли більш ніж 1000 компаніям оптимізувати свої витрати та підвищити ефективність виробництва.
+                </p>
+                <p class="story-text">
+                    Сьогодні Steel Plus - це команда з 50+ професіоналів, які працюють над створенням найкращих рішень для металообробної промисловості.
+                </p>
+            </div>
+
+            <!-- Секція досягнень -->
+            <div class="achievements-section">
+                <h2 class="achievements-title">Наші досягнення</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">1000+</div>
+                        <div class="stat-label">Задоволених клієнтів</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">15</div>
+                        <div class="stat-label">Років досвіду</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Співробітників</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Підтримка</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Секція цінностей -->
+        <div class="values-section">
+            <h2 class="values-title">Наші цінності</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">🎯</div>
+                    <h3 class="value-name">Точність</h3>
+                    <p class="value-desc">Ми забезпечуємо найвищу точність розрахунків</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">🏆</div>
+                    <h3 class="value-name">Якість</h3>
+                    <p class="value-desc">Дотримуємося найвищих стандартів якості</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">👥</div>
+                    <h3 class="value-name">Команда</h3>
+                    <p class="value-desc">Професійна команда експертів</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">💙</div>
+                    <h3 class="value-name">Надійність</h3>
+                    <p class="value-desc">Довіра клієнтів - наш пріоритет</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Секція команди -->
+        <div class="team-section">
+            <h2 class="team-title">Наша команда</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar">👨‍💼</div>
+                    <h3 class="team-name">Олексій Петренко</h3>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">👩‍💼</div>
+                    <h3 class="team-name">Марія Коваленко</h3>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">👨‍💼</div>
+                    <h3 class="team-name">Андрій Шевченко</h3>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">👩‍💼</div>
+                    <h3 class="team-name">Катерина Бондаренко</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

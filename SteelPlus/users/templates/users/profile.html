@@ -1,0 +1,100 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block CSS %}
+    <link rel="stylesheet" href="{% static 'core/base/style_profile.css' %}">
+{% endblock CSS %}
+
+{% block title %}
+    Сталь+ Профіль користувача
+{% endblock title %}
+
+{% block content %}
+   <div class="profile-dashboard-container">
+        <div class="profile-title-section">
+            <h1>Мій профіль</h1>
+            <p>Керуйте вашими особистими даними</p>
+        </div>
+
+        <div class="profile-layout-grid">
+            <div class="personal-data-panel">
+                <div class="personal-data-panel-top">
+                    <svg class="personal-data-icon-svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                    </svg>
+                    <h2>Особиста інформація</h2>
+                </div>
+                <div class="personal-data-panel-main">
+                    <form>
+                        <div class="user-form-layout">
+                            <div class="user-field-wrapper">
+                                <label for="firstName">Ім'я</label>
+                                <input type="text" id="firstName" value="Олексій">
+                            </div>
+                            <div class="user-field-wrapper">
+                                <label for="lastName">Прізвище</label>
+                                <input type="text" id="lastName" value="Петренко">
+                            </div>
+                        </div>
+
+                        <div class="user-field-wrapper spans-full-row">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" value="oleksiy.petrenko@example.com">
+                        </div>
+
+                        <div class="user-field-wrapper spans-full-row">
+                            <label for="phone">Телефон</label>
+                            <input type="tel" id="phone" value="+380 44 123 45 67">
+                        </div>
+
+                        <div class="user-field-wrapper spans-full-row">
+                            <label for="company">Компанія</label>
+                            <input type="text" id="company" value="Будівельна компанія 'Стандарт'">
+                        </div>
+
+                        <div class="user-field-wrapper spans-full-row">
+                            <label for="address">Адреса</label>
+                            <input type="text" id="address" value="вул. Хрещатик, 1, Київ, Україна">
+                        </div>
+
+                        <div class="user-form-layout">
+                            <div class="user-field-wrapper">
+                                <label for="registrationDate">Дата та час реєстрації</label>
+                                <input type="datetime-local" id="registrationDate" value="2023-03-15T14:30" readonly>
+                            </div>
+                            <div class="user-field-wrapper">
+                                <label for="lastUpdate">Дата та час останнього оновлення</label>
+                                <input type="datetime-local" id="lastUpdate" value="2025-06-10T16:45" readonly>
+                            </div>
+                        </div>
+
+                        <div class="user-actions-row">
+                            <button type="button" class="user-action-btn user-action-btn-change">Змінити пароль</button>
+                            <button type="submit" class="user-action-btn user-action-btn-save">Зберегти зміни</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="orders-summary-panel">
+                <h2>Статистика</h2>
+                <div class="orders-metric-item">
+                    <span class="orders-metric-name">Всього замовлень:</span>
+                    <span class="orders-metric-count metric-all">12</span>
+                </div>
+                <div class="orders-metric-item">
+                    <span class="orders-metric-name">Завершено:</span>
+                    <span class="orders-metric-count metric-done">8</span>
+                </div>
+                <div class="orders-metric-item">
+                    <span class="orders-metric-name">В процесі:</span>
+                    <span class="orders-metric-count metric-active">3</span>
+                </div>
+                <div class="orders-metric-item">
+                    <span class="orders-metric-name">Скасовано:</span>
+                    <span class="orders-metric-count metric-rejected">1</span>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
