@@ -5,14 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dd2d34e5-f041-4cd7-8e66-401ce7fbed41" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/practice.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/SteelPlus.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SteelPlus/SteelPlus/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/SteelPlus/SteelPlus/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SteelPlus/core/templates/core/about.html" beforeDir="false" afterPath="$PROJECT_DIR$/SteelPlus/core/templates/core/about.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SteelPlus/core/templates/core/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/SteelPlus/core/templates/core/base.html" afterDir="false" />
@@ -20,44 +12,6 @@
       <change beforePath="$PROJECT_DIR$/SteelPlus/core/templates/core/hub.html" beforeDir="false" afterPath="$PROJECT_DIR$/SteelPlus/core/templates/core/hub.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SteelPlus/core/templates/core/order.html" beforeDir="false" afterPath="$PROJECT_DIR$/SteelPlus/core/templates/core/order.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SteelPlus/users/templates/users/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/SteelPlus/users/templates/users/profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/admin.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/apps.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/migrations/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/models.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/tests.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/views.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/admin.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/apps.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/migrations/0002_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/migrations/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/models.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/static/core/base/logo.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/static/core/base/style.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/templates/core/about.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/templates/core/base.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/templates/core/drawing.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/templates/core/hub.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/templates/core/order.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/tests.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/urls.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/views.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/manage.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/admin.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/apps.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/migrations/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/models.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/templates/users/login.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/templates/users/profile.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/templates/users/register.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/tests.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/urls.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/views.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -170,7 +124,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1749983636102</updated>
-      <workItem from="1749983639044" duration="11022000" />
+      <workItem from="1749983639044" duration="11644000" />
     </task>
     <servers />
   </component>
