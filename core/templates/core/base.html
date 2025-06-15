@@ -1,0 +1,78 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'core/base/style.css' %}">
+    <title>{% block title %} {% endblock title %}</title>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <a href="{% url 'core:hub' %}">
+                <img src="{% static 'core/base/logo.svg' %}" class="logo" alt="Логотип">
+            </a>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="{% url 'core:order' %}">Замовлення</a></li>
+                    <li><a href="{% url 'users:profile' %}">Профіль</a></li>
+                    <li><a href="{% url 'core:drawing' %}">Креслення</a></li>
+                    <li><a href="{% url 'core:about' %}">Про нас</a></li>
+                </ul>
+            </nav>
+
+            <a href="#auth" class="auth-button">Вхід / Вихід</a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        {% block content %} {% endblock content %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-brand-info">
+                        <img src="{% static 'core/base/logo.svg' %}" class="logo" style="margin-top: -30px;" alt="Логотип">
+                        <br>
+                        <p>Професійна система розрахунку вартості деталей для виробничих компаній, конструкторських бюро та інженерів.</p>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Продукти</h4>
+                    <ul>
+                        <li><a href="#api">API</a></li>
+                        <li><a href="#prices">Ціни</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Компанія</h4>
+                    <ul>
+                        <li><a href="#about">Про нас</a></li>
+                        <li><a href="#support">Підтримка</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Контакти</h4>
+                    <div class="footer-contact">
+                        <p><strong>Email:</strong> example@gmail.com</p>
+                        <p><strong>Телефон:</strong> +380 44 123 45 67</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2025 Сталь+. Всі права захищені</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
