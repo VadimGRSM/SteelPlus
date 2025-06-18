@@ -1,18 +1,27 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from .models import User
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.utils.translation import gettext_lazy as _
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
-class CustomUserAdmin(UserAdmin):
-    fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('phone_number', 'created_at', 'updated_at')}),
+@admin.register(User)
+class UserAdmin(BaseUserAdmin):
+    ordering = ['email']  # 👈 заміна username на email
+    list_display = ['email', 'first_name', 'last_name', 'is_staff']
+    fieldsets = (
+        (None, {'fields': ('email', 'password')}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'phone_number')}),
+        (_('Permissions'), {
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')
+        }),
+        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
-
-    add_fieldsets = UserAdmin.add_fieldsets + (
-        (None, {'fields': ('phone_number',)}),
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'password1', 'password2'),
+        }),
     )
-
-    readonly_fields = ('created_at', 'updated_at',)
-
-
-admin.site.register(User, CustomUserAdmin)
+    search_fields = ('email',)

@@ -6,6 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'core/base/style.css' %}">
+    <link rel="stylesheet" href="{% static 'core/base/auth_reg_styles.css' %}">
+    {% block CSS %} {% endblock CSS %}
     <title>{% block title %} {% endblock title %}</title>
 </head>
 <body>
@@ -17,14 +19,19 @@
 
             <nav>
                 <ul class="nav-menu">
-                    <li><a href="{% url 'core:order' %}">Замовлення</a></li>
-                    <li><a href="{% url 'users:profile' %}">Профіль</a></li>
-                    <li><a href="{% url 'core:drawing' %}">Креслення</a></li>
+                    {% if user.is_authenticated %}
                     <li><a href="{% url 'core:about' %}">Про нас</a></li>
+                    <li><a href="{% url 'core:order' %}">Замовлення</a></li>
+                    <li><a href="{% url 'core:drawing' %}">Креслення</a></li>
+                    <li><a href="{% url 'users:profile' %}">Профіль</a></li>
+                    <li><a href="{% url 'users:logout' %}">{{user.email}} | Вихід</a></li>
+                    {% else %}
+                    <li class="nav-align-right"><a href="{% url 'core:about' %}">Про нас</a></li>
+                    <li><a href="{% url 'users:login' %}">Вхід</a></li>
+                    <li><a href="{% url 'users:register' %}">Реєстрація</a></li>
+                    {% endif %}
                 </ul>
             </nav>
-
-            <a href="#auth" class="auth-button">Вхід / Вихід</a>
         </div>
     </header>
 
@@ -74,5 +81,6 @@
             </div>
         </div>
     </footer>
+
 </body>
 </html>

@@ -1,22 +1,34 @@
 import uuid
+import os
 from django.db import models
+from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.utils.text import slugify
 
-User = get_user_model()
+User = settings.AUTH_USER_MODEL
 
 
 class Drawing(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='drawings')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="drawings")
     slug = models.SlugField(max_length=255, unique=True, blank=True)
-    file_name = models.CharField(max_length=255)
-    file_path = models.FileField(upload_to='drawings/%Y/%m/%d')
-    original_filename = models.CharField(max_length=255)
-    file_size = models.PositiveIntegerField()
+    name = models.CharField(max_length=255, unique=True)
+    file_path = models.FileField(upload_to="drawings/%Y/%m/%d")
+    original_filename = models.CharField(max_length=255, blank=True)
+    file_size = models.PositiveIntegerField(blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     description = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return self.file_name
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if self.file_path and not self.original_filename:
+            self.original_filename = os.path.basename(self.file_path.name)
+
+        if self.file_path and not self.file_size:
+            self.file_size = self.file_path.size
+
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Креслення"
@@ -29,15 +41,19 @@ def generate_order_number():
 
 class Order(models.Model):
     class StatusChoices(models.TextChoices):
-        DRAFT = 'draft', 'Чернетка'
-        PENDING = 'pending', 'Очікує обробки'
-        PROCESSING = 'processing', 'Обробляється'
-        COMPLETED = 'completed', 'Завершено'
-        CANCELLED = 'cancelled', 'Скасовано'
+        DRAFT = "draft", "Чернетка"
+        PENDING = "pending", "Очікує обробки"
+        PROCESSING = "processing", "Обробляється"
+        COMPLETED = "completed", "Завершено"
+        CANCELLED = "cancelled", "Скасовано"
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
-    order_number = models.CharField(max_length=50, unique=True, default=generate_order_number)
-    status = models.CharField(max_length=20, choices=StatusChoices.choices, default=StatusChoices.DRAFT)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
+    order_number = models.CharField(
+        max_length=50, unique=True, default=generate_order_number
+    )
+    status = models.CharField(
+        max_length=20, choices=StatusChoices.choices, default=StatusChoices.DRAFT
+    )
     total_cost = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -49,19 +65,20 @@ class Order(models.Model):
     class Meta:
         verbose_name = "Замовлення"
         verbose_name_plural = "Замовлення"
+        ordering = ["-created_at"]
 
 
 class Material(models.Model):
     class MaterialTypeChoices(models.TextChoices):
-        METAL = 'metal', 'Метал'
-        PLASTIC = 'plastic', 'Пластик'
-        COMPOSITES = 'composites', 'Композити'
+        METAL = "metal", "Метал"
+        PLASTIC = "plastic", "Пластик"
+        COMPOSITES = "composites", "Композити"
 
     material_name = models.CharField(max_length=50, unique=True)
     material_type = models.CharField(
         max_length=20,
         choices=MaterialTypeChoices.choices,
-        default=MaterialTypeChoices.METAL
+        default=MaterialTypeChoices.METAL,
     )
     price_unit_area = models.DecimalField(max_digits=10, decimal_places=2)
     properties = models.TextField(blank=True, null=True)
@@ -76,9 +93,13 @@ class Material(models.Model):
 
 
 class Detail(models.Model):
-    drawing = models.ForeignKey(Drawing, on_delete=models.PROTECT, related_name='details')
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='details')
-    material = models.ForeignKey(Material, on_delete=models.CASCADE, related_name='details')
+    drawing = models.ForeignKey(
+        Drawing, on_delete=models.PROTECT, related_name="details"
+    )
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="details")
+    material = models.ForeignKey(
+        Material, on_delete=models.CASCADE, related_name="details"
+    )
     length = models.DecimalField(max_digits=10, decimal_places=3)
     width = models.DecimalField(max_digits=10, decimal_places=3)
     thickness = models.DecimalField(max_digits=10, decimal_places=3)
@@ -88,7 +109,7 @@ class Detail(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Order: {self.order.order_number} - Drawing: {self.drawing.file_name}"
+        return f"Order: {self.order.order_number} - Drawing: {self.drawing.name}"
 
     class Meta:
         verbose_name = "Деталь"

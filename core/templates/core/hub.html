@@ -1,9 +1,70 @@
 {% extends "core/base.html" %}
+{% load static %}
+
+{% block CSS %}
+    <link rel="stylesheet" href="{% static 'core/hub/style_hub.css' %}">
+{% endblock CSS %}
 
 {% block title %}
-    Сталь+
+    Сталь+ Про нас
 {% endblock title %}
 
 {% block content %}
-    Початкова сторінка
+    <div class="steel-container">
+        <section class="hero-section">
+            <h1 class="main-title">Професійна система розрахунку<br>вартості металевих деталей</h1>
+            <p class="subtitle-text">
+                Steel Plus - це інноваційна платформа для точного розрахунку вартості виробництва металевих деталей та компонентів
+            </p>
+            <div class="action-buttons">
+                <a href="{% url 'core:drawing' %}" class="primary-btn">Почати роботу</a>
+                <a href="{% url 'core:about' %}" class="secondary-btn">Дізнатися більше</a>
+            </div>
+        </section>
+
+        <section class="features-area">
+            <div class="section-header">
+                <h2>Наші можливості</h2>
+                <p class="section-description">
+                    Використовуйте потужні інструменти для розрахунку вартості та управління проектами
+                </p>
+            </div>
+
+            <div class="capabilities-grid">
+                <div class="feature-card">
+                    <div class="feature-icon calculator-icon"></div>
+                    <h3 class="feature-title">Розрахунки</h3>
+                    <p class="feature-desc">Точні розрахунки вартості виробництва</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon blueprint-icon"></div>
+                    <h3 class="feature-title">Креслення</h3>
+                    <p class="feature-desc">Робота з технічними кресленнями</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon team-icon"></div>
+                    <h3 class="feature-title">Команда</h3>
+                    <p class="feature-desc">Співпраця в команді</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon settings-icon"></div>
+                    <h3 class="feature-title">Налаштування</h3>
+                    <p class="feature-desc">Гнучкі налаштування системи</p>
+                </div>
+            </div>
+        </section>
+
+        {% if not user.is_authenticated %}
+        <section class="cta-section">
+            <h2 class="cta-title">Готові почати?</h2>
+            <p class="cta-subtitle">
+                Приєднуйтесь до тисяч компаній, які довіряють Steel Plus
+            </p>
+            <a href="{% url 'users:register' %}" class="cta-btn">Створити акаунт</a>
+        </section>
+        {% endif %}
+    </div>
 {% endblock content %}

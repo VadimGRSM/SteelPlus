@@ -1,0 +1,102 @@
+{% extends "core/base.html" %}
+
+{% block title %}
+    Сталь+ Реєстрація
+{% endblock title %}
+
+{% block content %}
+
+<h2 class="form-title">Створити акаунт</h2>
+<p class="form-subtitle">Заповніть форму для створення нового акаунту</p>
+
+<div style="width: 500px; margin: 0 auto;">
+    <form method="post">
+        {% csrf_token %}
+
+        <input type="hidden" name="next" value="{{ next }}">
+
+        <div class="form-error">{{ form.non_field_errors }}</div>
+
+        <br>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+                {{ form.last_name }}
+                {% if form.last_name.errors %}
+                    <div class="field-errors">
+                        {{ form.last_name.errors }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                {{ form.first_name }}
+                {% if form.first_name.errors %}
+                    <div class="field-errors">
+                        {{ form.first_name.errors }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.phone_number.id_for_label }}">{{ form.phone_number.label }}</label>
+            <div class="input-wrapper">
+                {{ form.phone_number }}
+            </div>
+            {% if form.phone_number.errors %}
+                <div class="field-errors">
+                    {{ form.phone_number.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div class="field-errors">
+                    {{ form.email.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+            <div class="input-wrapper">
+                {{ form.password1 }}
+                <button type="button" class="password-toggle" onclick="togglePassword('registerPassword')">⚪</button>
+            </div>
+            {% if form.password1.errors %}
+                <div class="field-errors">
+                    {{ form.password1.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+            <div class="input-wrapper">
+                {{ form.password2 }}
+                <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">⚪</button>
+            </div>
+            {% if form.password2.errors %}
+                <div class="field-errors">
+                    {{ form.password2.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <button type="submit" name="register" class="submit-btn">Створити акаунт</button>
+    </form>
+</div>
+
+<script>
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    input.type = input.type === "password" ? "text" : "password";
+}
+</script>
+
+{% endblock content %}
