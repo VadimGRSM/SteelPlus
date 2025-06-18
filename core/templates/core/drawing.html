@@ -1,9 +1,84 @@
 {% extends "core/base.html" %}
+{% load static %}
+
+{% block CSS %}
+    <link rel="stylesheet" href="{% static 'core/drawings/style_drawing.css' %}">
+{% endblock CSS %}
 
 {% block title %}
     Сталь+ Креслення
 {% endblock title %}
 
 {% block content %}
-    Креслення
+     <div class="upload-container">
+        <div class="upload-header">
+            <div class="header-content">
+                <h1>Мої креслення</h1>
+                <p>Керуйте технічними кресленнями ваших проектів</p>
+            </div>
+            <button class="upload-btn">
+                <svg class="upload-icon" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 2L3 9h4v6h6V9h4l-7-7z"/>
+                </svg>
+                Завантажити креслення
+            </button>
+        </div>
+
+        <div class="drawings-container">
+            <div class="drawing-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <svg class="file-icon" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        <span class="title-text">Металева балка 200x100</span>
+                    </div>
+                </div>
+
+                <div class="description">
+                    Технічне креслення металевої балки двотаврового перерізу 200x100 мм. Включає детальні розміри, допуски, матеріал - сталь S235JR, покриття - гарячоцинковане. Креслення виконано згідно з ДСТУ та європейськими стандартами.
+                </div>
+
+                <div class="card-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Тип:</span>
+                        <span>DWG</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Розмір:</span>
+                        <span>2.4 МВ</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Дата:</span>
+                        <span>2025-01-15</span>
+                    </div>
+                </div>
+
+                <div class="card-actions">
+                    <button class="action-btn">
+                        <svg class="action-icon" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                            <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                        Переглянути
+                    </button>
+                    <button class="action-btn primary">
+                        <svg class="action-icon" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"/>
+                        </svg>
+                        Завантажити
+                    </button>
+                    <button class="action-btn">
+                        <svg class="action-icon" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"/>
+                        </svg>
+                        Замовити креслення
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'core/drawings/script_drawing.js' %}"></script>
+
 {% endblock content %}

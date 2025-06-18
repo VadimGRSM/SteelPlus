@@ -75,6 +75,10 @@ transition: width 0.3s ease;
 width: 100%;
 }
 
+.nav-align-right {
+    margin-left: auto;
+}
+
 .auth-button {
 background: #fff;
 border: 2px solid #e0e0e0;
@@ -214,4 +218,8 @@ gap: 30px;
 flex-direction: column;
 gap: 15px;
 }
+}
+
+.child-wrapper {
+    width: 300px;
 }

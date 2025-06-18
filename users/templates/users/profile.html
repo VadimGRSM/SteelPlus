@@ -1,10 +1,71 @@
 {% extends "core/base.html" %}
+{% load static %}
+
+{% block CSS %}
+    <link rel="stylesheet" href="{% static 'users/style_profile.css' %}">
+{% endblock CSS %}
 
 {% block title %}
     Сталь+ Профіль користувача
 {% endblock title %}
 
 {% block content %}
-    Ім'я Прізвище
-    Email
+
+<div class="profile-dashboard-container">
+    <div class="profile-title-section">
+        <h1>Мій профіль</h1>
+        <p>Керуйте вашими особистими даними</p>
+    </div>
+
+    <div class="profile-layout-grid">
+        <div class="personal-data-panel">
+            <div class="personal-data-panel-top">
+                <svg class="personal-data-icon-svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                </svg>
+                <h2>Особиста інформація</h2>
+            </div>
+            <div class="personal-data-panel-main">
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="user-form-layout">
+                        <div class="user-field-wrapper">
+                            <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                            {{ form.first_name }}
+                            {{ form.first_name.errors }}
+                        </div>
+                        <div class="user-field-wrapper">
+                            <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+                            {{ form.last_name }}
+                            {{ form.last_name.errors }}
+                        </div>
+                    </div>
+                    <div class="user-field-wrapper spans-full-row">
+                        <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                        {{ form.email }}
+                        </div>
+                    <br>
+                    <div class="user-field-wrapper spans-full-row">
+                        <label for="{{ form.phone_number.id_for_label }}">{{ form.phone_number.label }}</label>
+                        {{ form.phone_number }}
+                    </div>
+                    <br>
+                    <div class="user-form-layout">
+                        <div class="user-field-wrapper">
+                            <label for="{{ form.date_joined.id_for_label }}">{{ form.date_joined.label }}</label>
+                            {{ form.date_joined }}
+                        </div>
+                    </div>
+
+                    <div class="user-actions-row">
+                        <button type="submit" class="user-action-btn user-action-btn-save">Зберегти зміни</button>
+                        <a href="{% url 'users:password_change' %}"><button type="button" class="user-action-btn user-action-btn-change">Змінити пароль</button></a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock content %}

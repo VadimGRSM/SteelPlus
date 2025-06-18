@@ -1,0 +1,59 @@
+{% extends "core/base.html" %}
+
+{% block title %}
+    Сталь+ Авторизація
+{% endblock title %}
+
+{% block content %}
+
+<h2 class="form-title">Вхід в акаунт</h2>
+<p class="form-subtitle">Введіть ваші дані для входу в систему</p>
+
+<div style="width: 500px; margin: 0 auto;">
+    <form method="post">
+        {% csrf_token %}
+
+        <input type="hidden" name="next" value="{{ next }}">
+
+        <div class="form-error">{{ form.non_field_errors }}</div>
+
+        <br>
+
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+            {{ form.username }}
+            {{ form.username.errors }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+            <div class="input-wrapper">
+                {{ form.password }}
+                {{ form.password.errors }}
+                <button type="button" class="password-toggle" onclick="togglePassword('loginPassword')">⚪</button>
+            </div>
+        </div>
+
+        <button type="submit" name="login" class="submit-btn">Увійти</button>
+    </form>
+</div>
+
+
+<div class="forgot-password">
+    <a href="{% url 'users:password_reset' %}">Забули пароль?</a>
+
+    <a href="{% url 'users:register' %}">Немає облікового запису?</a>
+</div>
+
+<div class="forgot-password">
+
+</div>
+
+<script>
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    input.type = input.type === "password" ? "text" : "password";
+}
+</script>
+
+{% endblock content %}
