@@ -16,12 +16,14 @@
                 <h1>Мої креслення</h1>
                 <p>Керуйте технічними кресленнями ваших проектів</p>
             </div>
+            <a href="{% url 'core:upload_drawing' %}">
             <button class="upload-btn">
                 <svg class="upload-icon" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M10 2L3 9h4v6h6V9h4l-7-7z"/>
                 </svg>
                 Завантажити креслення
             </button>
+            </a>
         </div>
 
         <div class="drawings-container">
@@ -68,12 +70,14 @@
                         </svg>
                         Завантажити
                     </button>
+                    <a href="{% url 'core:create_order' %}">
                     <button class="action-btn">
                         <svg class="action-icon" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"/>
                         </svg>
                         Замовити креслення
                     </button>
+                    </a>
                 </div>
             </div>
         </div>

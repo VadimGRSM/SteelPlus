@@ -1,0 +1,39 @@
+/* Клас для контейнера сторінки */
+.mess-page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Клас для заголовка успіху */
+.mess-title {
+    font-size: 32px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 20px 0;
+    line-height: 1.3;
+}
+
+/* Клас для тексту повідомлення */
+.mess-message {
+    font-size: 16px;
+    color: #6c757d;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Клас для посилання назад */
+.mess-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.mess-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}

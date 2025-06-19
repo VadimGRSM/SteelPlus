@@ -19,3 +19,15 @@ def drawing(request):
 @login_required
 def order(request):
     return render(request, 'core/order.html')
+
+@login_required
+def create_order(request):
+    return render(request, 'orders/create_order.html')
+
+@login_required
+def upload_drawing(request):
+    return render(request, 'drawings/upload_drawing.html')
+
+@login_required
+def view_drawing(request):
+    return render(request, 'drawings/view_drawing.html')
