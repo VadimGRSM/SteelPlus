@@ -11,34 +11,30 @@
 
 {% block content %}
 <div class="page-container">
-    <div class="page-header">
-        <div class="title-section">
-            <h1>{{ drawing.name }}</h1>
-            <div class="file-info">
-                <span>{{ drawing.file_size|filesizeformat }}</span>
-            </div>
-        </div>
-    </div>
-
     <div class="content-grid">
         <div class="viewer-panel">
             <div class="viewer-header">
                 <div class="viewer-title">
-                    <div class="viewer-title-icon">📄</div>
-                    Перегляд кресленя
+                    {{ drawing.name }}
+                    <div class="file-info">
+                        <span>{{ drawing.file_size|filesizeformat }}</span>
+                    </div>
                 </div>
-                <div class="viewer-toolbar">
-                    <button class="toolbar-btn">-</button>
-                    <div class="zoom-display">100%</div>
-                    <button class="toolbar-btn">+</button>
-                </div>
+                {% if img %}
+                    <div class="viewer-toolbar">
+                        <button class="toolbar-btn" id="zoom-out">-</button>
+                        <div class="zoom-display" id="zoom-display">100%</div>
+                        <button class="toolbar-btn" id="zoom-in">+</button>
+                        <button class="toolbar-btn" id="reset-view" title="Скинути">⟳</button>
+                    </div>
+                {% endif %}
             </div>
 
             <div class="drawing-area">
                 {% if img %}
-                    <img src="{{ img }}" alt="DXF превью" style="max-width: 100%; height: auto;">
+                    <img src="{{ img }}" alt="DXF превью" oncontextmenu="return false;" style="max-width: 100%; height: auto;">
                 {% else %}
-                    <p>Предпросмотр недоступен</p>
+                    <p>Перегляд недоступний</p>
                 {% endif %}
             </div>
 
@@ -72,14 +68,9 @@
                 <span class="info-label">Опис</span>
                 <span class="description-value">{{ drawing.description }}</span>
             </div>
-            <div class="info-item">
-                <span class="info-label">Розміри:</span>
-                <span class="info-value">
-                    {{ sizes.width|floatformat:0 }} × {{ sizes.height|floatformat:0 }} мм
-                </span>
-            </div>
 
             <h3 style="margin-top: 32px;">Метадані</h3>
+
             <div class="metadata-list">
                 <div class="metadata-entry">
                     <div class="metadata-details">
@@ -87,22 +78,17 @@
                         <div class="value">{{ drawing.uploaded_at }}</div>
                     </div>
                 </div>
+                <div class="metadata-entry">
+                    <div class="metadata-details">
+                        <div class="label">Автор публікації</div>
+                        <div class="value">{{ drawing.user.email }}</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-  document.getElementById('share-btn').addEventListener('click', function() {
-    const url = window.location.href
-    navigator.clipboard.writeText(url)
-      .then(() => {
-        alert('URL скопійовано в буфер обміну!')
-      })
-      .catch(() => {
-        alert('Не вдалося скопіювати URL')
-      })
-  })
-</script>
+<script src="{% static 'core/drawings/view_drawing.js' %}"></script>
 
 {% endblock content %}
