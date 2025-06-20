@@ -24,7 +24,7 @@
                     <li><a href="{% url 'core:order' %}">Замовлення</a></li>
                     <li><a href="{% url 'core:drawing' %}">Креслення</a></li>
                     <li><a href="{% url 'users:profile' %}">Профіль</a></li>
-                    <li><a href="{% url 'users:logout' %}">{{user.email}} | Вихід</a></li>
+                    <li><a onclick="openLogoutModal()">{{user.email}} | Вихід</a></li>
                     {% else %}
                     <li class="nav-align-right"><a href="{% url 'core:about' %}">Про нас</a></li>
                     <li><a href="{% url 'users:login' %}">Вхід</a></li>
@@ -38,6 +38,17 @@
     <main class="main-content">
         {% block content %} {% endblock content %}
     </main>
+
+    <!-- Модальне вікно для виходу -->
+    <div id="logoutModal" class="modal-overlay" style="display: none;">
+        <div class="modal-window">
+            <p>Ви впевнені, що хочете вийти з облікового запису?</p>
+            <div class="modal-actions">
+                <a id="confirmLogout" class="modal-btn danger" href="{% url 'users:logout' %}">Так, вийти</a>
+                <button class="modal-btn" onclick="closeLogoutModal()">Скасувати</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -81,6 +92,16 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        function openLogoutModal() {
+            document.getElementById("logoutModal").style.display = "flex";
+        }
+
+        function closeLogoutModal() {
+            document.getElementById("logoutModal").style.display = "none";
+        }
+    </script>
 
 </body>
 </html>

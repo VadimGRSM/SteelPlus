@@ -10,22 +10,24 @@
 {% endblock title %}
 
 {% block content %}
-     <div class="upload-container">
-        <div class="upload-header">
-            <div class="header-content">
-                <h1>Мої креслення</h1>
-                <p>Керуйте технічними кресленнями ваших проектів</p>
-            </div>
-            <a href="{% url 'core:upload_drawing' %}">
+<div class="upload-container">
+    <div class="upload-header">
+        <div class="header-content">
+            <h1>Мої креслення</h1>
+            <p>Керуйте технічними кресленнями ваших проектів</p>
+        </div>
+        <a href="{% url 'core:upload_drawing' %}" style="text-decoration: none;">
             <button class="upload-btn">
                 <svg class="upload-icon" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M10 2L3 9h4v6h6V9h4l-7-7z"/>
                 </svg>
                 Завантажити креслення
             </button>
-            </a>
-        </div>
+        </a>
+    </div>
 
+    {% if drawings %}
+    {% for drawing in drawings %}
         <div class="drawings-container">
             <div class="drawing-card">
                 <div class="card-header">
@@ -33,13 +35,13 @@
                         <svg class="file-icon" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
                         </svg>
-                        <span class="title-text">Металева балка 200x100</span>
+                        <span class="title-text">{{ drawing.name }}</span>
                     </div>
                 </div>
 
-                <div class="description">
-                    Технічне креслення металевої балки двотаврового перерізу 200x100 мм. Включає детальні розміри, допуски, матеріал - сталь S235JR, покриття - гарячоцинковане. Креслення виконано згідно з ДСТУ та європейськими стандартами.
-                </div>
+                {% if drawing.description %}
+                    <div class="description">{{ drawing.description }}</div>
+                {% endif %}
 
                 <div class="card-details">
                     <div class="detail-item">
@@ -48,16 +50,16 @@
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Розмір:</span>
-                        <span>2.4 МВ</span>
+                        <span>{{ drawing.file_size|filesizeformat }}</span>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Дата:</span>
-                        <span>2025-01-15</span>
+                        <span>{{ drawing.uploaded_at }}</span>
                     </div>
                 </div>
 
                 <div class="card-actions">
-                    <a href="{% url 'core:view_drawing' %}">
+                    <a href="{% url 'core:view_drawing' drawing.pk %}" style="text-decoration: none;">
                     <button class="action-btn">
                         <svg class="action-icon" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
@@ -66,17 +68,39 @@
                         Переглянути
                     </button>
                     </a>
-                    <button class="action-btn primary">
-                        <svg class="action-icon" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"/>
+                    <a href="{{ drawing.file_path.url }}" download style="text-decoration: none;">
+                        <button class="action-btn primary">
+                            <svg class="action-icon" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"/>
+                            </svg>
+                            Завантажити
+                        </button>
+                    </a>
+                    <button class="delete-btn danger" onclick="openModal('{% url 'core:delete_drawing' drawing.pk %}')">
+                        <svg class="action-icon" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M6 7V6a2 2 0 012-2h8a2 2 0 012 2v1h3v2H3V7h3zm2 0h8V6H8v1zm-1 3h10l-.8 10.4A2 2 0 0114.2 22H9.8a2 2 0 01-1.98-1.6L7 10z"/>
                         </svg>
-                        Завантажити
+                        Видалити
                     </button>
-                    
                 </div>
             </div>
         </div>
+    {% endfor %}
+    {% else %}
+        <p>Наразі у вас не завантажено жодного креслення. Щоб продовжити роботу, будь ласка, завантажте його.</p>
+    {% endif %}
+</div>
+
+    <!-- Модальне вікно -->
+<div id="deleteModal" class="modal-overlay" style="display: none;">
+    <div class="modal-window">
+        <p>Ви впевнені, що хочете видалити креслення?</p>
+        <div class="modal-actions">
+            <button class="modal-btn danger" id="confirmDelete">Так, видалити</button>
+            <button class="modal-btn" onclick="closeModal()">Скасувати</button>
+        </div>
     </div>
+</div>
 
     <script src="{% static 'core/drawings/script_drawing.js' %}"></script>
 

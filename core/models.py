@@ -3,15 +3,13 @@ import os
 from django.db import models
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.utils.text import slugify
 
 User = settings.AUTH_USER_MODEL
 
 
 class Drawing(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="drawings")
-    slug = models.SlugField(max_length=255, unique=True, blank=True)
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
     file_path = models.FileField(upload_to="drawings/%Y/%m/%d")
     original_filename = models.CharField(max_length=255, blank=True)
     file_size = models.PositiveIntegerField(blank=True)

@@ -10,69 +10,138 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="drawing-upload-container">
-        <div class="title-section">
-            <h1 class="main-heading">Завантаження креслення</h1>
-            <p class="description-text">Завантажте ваші технічні креслення та додайте необхідну інформацію</p>
-        </div>
+<div class="drawing-upload-container">
+    <div class="title-section">
+        <h1 class="main-heading">Завантаження креслення</h1>
+        <p class="description-text">Завантажте ваші технічні креслення та додайте необхідну інформацію</p>
+    </div>
 
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Панель завантаження файлів -->
         <div class="file-upload-panel">
             <div class="panel-header">
                 <h2 class="panel-heading">Файли креслень</h2>
             </div>
-            
             <div class="drop-zone" id="fileDropZone">
                 <div class="file-icon">
-                    <svg viewBox="0 0 24 24">
+                    <svg id="defaultFileIcon" viewBox="0 0 24 24">
                         <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
                     </svg>
+                    <svg id="successIcon" viewBox="0 0 24 24" class="hidden-success-icon" style="display: none; fill: #2ecc71;">
+                        <path d="M12,2A10,10 0 1,0 22,12A10,10 0 0,0 12,2ZM10,17L5,12L6.41,10.59L10,14.17L17.59,6.59L19,8L10,17Z"/>
+                    </svg>
                 </div>
-                <div class="primary-upload-text">Перетягніть файли сюди або клікніть для вибору</div>
-                <div class="secondary-upload-text">Підтримуються формати: DWG, PDF, DXF (макс. 10 МБ)</div>
-                <button class="select-files-button" type="button" onclick="document.getElementById('fileInputControl').click()">
+
+                <div class="primary-upload-text" id="uploadText">Перетягніть файли сюди або клікніть для вибору</div>
+                <div class="secondary-upload-text" id="uploadDetailsText">Підтримуються формати: DWG, PDF, DXF (макс. 10 МБ)</div>
+
+                <!-- Django поле file_path -->
+                {{ form.file_path }}
+
+                <button class="select-files-button" type="button" onclick="document.getElementById('id_file_path').click()">
                     Обрати файли
                 </button>
-                <input type="file" id="fileInputControl" class="hidden-file-input" accept=".dwg,.pdf,.dxf" multiple>
-                
-                <div class="selected-files-display" id="selectedFilesContainer">
-                    <!-- Uploaded files will appear here -->
-                </div>
+
+                <div class="selected-files-display" id="selectedFilesContainer"></div>
             </div>
         </div>
 
+        <!-- Панель інформації -->
         <div class="information-panel">
             <div class="info-panel-header">
                 <h2 class="info-panel-title">Інформація про креслення</h2>
             </div>
             <div class="info-panel-content">
                 <div class="input-field-group">
-                    <label class="input-field-label" for="drawingNameField">
+                    <label class="input-field-label" for="{{ form.name.id_for_label }}">
                         Назва креслення <span class="required-indicator">*</span>
                     </label>
-                    <input 
-                        type="text" 
-                        id="drawingNameField" 
-                        class="text-field" 
-                        placeholder="Введіть назву креслення"
-                    >
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        <div class="form-error">{{ form.name.errors }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="input-field-group">
-                    <label class="input-field-label" for="drawingDescriptionField">Опис</label>
-                    <textarea 
-                        id="drawingDescriptionField" 
-                        class="text-field multiline-text-field" 
-                        placeholder="Детальний опис креслення"
-                    ></textarea>
+                    <label class="input-field-label" for="{{ form.description.id_for_label }}">Опис</label>
+                    {{ form.description }}
+                    {% if form.description.errors %}
+                        <div class="form-error">{{ form.description.errors }}</div>
+                    {% endif %}
                 </div>
             </div>
         </div>
 
+        <!-- Кнопки дій -->
         <div class="action-button-row">
-            <button type="button" class="secondary-action-button" onclick="clearFormData()">Скасувати</button>
-            <button type="button" class="primary-action-button" onclick="processFormSubmission()">Завантажити</button>
+            <button type="submit" class="primary-action-button">Завантажити</button>
         </div>
-    </div>
+    </form>
+</div>
 
-   <script  src="{% static 'core/drawings/script_drawing.js' %}"></script>
+<script>
+    const dropZone = document.getElementById('fileDropZone');
+    const fileInput = document.getElementById('id_file_path');
+    const selectedFilesContainer = document.getElementById('selectedFilesContainer');
+
+    const defaultIcon = document.getElementById('defaultFileIcon');
+    const successIcon = document.getElementById('successIcon');
+    const uploadText = document.getElementById('uploadText');
+    const uploadDetailsText = document.getElementById('uploadDetailsText');
+
+    function updateFileList(files) {
+        selectedFilesContainer.innerHTML = '';
+        if (files.length > 0) {
+            // Показываем галочку
+            defaultIcon.style.display = 'none';
+            successIcon.style.display = 'block';
+
+            const file = files[0]; // Берём первый файл
+            uploadText.textContent = file.name;
+            uploadDetailsText.textContent = `${(file.size / 1024 / 1024).toFixed(2)} МБ`;
+
+            const p = document.createElement('p');
+            p.textContent = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+            selectedFilesContainer.appendChild(p);
+        } else {
+            // Возвращаем дефолт
+            defaultIcon.style.display = 'block';
+            successIcon.style.display = 'none';
+            uploadText.textContent = "Перетягніть файли сюди або клікніть для вибору";
+            uploadDetailsText.textContent = "Підтримуються формати: DWG, PDF, DXF (макс. 10 МБ)";
+        }
+    }
+
+    fileInput.addEventListener('change', () => {
+        updateFileList(fileInput.files);
+    });
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+    });
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.classList.add('drop-zone-hover');
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.classList.remove('drop-zone-hover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        const files = e.dataTransfer.files;
+        const dataTransfer = new DataTransfer();
+        for (const file of files) {
+            dataTransfer.items.add(file);
+        }
+        fileInput.files = dataTransfer.files;
+        updateFileList(fileInput.files);
+    });
+</script>
+
 {% endblock content %}
