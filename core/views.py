@@ -10,7 +10,7 @@ from django.core.files.storage import default_storage
 
 from .models import Material, Drawing, Order, Detail
 from .forms import DrawingForm
-from .utils import generate_dxf_preview, get_drawing_sizes
+from .utils import generate_dxf_preview
 
 
 def hub(request):
@@ -58,21 +58,22 @@ class UploadDrawing(LoginRequiredMixin, CreateView):
 
 @login_required
 def view_drawing(request, pk):
-    drawing = get_object_or_404(Drawing, pk=pk, user=request.user)
+    drawing = get_object_or_404(Drawing, pk=pk)
 
     svg_url = None
     if drawing.file_path.name.endswith(".dxf"):
-        preview = generate_dxf_preview(drawing.file_path.path)
-        if preview:
-            temp_path = f"tmp_previews/{preview.name}"
-            saved_path = default_storage.save(temp_path, preview)
-            svg_url = default_storage.url(saved_path)
-
-    sizes = get_drawing_sizes(drawing.file_path.path)
+        preview_filename = f"previews/preview_{drawing.pk}.png"
+        if default_storage.exists(preview_filename):
+            svg_url = default_storage.url(preview_filename)
+        else:
+            preview = generate_dxf_preview(drawing.file_path.path)
+            if preview:
+                default_storage.save(preview_filename, preview)
+                svg_url = default_storage.url(preview_filename)
 
     context = {
         "drawing": drawing,
-        "sizes": sizes,
+
         "img": svg_url,
     }
 
