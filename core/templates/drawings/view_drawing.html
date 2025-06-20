@@ -6,44 +6,44 @@
 {% endblock CSS %}
 
 {% block title %}
-    Сталь+ Перегляд креслення
+    Сталь+ {{ drawing.name }}
 {% endblock title %}
 
 {% block content %}
-    <div class="page-container">
-        <div class="page-header">
-            <div class="title-section">
-                <h1>Металева балка 200x100</h1>
-                <div class="file-info">
-                    <span>2.4 MB</span>
-                </div>
+<div class="page-container">
+    <div class="page-header">
+        <div class="title-section">
+            <h1>{{ drawing.name }}</h1>
+            <div class="file-info">
+                <span>{{ drawing.file_size|filesizeformat }}</span>
             </div>
         </div>
-        
-        <div class="content-grid">
-            <div class="viewer-panel">
-                <div class="viewer-header">
-                    <div class="viewer-title">
-                        <div class="viewer-title-icon">📄</div>
-                        Перегляд кресленя
-                    </div>
-                    <div class="viewer-toolbar">
-                        <button class="toolbar-btn">-</button>
-                        <div class="zoom-display">100%</div>
-                        <button class="toolbar-btn">+</button>
-                    </div>
+    </div>
+
+    <div class="content-grid">
+        <div class="viewer-panel">
+            <div class="viewer-header">
+                <div class="viewer-title">
+                    <div class="viewer-title-icon">📄</div>
+                    Перегляд кресленя
                 </div>
-                
-                <div class="drawing-area">
-                    <div class="drawing-placeholder">
-                        <div class="drawing-placeholder-icon">□</div>
-                        <h3>Перегляд кресленя</h3>
-                        <p>Тут буде відображено креслення у форматі DWG</p>
-                        <div class="scale">Масштаб: 100%</div>
-                    </div>
+                <div class="viewer-toolbar">
+                    <button class="toolbar-btn">-</button>
+                    <div class="zoom-display">100%</div>
+                    <button class="toolbar-btn">+</button>
                 </div>
-                
-                <div class="action-bar">
+            </div>
+
+            <div class="drawing-area">
+                {% if img %}
+                    <img src="{{ img }}" alt="DXF превью" style="max-width: 100%; height: auto;">
+                {% else %}
+                    <p>Предпросмотр недоступен</p>
+                {% endif %}
+            </div>
+
+            <div class="action-bar">
+                <a href="{{ drawing.file_path.url }}" download style="text-decoration: none;">
                     <button class="action-btn primary">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -52,44 +52,57 @@
                         </svg>
                         Завантажити
                     </button>
-                    <button class="action-btn secondary">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="18" cy="5" r="3"/>
-                            <circle cx="6" cy="12" r="3"/>
-                            <circle cx="18" cy="19" r="3"/>
-                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
-                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-                        </svg>
-                        Поділитися
-                    </button>
-                </div>
+                </a>
+                <button class="action-btn secondary" id="share-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="18" cy="5" r="3"/>
+                        <circle cx="6" cy="12" r="3"/>
+                        <circle cx="18" cy="19" r="3"/>
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                    </svg>
+                    Поділитися
+                </button>
             </div>
-            
-            <div class="info-block">
-                <h3>Інформація</h3>
-                <div class="info-item">
-                    <span class="info-label">Опис</span>
-                    <span class="description-value">Спеціальна металева рама для промислового будівництва з антикорозійним покриттям</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Розміри:</span>
-                    <span class="info-value">2000x1500x800 мм</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Товщина:</span>
-                    <span class="info-value">8мм</span>
-                </div>
-                
-                <h3 style="margin-top: 32px;">Метадані</h3>
-                <div class="metadata-list">
-                    <div class="metadata-entry">
-                        <div class="metadata-details">
-                            <div class="label">Дата завантаження</div>
-                            <div class="value">2025-01-15</div>
-                        </div>
+        </div>
+
+        <div class="info-block">
+            <h3>Інформація</h3>
+            <div class="info-item">
+                <span class="info-label">Опис</span>
+                <span class="description-value">{{ drawing.description }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Розміри:</span>
+                <span class="info-value">
+                    {{ sizes.width|floatformat:0 }} × {{ sizes.height|floatformat:0 }} мм
+                </span>
+            </div>
+
+            <h3 style="margin-top: 32px;">Метадані</h3>
+            <div class="metadata-list">
+                <div class="metadata-entry">
+                    <div class="metadata-details">
+                        <div class="label">Дата завантаження</div>
+                        <div class="value">{{ drawing.uploaded_at }}</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<script>
+  document.getElementById('share-btn').addEventListener('click', function() {
+    const url = window.location.href
+    navigator.clipboard.writeText(url)
+      .then(() => {
+        alert('URL скопійовано в буфер обміну!')
+      })
+      .catch(() => {
+        alert('Не вдалося скопіювати URL')
+      })
+  })
+</script>
+
 {% endblock content %}

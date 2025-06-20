@@ -113,7 +113,7 @@ class RegisterUserForm(forms.ModelForm):
             "first_name": forms.TextInput(),
             "last_name": forms.TextInput(),
             "phone_number": forms.TextInput(
-                attrs={"type": "tel", "pattern": r"^(\+380)?0\d{9}$"}
+                attrs={"type": "tel", "pattern": r"^(\+380\d{9}|0\d{9})$"}
             ),
         }
 

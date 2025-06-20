@@ -6,7 +6,6 @@ from .models import Drawing, Order, Material, Detail
 class DrawingAdmin(admin.ModelAdmin):
     list_display = [
         "user",
-        "slug",
         "name",
         "file_path",
         "original_filename",
@@ -15,7 +14,6 @@ class DrawingAdmin(admin.ModelAdmin):
         "description",
     ]
     exclude = ("original_filename", "file_size")
-    prepopulated_fields = {"slug": ("name",)}
 
 
 @admin.register(Order)
