@@ -1,0 +1,121 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block CSS %}
+    <link rel="stylesheet" href="{% static 'core/orders/style_order_pay.css' %}">
+{% endblock CSS %}
+
+{% block title %}
+    Сталь+ Оплата замовлення
+{% endblock title %}
+
+{% block content %}
+  <div class="payment-container">
+        <div class="payment-header">
+            <button class="back-arrow">←</button>
+            <div>
+                <h1 class="payment-title">Оплата замовлення</h1>
+                <span class="order-number">Замовлення #001</span>
+            </div>
+        </div>
+
+        <div class="payment-layout">
+            <div class="payment-details-section">
+                <h2 class="section-title">
+                    <div class="payment-icon"></div>
+                    Деталі оплати
+                </h2>
+
+                <div class="payment-method-group">
+                    <label class="payment-method-label">Спосіб оплати</label>
+                    <select class="payment-method-select">
+                        <option>Банківська картка</option>
+                        <option>PayPal</option>
+                        <option>Apple Pay</option>
+                    </select>
+                </div>
+
+                <div class="card-form-group">
+                    <label class="card-form-label">Ім'я власника картки</label>
+                    <input type="text" class="card-form-input" value="ІВАН ПЕТРЕНКО" placeholder="Введіть ім'я власника">
+                </div>
+
+                <div class="card-form-group">
+                    <label class="card-form-label">Номер картки</label>
+                    <input type="text" class="card-form-input" value="1234 5678 9012 3456" placeholder="1234 5678 9012 3456">
+                </div>
+
+                <div class="card-form-row">
+                    <div class="card-form-group">
+                        <label class="card-form-label">Термін дії</label>
+                        <input type="text" class="card-form-input" placeholder="MM/YY">
+                    </div>
+                    <div class="card-form-group">
+                        <label class="card-form-label">CVV</label>
+                        <input type="text" class="card-form-input" placeholder="123">
+                    </div>
+                </div>
+
+                <div class="security-notice">
+                    <div class="security-icon"></div>
+                    Ваші дані захищені SSL-шифруванням
+                </div>
+
+                <button class="payment-button">
+                    <svg class="lock-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    Оплатити 15,000 грн
+                </button>
+            </div>
+
+            <div class="order-summary-section">
+                <h2 class="order-summary-title">Деталі замовлення</h2>
+
+                <div class="product-info">
+                    <div class="product-name">Металева конструкція для будівництва</div>
+                    <div class="product-description">Спеціальна металева рама для промислового будівництва з антикорозійним покриттям</div>
+
+                    <div class="product-details">
+                        <div class="product-detail-row">
+                            <span class="product-detail-label">Кількість:</span>
+                            <span class="product-detail-value">2 шт</span>
+                        </div>
+                        <div class="product-detail-row">
+                            <span class="product-detail-label">Матеріал:</span>
+                            <span class="product-detail-value">Сталь St37</span>
+                        </div>
+                        <div class="product-detail-row">
+                            <span class="product-detail-label">Розміри:</span>
+                            <span class="product-detail-value">2000x1500x800 мм</span>
+                        </div>
+                        <div class="product-detail-row">
+                            <span class="product-detail-label">Вартість:</span>
+                            <span class="product-detail-value">15,000 грн</span>
+                        </div>
+                        <div class="product-detail-row">
+                            <span class="product-detail-label">ПДВ:</span>
+                            <span class="product-detail-value">Включено</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="price-section">
+                    <div class="total-price">
+                        <span>До сплати:</span>
+                        <span class="total-amount">15,000 грн</span>
+                    </div>
+
+                    <div class="quality-guarantee">
+                        <div class="guarantee-icon"></div>
+                        <div>
+                            <div>Гарантія якості</div>
+                            <div class="guarantee-text">30 днів гарантії на всі вироби</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script src="{% static 'core/orders/script_order_pay.js' %}"> </script>
+{% endblock content %}

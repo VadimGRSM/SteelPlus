@@ -10,182 +10,90 @@
 {% endblock title %}
 
 {% block content %}
-   <div class="page-container">
-        <div class="page-header">
-            <h1 class="page-title">Створення замовлення</h1>
-            <p class="page-subtitle">Заповніть деталі для виготовлення вашого виробу</p>
+    <div class="order-form-wrapper">
+        <div id="drawings-container">
+            <div class="order-drawing-block">
+                <div class="order-drawing-header">
+                    <div class="order-drawing-number-group">
+                        <div class="order-drawing-number-label">№1</div>
+                        <select class="order-drawing-number-select">
+                            <option value="">Оберіть креслення</option>
+                            <option value="DRW-001">DRW-001 - Основна деталь</option>
+                            <option value="DRW-002">DRW-002 - Кронштейн</option>
+                            <option value="DRW-003">DRW-003 - Кришка</option>
+                            <option value="DRW-004">DRW-004 - Корпус</option>
+                            <option value="DRW-005">DRW-005 - Пластина</option>
+                        </select>
+                    </div>
+                    <div class="order-drawing-title">Креслення</div>
+                    <div class="order-header-actions">
+                        <button class="order-collapse-btn">∨</button>
+                        <button class="order-delete-btn">×</button>
+                    </div>
+                </div>
+
+                <div class="order-drawing-content">
+                    <div class="order-form-row">
+                        <div class="order-form-group">
+                            <div class="order-form-label">Кількість</div>
+                            <input type="number" class="order-form-input" placeholder="Вказати кількість" min="1">
+                        </div>
+
+                        <div class="order-form-group">
+                            <div class="order-form-label">Вид матеріалу</div>
+                            <select class="order-form-select material-type-select">
+                                <option value="">Обрати вид матеріалу</option>
+                                <option value="metal">Метал</option>
+                                <option value="plastic">Пластик</option>
+                                <option value="composite">Композит</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="order-form-row">
+                        <div class="order-form-group">
+                            <div class="order-form-label">Матеріал</div>
+                            <select class="order-form-select material-select">
+                                <option value="">Спочатку оберіть вид матеріалу</option>
+                            </select>
+                        </div>
+
+                        <div class="order-form-group">
+                            <div class="order-form-label">Товщина (мм)</div>
+                            <input type="number" class="order-form-input" placeholder="Вказати товщину" step="0.1" min="0.1">
+                        </div>
+                    </div>
+
+                    <div class="order-processing-section">
+                        <div class="order-form-label">Види обробки</div>
+                        <div class="order-processing-options">
+                            <div class="order-processing-option">
+                                <input type="checkbox" class="order-processing-checkbox">
+                                <span class="order-processing-label">Лазерна різка</span>
+                            </div>
+                            <div class="order-processing-option">
+                                <input type="checkbox" class="order-processing-checkbox">
+                                <span class="order-processing-label">Згинання</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="order-content">
-            <div class="order-form">
-                <div class="section-card">
-                    <h2 class="section-title">
-                        <span class="section-icon package-icon"></span>
-                        Деталі замовлення
-                    </h2>
-                    <div class="form-field">
-                        <label class="field-label">Кількість</label>
-                        <input type="number" class="field-input" placeholder="Введіть кількість">
-                    </div>
-                    <div class="field-row">
-                        <div class="form-field">
-                            <label class="field-label">Вид матеріалу</label>
-                            <div class="select-field">
-                                <select class="field-input" id="materialType" onchange="updateMaterialOptions()">
-                                    <option value="">Оберіть вид матеріалу</option>
-                                    <option value="metal">Метал</option>
-                                    <option value="plastic">Пластик</option>
-                                    <option value="wood">Дерево</option>
-                                    <option value="composite">Композит</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-field">
-                            <label class="field-label">Матеріал</label>
-                            <div class="select-field">
-                                <select class="field-input" id="specificMaterial">
-                                    <option>Спочатку оберіть вид матеріалу</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <button class="order-add-drawing-btn">Додати креслення</button>
 
-                <div class="section-card">
-                    <h2 class="section-title">
-                        <span class="section-icon person-icon"></span>
-                        Контактна інформація
-                    </h2>
-                    <div class="field-row">
-                        <div class="form-field">
-                            <label class="field-label">Ім'я контактної особи</label>
-                            <input type="text" class="field-input" placeholder="Введіть ім'я">
-                        </div>
-                        <div class="form-field">
-                            <label class="field-label">Телефон</label>
-                            <div class="phone-wrapper">
-                                <span class="phone-code">+380</span>
-                                <input type="tel" class="field-input phone-input" placeholder="XX XXX XX XX">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-field">
-                        <label class="field-label">Адреса доставки</label>
-                        <textarea class="field-input textarea-field" placeholder="Введіть повну адресу доставки"></textarea>
-                    </div>
-                    <div class="form-field">
-                        <label class="field-label">Спеціальні вимоги</label>
-                        <textarea class="field-input textarea-field" placeholder="Опишіть додаткові вимоги до виробу..."></textarea>
-                    </div>
-                </div>
-
-                <div class="action-buttons">
-                    <button class="btn-primary">Створити замовлення</button>
-                    <button class="btn-secondary">Скасувати</button>
-                </div>
-            </div>
-
-            <div class="sidebar">
-                <div class="cost-breakdown">
-                    <h3 class="cost-title">
-                        <span class="section-icon calc-icon"></span>
-                        Розрахунок вартості
-                    </h3>
-                    <div class="cost-item">
-                        <span class="cost-label">Матеріали:</span>
-                        <span class="cost-value">8,000 грн</span>
-                    </div>
-                    <div class="cost-item">
-                        <span class="cost-label">Робота:</span>
-                        <span class="cost-value">3,500 грн</span>
-                    </div>
-                    <div class="cost-item">
-                        <span class="cost-label">Доставка:</span>
-                        <span class="cost-value">500 грн</span>
-                    </div>
-                    <div class="cost-item">
-                        <span class="cost-label">ПДВ:</span>
-                        <span class="cost-value">500 грн</span>
-                    </div>
-                    <div class="cost-total">
-                        <span class="total-label">Загалом:</span>
-                        <span class="total-value">12,500 грн</span>
-                    </div>
-                    <p class="cost-note">* Остаточна вартість може відрізнятися залежно від специфікації</p>
-                </div>
-            </div>
+        <div class="order-bottom-actions">
+            <a href="{% url 'core:order_pay' %}">
+            <button class="order-create-btn">Створити замовлення</button>
+            </a>
+            <a href="{% url 'core:order' %}">
+            <button class="order-follow-btn">Скасувати</button>
+            </a>
         </div>
     </div>
 
-    <script>
-        const materialOptions = {
-            metal: [
-                'Нержавіюча сталь',
-                'Вуглецева сталь',
-                'Алюміній',
-                'Латунь',
-                'Мідь',
-                'Титан',
-                'Чавун',
-                'Оцинкована сталь'
-            ],
-            plastic: [
-                'ABS пластик',
-                'PLA пластик',
-                'PETG пластик',
-                'Поліетилен',
-                'Поліпропілен',
-                'Поліамід (Нейлон)',
-                'Акрил (PMMA)',
-                'Полікарбонат'
-            ],
-            wood: [
-                'Дуб',
-                'Сосна',
-                'Береза',
-                'Ясен',
-                'Бук',
-                'Горіх',
-                'Клен',
-                'Липа',
-                'Фанера',
-                'МДФ',
-                'ДСП'
-            ],
-            composite: [
-                'Скловолокно',
-                'Вуглепластик',
-                'Кевлар',
-                'Епоксидний композит',
-                'Поліестер з скловолокном',
-                'Базальтопластик',
-                'Алюмоматричний композит'
-            ]
-        };
+    <script src="{% static 'core/orders/script_create_order.js' %}"></script>
 
-        function updateMaterialOptions() {
-            const materialType = document.getElementById('materialType').value;
-            const specificMaterial = document.getElementById('specificMaterial');
-            
-            // Очищаємо попередні опції
-            specificMaterial.innerHTML = '';
-            
-            if (materialType === '') {
-                specificMaterial.innerHTML = '<option>Спочатку оберіть вид матеріалу</option>';
-                return;
-            }
-            
-            // Додаємо заголовок
-            specificMaterial.innerHTML = '<option value="">Оберіть конкретний матеріал</option>';
-            
-            // Додаємо опції для обраного виду матеріалу
-            const options = materialOptions[materialType];
-            options.forEach(material => {
-                const option = document.createElement('option');
-                option.value = material;
-                option.textContent = material;
-                specificMaterial.appendChild(option);
-            });
-        }
-    </script>
+
 {% endblock content %}
