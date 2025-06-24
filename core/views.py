@@ -40,6 +40,10 @@ def delete_drawing(request, pk):
 def order(request):
     return render(request, "core/order.html")
 
+@login_required
+def order_pay(request):
+    return render(request, 'orders/order_pay.html')
+
 
 @login_required
 def create_order(request):

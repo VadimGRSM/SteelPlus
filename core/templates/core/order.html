@@ -10,67 +10,72 @@
 {% endblock title %}
 
 {% block content %}
-     <div class="page-wrapper">
-        <div class="page-title-section">
-            <h1>Мої замовлення</h1>
-            <p>Детальна інформація про ваші замовлення та їх статус</p>
+        <div class="page-wrapper">
+    <div class="page-title-section" style="display: flex; justify-content: space-between; align-items: center;">
+        <h1 style="margin: 0;">Мої замовлення</h1>
+        <a href="{% url 'core:create_order' %}">
+            <button class="action-btn primary-btn">Створити замовлення</button>
+        </a>
+    </div>
+
+    <p>Детальна інформація про ваші замовлення та їх статус</p>
+
+    <div class="order-item">
+        <div class="order-top-section">
+            <div class="order-info-block">
+                <div class="document-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3182ce" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14,2 14,8 20,8"></polyline>
+                    </svg>
+                </div>
+                <div>
+                    <div class="order-id">Замовлення #001</div>
+                    <div class="creation-date">Створено: 2025-01-10</div>
+                </div>
+            </div>
+            <div class="progress-indicator">В процесі</div>
         </div>
 
-        <div class="order-item">
-            <div class="order-top-section">
-                <div class="order-info-block">
-                    <div class="document-icon">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3182ce" stroke-width="2">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14,2 14,8 20,8"></polyline>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="order-id">Замовлення #001</div>
-                        <div class="creation-date">Створено: 2025-01-10</div>
-                    </div>
-                </div>
-                <div class="progress-indicator">В процесі</div>
-            </div>
+        <div class="item-name">Металева конструкція для будівництва</div>
+        <div class="item-summary">
+            Спеціальна металева рама для промислового будівництва з антикорозійним покриттям
+        </div>
 
-            <div class="item-name">Металева конструкція для будівництва</div>
-            <div class="item-summary">
-                Спеціальна металева рама для промислового будівництва з антикорозійним покриттям
+        <div class="specifications-grid">
+            <div class="spec-row">
+                <div class="spec-indicator"></div>
+                <span class="spec-key">Кількість:</span>
+                <span class="spec-data">2 шт</span>
             </div>
-
-            <div class="specifications-grid">
-                <div class="spec-row">
-                    <div class="spec-indicator"></div>
-                    <span class="spec-key">Кількість:</span>
-                    <span class="spec-data">2 шт</span>
-                </div>
-                <div class="spec-row">
-                    <div class="spec-indicator"></div>
-                    <span class="spec-key">Матеріал:</span>
-                    <span class="spec-data">Сталь St37</span>
-                </div>
-                <div class="spec-row">
-                    <div class="spec-indicator"></div>
-                    <span class="spec-key">Розмір:</span>
-                    <span class="spec-data">2000x1500x800 мм</span>
-                </div>
-                <div class="spec-row">
-                    <div class="spec-indicator"></div>
-                    <span class="spec-key">Вага:</span>
-                    <span class="spec-data">450 кг</span>
-                </div>
+            <div class="spec-row">
+                <div class="spec-indicator"></div>
+                <span class="spec-key">Матеріал:</span>
+                <span class="spec-data">Сталь St37</span>
             </div>
+            <div class="spec-row">
+                <div class="spec-indicator"></div>
+                <span class="spec-key">Розмір:</span>
+                <span class="spec-data">2000x1500x800 мм</span>
+            </div>
+            <div class="spec-row">
+                <div class="spec-indicator"></div>
+                <span class="spec-key">Вага:</span>
+                <span class="spec-data">450 кг</span>
+            </div>
+        </div>
 
-            <div class="cost-area">
-                <div>
-                    <div class="total-cost">15,000 грн</div>
-                    <div class="tax-info">включно з ПДВ</div>
-                </div>
-                <div class="button-group">
-                    <button class="action-btn outline-btn">Комерційна пропозиція</button>
-                    <button class="action-btn primary-btn">Відстежити виробництво</button>
-                </div>
+        <div class="cost-area">
+            <div>
+                <div class="total-cost">15,000 грн</div>
+                <div class="tax-info">включно з ПДВ</div>
+            </div>
+            <div class="button-group">
+                <button class="action-btn outline-btn">Комерційна пропозиція</button>
+                <button class="action-btn primary-btn">Відстежити виробництво</button>
             </div>
         </div>
     </div>
+</div>
+
 {% endblock content %}
