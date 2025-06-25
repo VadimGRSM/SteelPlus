@@ -1,4 +1,4 @@
-  .order-form-wrapper {
+ .order-form-wrapper {
             max-width: 800px;
             margin: 0 auto;
             background: white;
@@ -32,7 +32,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            min-width: 200px;
+            flex: 1;
         }
 
         .order-drawing-number-label {
@@ -59,14 +59,6 @@
         .order-drawing-number-select:focus {
             outline: none;
             border-color: #2196F3;
-        }
-
-        .order-drawing-title {
-            flex: 1;
-            text-align: center;
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
         }
 
         .order-header-actions {
@@ -174,8 +166,8 @@
         .order-processing-option {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 12px 16px;
+            gap: 12px;
+            padding: 16px;
             background: #f8f9fa;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
@@ -197,12 +189,15 @@
         .order-processing-checkbox {
             margin: 0;
             cursor: pointer;
+            width: 16px;
+            height: 16px;
         }
 
         .order-processing-label {
             font-size: 14px;
             color: #333;
             cursor: pointer;
+            pointer-events: none;
         }
 
         .order-add-drawing-btn {

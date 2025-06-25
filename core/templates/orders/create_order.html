@@ -10,7 +10,7 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="order-form-wrapper">
+  <div class="order-form-wrapper">
         <div id="drawings-container">
             <div class="order-drawing-block">
                 <div class="order-drawing-header">
@@ -25,7 +25,6 @@
                             <option value="DRW-005">DRW-005 - Пластина</option>
                         </select>
                     </div>
-                    <div class="order-drawing-title">Креслення</div>
                     <div class="order-header-actions">
                         <button class="order-collapse-btn">∨</button>
                         <button class="order-delete-btn">×</button>
@@ -84,12 +83,8 @@
         <button class="order-add-drawing-btn">Додати креслення</button>
 
         <div class="order-bottom-actions">
-            <a href="{% url 'core:order_pay' %}">
             <button class="order-create-btn">Створити замовлення</button>
-            </a>
-            <a href="{% url 'core:order' %}">
             <button class="order-follow-btn">Скасувати</button>
-            </a>
         </div>
     </div>
 

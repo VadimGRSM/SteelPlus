@@ -30,7 +30,7 @@
             <div class="input-wrapper">
                 {{ form.password }}
                 {{ form.password.errors }}
-                <button type="button" class="password-toggle" onclick="togglePassword('loginPassword')">⚪</button>
+                <button type="button" class="password-toggle" onclick="togglePassword()">⚪</button>
             </div>
         </div>
 
@@ -38,22 +38,59 @@
     </form>
 </div>
 
-
 <div class="forgot-password">
     <a href="{% url 'users:password_reset' %}">Забули пароль?</a>
-
     <a href="{% url 'users:register' %}">Немає облікового запису?</a>
 </div>
 
-<div class="forgot-password">
-
-</div>
-
 <script>
-function togglePassword(inputId) {
-    const input = document.getElementById(inputId);
-    input.type = input.type === "password" ? "text" : "password";
+function togglePassword() {
+    // Знаходимо поле пароля за його атрибутом name або типом
+    const passwordInput = document.querySelector('input[name="password"]');
+    const toggleButton = document.querySelector('.password-toggle');
+
+    if (passwordInput && toggleButton) {
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleButton.textContent = "🔵"; // Синій кружок коли пароль видимий
+            toggleButton.style.color = "#4444ff";
+        } else {
+            passwordInput.type = "password";
+            toggleButton.textContent = "⚪"; // Білий кружок коли пароль прихований
+            toggleButton.style.color = "#cccccc";
+        }
+    }
 }
 </script>
+
+<style>
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px;
+    color: #cccccc;
+    transition: color 0.3s ease;
+}
+
+.password-toggle:hover {
+    opacity: 0.7;
+}
+
+/* Додаємо відступ праворуч для input, щоб текст не перекривався кнопкою */
+.input-wrapper input[type="password"],
+.input-wrapper input[type="text"] {
+    padding-right: 40px;
+}
+</style>
 
 {% endblock content %}
