@@ -1,39 +1,36 @@
-  // Використовуємо делегування подій для кращої сумісності з динамічно створеними елементами
-        document.addEventListener('DOMContentLoaded', function() {
+ document.addEventListener('DOMContentLoaded', function() {
             const container = document.getElementById('drawings-container');
             const addBtn = document.querySelector('.order-add-drawing-btn');
             const createBtn = document.querySelector('.order-create-btn');
             const followBtn = document.querySelector('.order-follow-btn');
 
-            // Делегування подій для кнопок у контейнері креслень
+            // Делегування подій
             container.addEventListener('click', function(e) {
                 if (e.target.classList.contains('order-collapse-btn')) {
                     toggleCollapse(e.target);
                 } else if (e.target.classList.contains('order-delete-btn')) {
                     deleteDrawing(e.target);
-                } else if (e.target.classList.contains('order-processing-option') ||
-                          e.target.parentElement.classList.contains('order-processing-option')) {
-                    const option = e.target.classList.contains('order-processing-option') ?
-                                  e.target : e.target.parentElement;
-                    toggleProcessing(option);
+                } else if (e.target.classList.contains('order-processing-option')) {
+                    const checkbox = e.target.querySelector('.order-processing-checkbox');
+                    checkbox.checked = !checkbox.checked;
+                    updateProcessingState(e.target, checkbox.checked);
                 }
             });
 
-            // Делегування подій для селектів
+            // Подія для чекбоксів
             container.addEventListener('change', function(e) {
-                if (e.target.classList.contains('material-type-select')) {
+                if (e.target.classList.contains('order-processing-checkbox')) {
+                    const option = e.target.closest('.order-processing-option');
+                    updateProcessingState(option, e.target.checked);
+                } else if (e.target.classList.contains('material-type-select')) {
                     updateMaterialOptions(e.target);
                 }
             });
 
-            // Подія для кнопки додавання креслення
             addBtn.addEventListener('click', addDrawing);
-
-            // Події для нижніх кнопок
             createBtn.addEventListener('click', function() {
                 alert('Замовлення створено!');
             });
-
             followBtn.addEventListener('click', function() {
                 alert('Слідування увімкнено!');
             });
@@ -49,10 +46,8 @@
             const drawingBlock = button.closest('.order-drawing-block');
             const container = document.getElementById('drawings-container');
 
-            // Перевіряємо, чи залишається хоча б одне креслення
             if (container.children.length > 1) {
                 drawingBlock.remove();
-                // Оновлюємо нумерацію
                 updateDrawingNumbers();
             } else {
                 alert('Неможливо видалити останнє креслення');
@@ -67,10 +62,8 @@
             });
         }
 
-        function toggleProcessing(option) {
-            const checkbox = option.querySelector('.order-processing-checkbox');
-            checkbox.checked = !checkbox.checked;
-            option.classList.toggle('active', checkbox.checked);
+        function updateProcessingState(option, isChecked) {
+            option.classList.toggle('active', isChecked);
         }
 
         function updateMaterialOptions(select) {
@@ -115,12 +108,12 @@
                 }
             });
 
-            // Оновити стан чекбоксів (виправлений селектор)
+            // Оновити стан чекбоксів
             newDrawing.querySelectorAll('.order-processing-option').forEach(option => {
                 option.classList.remove('active');
             });
 
-            // Розгорнути новий блок, якщо він був згорнутий
+            // Розгорнути новий блок
             const content = newDrawing.querySelector('.order-drawing-content');
             const collapseBtn = newDrawing.querySelector('.order-collapse-btn');
             content.classList.remove('collapsed');
