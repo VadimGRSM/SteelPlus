@@ -1,0 +1,190 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block CSS %}
+    <link rel="stylesheet" href="{% static 'core/drawings/style_settings_drawing.css' %}">
+{% endblock CSS %}
+
+{% block title %}
+    Сталь+ Налаштування креслення
+{% endblock title %}
+
+{% block content %}
+<div class="page-container">
+    <main class="primary-section">
+       <h1 class="page-heading">Налаштування креслення</h1>
+            <p class="page-id">ID: #001</p>
+
+            <div class="section-header">
+                <div class="section-icon"></div>
+                <h2 class="section-title">Назва креслення</h2>
+                <div class="nav-controls">
+                    <button class="nav-button prev" onclick="previousSlide()"></button>
+                    <button class="nav-button next" onclick="nextSlide()"></button>
+                    <div class="zoom-divider"></div>
+                    <button class="nav-button zoom-out" onclick="zoomOut()" title="Зменшити масштаб"></button>
+                    <div class="zoom-display" id="zoom-display">100%</div>
+                    <button class="nav-button zoom-in" onclick="zoomIn()" title="Збільшити масштаб"></button>
+                    <button class="nav-button zoom-reset" onclick="resetZoom()" title="Скинути масштаб"></button>
+                </div>
+            </div>
+
+            <div class="drawing-area">
+                <div class="layer-label" id="layer-label">Слой 1</div>
+
+                <div class="slider-container">
+                    <div class="slide active-slide">
+                        <div class="drawing-title">Назва креслення - Слайд 1</div>
+                        <div class="step-indicators">
+                            <div class="step-number active">1</div>
+                            <div class="step-number">2</div>
+                        </div>
+                        <div class="step-description">Перегляд слою 1</div>
+                    </div>
+
+                    <div class="slide">
+                        <div class="drawing-title">Назва креслення - Слайд 2</div>
+                        <div class="step-indicators">
+                            <div class="step-number">1</div>
+                            <div class="step-number active">2</div>
+                        </div>
+                        <div class="step-description">Перегляд слою 2</div>
+                    </div>
+
+                    <div class="slide">
+                        <div class="drawing-title">Назва креслення - Слайд 3</div>
+                        <div class="step-indicators">
+                            <div class="step-number active">1</div>
+                            <div class="step-number active">2</div>
+                        </div>
+                        <div class="step-description">Перегляд слою 3</div>
+                    </div>
+                </div>
+
+                <div class="progress-dots">
+                    <div class="progress-dot current" onclick="showSlide(0)"></div>
+                    <div class="progress-dot" onclick="showSlide(1)"></div>
+                    <div class="progress-dot" onclick="showSlide(2)"></div>
+                </div>
+
+                <div class="description-block">
+                    <div class="description-label">Опис</div>
+                    <textarea class="description-textbox" id="description-textbox" placeholder="Введіть загальний опис креслення...">Загальний опис креслення - детальна інформація про всі слої та налаштування</textarea>
+                </div>
+            </div>
+
+            <button class="save-button">Зберегти зміни</button>
+
+    </main>
+
+    <aside class="sidebar-panel">
+      <h2 class="info-heading">Загальна інформація</h2>
+
+      <div class="cutting-section">
+        <h3>Налаштування різки</h3>
+        <div class="info-item">
+          <div class="info-label">Оберіть свій слой різки на кресленні</div>
+          <select class="dropdown-select" id="cutting-layer-select">
+            <option value="">Оберіть слой...</option>
+            <option value="1">Слой 1</option>
+            <option value="2">Слой 2</option>
+            <option value="3">Слой 3</option>
+          </select>
+        </div>
+        <div class="info-item hidden" id="cutting-length-container">
+          <div class="info-label">Довжина різу</div>
+          <input type="text" class="dimension-input" id="cutting-length" placeholder="сама довжина(число)" />
+        </div>
+      </div>
+
+      <div class="bending-section">
+        <h3>Налаштування згинання</h3>
+        <div class="info-item">
+          <div class="info-label">Оберіть слой з кутами для згинання на кресленні</div>
+          <select class="dropdown-select" id="bending-layer-select">
+            <option value="">Оберіть слой...</option>
+            <option value="1">Слой 1</option>
+            <option value="2">Слой 2</option>
+            <option value="3">Слой 3</option>
+          </select>
+        </div>
+
+        <div class="error-message" id="layer-error">
+          Помилка: Для різки та згинання мають бути вибрані різні слої!
+        </div>
+
+        <div class="hidden" id="corner-config">
+          <h4 style="margin: 20px 0 15px 0; font-size: 14px; font-weight: 500;">Налаштування кутів</h4>
+          <div style="overflow-x: auto;">
+            <table class="corner-table">
+              <thead>
+                <tr>
+                  <th>Кути</th>
+                  <th>Градус кута</th>
+                  <th>Напрямок (Вверх)</th>
+                  <th>
+                    Радіус<br>
+                    <button class="select-all-button" onclick="openRadiusModal(-1)">Обрати для всіх</button>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td><input type="text" class="corner-input" value="90"></td>
+                  <td><input type="checkbox" class="corner-checkbox"></td>
+                  <td><button class="action-button" onclick="openRadiusModal(0)">Обрати</button></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td><input type="text" class="corner-input" value="90"></td>
+                  <td><input type="checkbox" class="corner-checkbox"></td>
+                  <td><button class="action-button" onclick="openRadiusModal(1)">Обрати</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="metadata-section">
+        <h3>Метадані:</h3>
+        <div class="metadata-item">Дата: 2025-06-30</div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- [модальне вікно для вибору градусу] -->
+     <div class="modal-overlay" id="radius-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Оберіть градус кута:</h3>
+                <button class="modal-close" onclick="closeRadiusModal()">×</button>
+            </div>
+
+            <div class="angle-diagram">
+                <div class="angle-visual">
+                    <div class="angle-line vertical"></div>
+                    <div class="angle-line horizontal"></div>
+                    <div class="angle-arc"></div>
+                </div>
+                <div class="radius-label">
+                    фото<br>радіуса
+                </div>
+            </div>
+
+            <div class="angle-value" id="angle-value">13</div>
+
+            <input type="range" class="angle-slider" id="angle-slider" min="0" max="3" step="1" value="0">
+
+
+            <div class="modal-buttons">
+                <button class="modal-button" onclick="closeRadiusModal()">Відмінити</button>
+                <button class="modal-button primary" onclick="confirmRadius()">Підтвердити</button>
+            </div>
+        </div>
+    </div>
+
+  <script src="{% static 'core/drawings/script_settings_drawing.js' %}"></script>
+
+{% endblock content %}

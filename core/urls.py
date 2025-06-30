@@ -17,4 +17,8 @@ urlpatterns = [
 
     path('orders/pay-order/', views.order_pay, name='order_pay'),
 
+    path('settings-drawing/', views.settings_drawing, name='settings_drawing'),
+
+
+
 ]
