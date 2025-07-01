@@ -346,21 +346,11 @@
             margin-bottom: 6px;
         }
 
-        .dropdown-select {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid #d2d2d7;
-            border-radius: 6px;
-            background: white;
-            font-size: 14px;
-            cursor: pointer;
-        }
 
-        .dropdown-select:focus {
-            outline: none;
-            border-color: #007aff;
-            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
-        }
+
+
+
+
 
         .dimension-input {
             width: 100%;
@@ -437,75 +427,6 @@
             background: #28a745;
         }
 
-        /* Модальне вікно */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-            width: 90%;
-            max-width: 500px;
-            position: relative;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1d1d1f;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #6e6e73;
-            padding: 0;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-close:hover {
-            background: #f5f5f7;
-        }
-
-        .angle-diagram {
-            width: 100%;
-            height: 300px;
-            background: #f8f9fa;
-            border: 2px solid #e5e5e7;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
         .angle-visual {
             position: relative;
             width: 200px;
@@ -553,86 +474,6 @@
             font-weight: 500;
         }
 
-        .angle-value {
-            text-align: center;
-            font-size: 24px;
-            font-weight: 600;
-            color: #1d1d1f;
-            margin-bottom: 20px;
-        }
-
-        .angle-slider {
-            width: 100%;
-            height: 6px;
-            background: #ddd;
-            border-radius: 3px;
-            outline: none;
-            margin-bottom: 20px;
-            -webkit-appearance: none;
-        }
-
-        .angle-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 24px;
-            height: 24px;
-            background: #007aff;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .angle-slider::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            background: #007aff;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .modal-button {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid #d2d2d7;
-            border-radius: 8px;
-            background: white;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-
-        .modal-button.primary {
-            background: #007aff;
-            color: white;
-            border-color: #007aff;
-        }
-
-        .modal-button:hover {
-            background: #f5f5f7;
-        }
-
-        .modal-button.primary:hover {
-            background: #0056cc;
-        }
-
-        .action-button {
-            background: #ff3b30;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            cursor: pointer;
-        }
 
         .action-button:hover {
             background: #d12b20;
@@ -649,17 +490,6 @@
             color: #6e6e73;
             font-size: 14px;
             margin-bottom: 8px;
-        }
-
-        .error-message {
-            background: #fee;
-            border: 1px solid #f88;
-            color: #c33;
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 14px;
-            margin-top: 10px;
-            display: none;
         }
 
         .hidden {
@@ -681,3 +511,229 @@
       grid-template-columns: 1fr 500px; /* розширення правого блоку */
       gap: 30px;
     }
+
+  /* Модальне вікно */
+.modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin: 0;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6e6e73;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-close:hover {
+            background: #f5f5f7;
+        }
+        .angle-diagram {
+            width: 100%;
+            height: 300px;
+            background: #f8f9fa;
+            border: 2px solid #e5e5e7;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .angle-svg {
+            width: 280px;
+            height: 280px;
+        }
+        .angle-value {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 20px;
+        }
+        .angle-slider {
+            width: 100%;
+            height: 6px;
+            background: #ddd;
+            border-radius: 3px;
+            outline: none;
+            margin-bottom: 20px;
+            -webkit-appearance: none;
+        }
+        .angle-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: #007aff;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .angle-slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            background: #007aff;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            border: none;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .modal-button {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #d2d2d7;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .modal-button.primary {
+            background: #007aff;
+            color: white;
+            border-color: #007aff;
+        }
+        .modal-button:hover {
+            background: #f5f5f7;
+        }
+        .modal-button.primary:hover {
+            background: #0056cc;
+        }
+        .demo-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 12px 24px;
+            background: #007aff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .radius-info {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+
+
+
+.error-message {
+    transition: all 0.3s ease;
+    background: #ffecec;
+    border: 1px solid #ff6b6b;
+    color: #b00020;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-top: 10px;
+    display: none;
+}
+
+
+
+
+
+.dropdown-select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #d2d2d7;
+    border-radius: 6px;
+    background-color: #ffffff;
+    font-size: 14px;
+    color: #1d1d1f;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%236e6e73' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px 16px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.dropdown-select:focus {
+    outline: none;
+    border-color: #007aff;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+}
+
+/* Стилі для мультивибору */
+.dropdown-select[multiple] {
+    background-image: none;
+    height: auto;
+    min-height: 100px;
+    overflow-y: auto;
+    cursor: default;
+}
+
+/* Стилі для окремих опцій (можна опціонально) */
+.dropdown-select option {
+    padding: 6px 10px;
+}
+
+
+
+.action-button {
+    background: #ff3b30;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.action-button.transparent {
+    background: transparent;
+    border: 1px solid #ccc;
+    color: #333;
+}

@@ -83,9 +83,8 @@
       <div class="cutting-section">
         <h3>Налаштування різки</h3>
         <div class="info-item">
-          <div class="info-label">Оберіть свій слой різки на кресленні</div>
-          <select class="dropdown-select" id="cutting-layer-select">
-            <option value="">Оберіть слой...</option>
+          <div class="info-label">Оберіть свій слой різки на кресленні <br>Для вибору декількох слоїв затисніть кнопку Ctrl</div>
+          <select class="dropdown-select" id="cutting-layer-select" multiple>
             <option value="1">Слой 1</option>
             <option value="2">Слой 2</option>
             <option value="3">Слой 3</option>
@@ -95,21 +94,23 @@
           <div class="info-label">Довжина різу</div>
           <input type="text" class="dimension-input" id="cutting-length" placeholder="сама довжина(число)" />
         </div>
-      </div>
+           <div class="error-message" id="cutting-layer-error">
+                Помилка: Для різки та згинання мають бути вибрані різні слої!
+            </div>
+        </div>
 
       <div class="bending-section">
         <h3>Налаштування згинання</h3>
         <div class="info-item">
-          <div class="info-label">Оберіть слой з кутами для згинання на кресленні</div>
-          <select class="dropdown-select" id="bending-layer-select">
-            <option value="">Оберіть слой...</option>
+          <div class="info-label">Оберіть слой з кутами для згинання на кресленні <br>Для вибору декількох слоїв затисніть кнопку Ctrl</div>
+          <select class="dropdown-select" id="bending-layer-select" multiple>
             <option value="1">Слой 1</option>
             <option value="2">Слой 2</option>
             <option value="3">Слой 3</option>
           </select>
         </div>
 
-        <div class="error-message" id="layer-error">
+        <div class="error-message" id="bending-layer-error">
           Помилка: Для різки та згинання мають бути вибрані різні слої!
         </div>
 
@@ -158,26 +159,43 @@
      <div class="modal-overlay" id="radius-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Оберіть градус кута:</h3>
+                <h3 class="modal-title">Оберіть градус заокруглення кута:</h3>
                 <button class="modal-close" onclick="closeRadiusModal()">×</button>
             </div>
-
             <div class="angle-diagram">
-                <div class="angle-visual">
-                    <div class="angle-line vertical"></div>
-                    <div class="angle-line horizontal"></div>
-                    <div class="angle-arc"></div>
-                </div>
-                <div class="radius-label">
-                    фото<br>радіуса
-                </div>
+                <svg class="angle-svg" viewBox="0 0 320 320">
+                    <!-- Сітка для кращої візуалізації -->
+                    <defs>
+                        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e0e0e0" stroke-width="0.5"/>
+                        </pattern>
+                    </defs>
+                    <rect width="320" height="320" fill="url(#grid)" opacity="0.3"/>
+
+                    <!-- Основні лінії (продовжені за межі заокруглення) -->
+                    <line id="horizontal-line" x1="50" y1="160" x2="270" y2="160" stroke="#666" stroke-width="2" stroke-dasharray="5,5"/>
+                    <line id="vertical-line" x1="160" y1="50" x2="160" y2="270" stroke="#666" stroke-width="2" stroke-dasharray="5,5"/>
+
+                    <!-- Основні жирні лінії що формують кут -->
+                    <line id="main-horizontal" x1="50" y1="160" x2="160" y2="160" stroke="#333" stroke-width="4"/>
+                    <line id="main-vertical" x1="160" y1="160" x2="160" y2="50" stroke="#333" stroke-width="4"/>
+
+                    <!-- Заокруглений кут -->
+                    <path id="rounded-corner" d="" fill="none" stroke="#ff3b30" stroke-width="4" stroke-linecap="round"/>
+
+                    <!-- Підпис радіуса -->
+                    <text id="radius-text" x="130" y="130" font-family="Arial" font-size="12" fill="#ff3b30" font-weight="bold"></text>
+
+                    <!-- Лінія радіуса (допоміжна) -->
+                    <line id="radius-line" x1="160" y1="160" x2="160" y2="160" stroke="#ff3b30" stroke-width="1" stroke-dasharray="2,2" opacity="0.7"/>
+
+                    <!-- Центральна точка -->
+                    <circle cx="160" cy="160" r="2" fill="#333"/>
+                </svg>
             </div>
-
-            <div class="angle-value" id="angle-value">13</div>
-
+            <div class="radius-info" id="radius-info">Радіус заокруглення: 1px</div>
+            <div class="angle-value" id="angle-value">1px</div>
             <input type="range" class="angle-slider" id="angle-slider" min="0" max="3" step="1" value="0">
-
-
             <div class="modal-buttons">
                 <button class="modal-button" onclick="closeRadiusModal()">Відмінити</button>
                 <button class="modal-button primary" onclick="confirmRadius()">Підтвердити</button>
