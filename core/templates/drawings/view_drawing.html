@@ -11,83 +11,92 @@
 
 {% block content %}
 <div class="page-container">
-    <div class="content-grid">
-        <div class="viewer-panel">
-            <div class="viewer-header">
-                <div class="viewer-title">
-                    {{ drawing.name }}
-                    <div class="file-info">
-                        <span>{{ drawing.file_size|filesizeformat }}</span>
+        <div class="content-grid">
+            <div class="viewer-panel">
+                <div class="viewer-header">
+                    <div class="viewer-title">
+                        {{ drawing.name }}
+                        <div class="file-info">
+                            <span>{{ drawing.file_size|filesizeformat }}</span>
+                        </div>
                     </div>
+                    {% if img %}
+                        <div class="viewer-toolbar">
+                            <button class="toolbar-btn" id="zoom-out">-</button>
+                            <div class="zoom-display" id="zoom-display">100%</div>
+                            <button class="toolbar-btn" id="zoom-in">+</button>
+                            <button class="toolbar-btn" id="reset-view" title="Скинути">⟳</button>
+                        </div>
+                    {% endif %}
                 </div>
-                {% if img %}
-                    <div class="viewer-toolbar">
-                        <button class="toolbar-btn" id="zoom-out">-</button>
-                        <div class="zoom-display" id="zoom-display">100%</div>
-                        <button class="toolbar-btn" id="zoom-in">+</button>
-                        <button class="toolbar-btn" id="reset-view" title="Скинути">⟳</button>
-                    </div>
-                {% endif %}
-            </div>
 
-            <div class="drawing-area">
-                {% if img %}
-                    <img src="{{ img }}" alt="DXF превью" oncontextmenu="return false;" style="max-width: 100%; height: auto;">
-                {% else %}
-                    <p>Перегляд недоступний</p>
-                {% endif %}
-            </div>
+                <div class="drawing-area">
+                    {% if img %}
+                        <img src="{{ img }}" alt="DXF превью" oncontextmenu="return false;" style="max-width: 100%; height: auto;">
+                    {% else %}
+                        <p>Перегляд недоступний</p>
+                    {% endif %}
+                </div>
 
-            <div class="action-bar">
-                <a href="{{ drawing.file_path.url }}" download style="text-decoration: none;">
-                    <button class="action-btn primary">
+                <div class="action-bar">
+                    <a href="{{ drawing.file_path.url }}" download style="text-decoration: none;">
+                        <button class="action-btn primary">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7,10 12,15 17,10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            Завантажити
+                        </button>
+                    </a>
+
+                    <button class="action-btn success" id="download-png-btn">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                            <polyline points="7,10 12,15 17,10"/>
-                            <line x1="12" y1="15" x2="12" y2="3"/>
+                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <polyline points="21,15 16,10 5,21"/>
                         </svg>
-                        Завантажити
+                        Завантажити PNG
                     </button>
-                </a>
-                <button class="action-btn secondary" id="share-btn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="18" cy="5" r="3"/>
-                        <circle cx="6" cy="12" r="3"/>
-                        <circle cx="18" cy="19" r="3"/>
-                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
-                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-                    </svg>
-                    Поділитися
-                </button>
-            </div>
-        </div>
 
-        <div class="info-block">
-            <h3>Інформація</h3>
-            <div class="info-item">
-                <span class="info-label">Опис</span>
-                <span class="description-value">{{ drawing.description }}</span>
-            </div>
-
-            <h3 style="margin-top: 32px;">Метадані</h3>
-
-            <div class="metadata-list">
-                <div class="metadata-entry">
-                    <div class="metadata-details">
-                        <div class="label">Дата завантаження</div>
-                        <div class="value">{{ drawing.uploaded_at }}</div>
-                    </div>
+                    <button class="action-btn secondary" id="share-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="18" cy="5" r="3"/>
+                            <circle cx="6" cy="12" r="3"/>
+                            <circle cx="18" cy="19" r="3"/>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                        </svg>
+                        Поділитися
+                    </button>
                 </div>
-                <div class="metadata-entry">
-                    <div class="metadata-details">
-                        <div class="label">Автор публікації</div>
-                        <div class="value">{{ drawing.user.email }}</div>
+            </div>
+
+            <div class="info-block">
+                <div class="description-section">
+                    <div class="description-label">Опис</div>
+                    <div class="description-content">{{ drawing.description }}</div>
+                </div>
+
+                <h3 style="margin-top: 32px;">Метадані</h3>
+
+                <div class="metadata-list">
+                    <div class="metadata-entry">
+                        <div class="metadata-details">
+                            <div class="label">Дата завантаження</div>
+                            <div class="value">{{ drawing.uploaded_at }}</div>
+                        </div>
+                    </div>
+                    <div class="metadata-entry">
+                        <div class="metadata-details">
+                            <div class="label">Автор публікації</div>
+                            <div class="value">{{ drawing.user.email }}</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 <script src="{% static 'core/drawings/script_view_drawing.js' %}"></script>
 

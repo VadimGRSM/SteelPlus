@@ -16,9 +16,7 @@
         <p class="description-text">Завантажте ваші технічні креслення та додайте необхідну інформацію</p>
     </div>
 
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-
+    <form method="post" enctype="multipart/form-data" id="drawingForm">
         <!-- Панель завантаження файлів -->
         <div class="file-upload-panel">
             <div class="panel-header">
@@ -37,10 +35,9 @@
                 <div class="primary-upload-text" id="uploadText">Перетягніть файли сюди або клікніть для вибору</div>
                 <div class="secondary-upload-text" id="uploadDetailsText">Підтримуються формати: DWG, PDF, DXF (макс. 10 МБ)</div>
 
-                <!-- Django поле file_path -->
-                {{ form.file_path }}
+                <input type="file" class="hidden-file-input" id="fileInput" name="file_path" accept=".dwg,.pdf,.dxf">
 
-                <button class="select-files-button" type="button" onclick="document.getElementById('id_file_path').click()">
+                <button class="select-files-button" type="button" onclick="document.getElementById('fileInput').click()">
                     Обрати файли
                 </button>
 
@@ -55,93 +52,50 @@
             </div>
             <div class="info-panel-content">
                 <div class="input-field-group">
-                    <label class="input-field-label" for="{{ form.name.id_for_label }}">
+                    <label class="input-field-label" for="drawingName">
                         Назва креслення <span class="required-indicator">*</span>
                     </label>
-                    {{ form.name }}
-                    {% if form.name.errors %}
-                        <div class="form-error">{{ form.name.errors }}</div>
-                    {% endif %}
+                    <input type="text" class="text-field" id="drawingName" name="name" placeholder="Введіть назву креслення" required>
                 </div>
 
                 <div class="input-field-group">
-                    <label class="input-field-label" for="{{ form.description.id_for_label }}">Опис</label>
-                    {{ form.description }}
-                    {% if form.description.errors %}
-                        <div class="form-error">{{ form.description.errors }}</div>
-                    {% endif %}
+                    <label class="input-field-label" for="drawingDescription">Опис</label>
+                    <textarea class="text-field multiline-text-field" id="drawingDescription" name="description" placeholder="Опис (необов'язково)"></textarea>
+                </div>
+
+                <!-- Секція процесів -->
+                <div class="processes-section">
+                    <label class="input-field-label">
+                        Оберіть процеси які мають бути оброблені за вашим кресленням <span class="required-indicator">*</span>
+                    </label>
+                    <div class="processes-grid">
+                        <button type="button" class="process-button active" data-process="rizkа">Різка</button>
+                        <button type="button" class="process-button active" data-process="gibka">Гібка</button>
+                        <button type="button" class="process-button" data-process="frezuvannуa">Фрезування</button>
+                        <button type="button" class="process-button" data-process="shantazhuvannуa">Шантажування</button>
+                        <button type="button" class="process-button" data-process="process5">Процес ...</button>
+                        <button type="button" class="process-button" data-process="vidmivannуa">Відмивання</button>
+                        <button type="button" class="process-button" data-process="pofraska">Пофраска</button>
+                        <button type="button" class="process-button" data-process="process8">Процес ...</button>
+                        <button type="button" class="process-button" data-process="process9">Процес ...</button>
+                        <button type="button" class="process-button" data-process="process10">Процес ...</button>
+                        <button type="button" class="process-button" data-process="process11">Процес ...</button>
+                        <button type="button" class="process-button" data-process="process12">Процес ...</button>
+                        <button type="button" class="process-button" data-process="process13">Процес ...</button>
+                        <button type="button" class="process-button" data-process="process14">Процес ...</button>
+                    </div>
+                    <input type="hidden" id="selectedProcesses" name="processes" value="">
                 </div>
             </div>
         </div>
 
         <!-- Кнопки дій -->
         <div class="action-button-row">
-            <button type="submit" class="primary-action-button">Завантажити</button>
+            <button type="submit" class="primary-action-button" id="submitButton" disabled>Завантажити креслення</button>
         </div>
     </form>
 </div>
 
-<script>
-    const dropZone = document.getElementById('fileDropZone');
-    const fileInput = document.getElementById('id_file_path');
-    const selectedFilesContainer = document.getElementById('selectedFilesContainer');
-
-    const defaultIcon = document.getElementById('defaultFileIcon');
-    const successIcon = document.getElementById('successIcon');
-    const uploadText = document.getElementById('uploadText');
-    const uploadDetailsText = document.getElementById('uploadDetailsText');
-
-    function updateFileList(files) {
-        selectedFilesContainer.innerHTML = '';
-        if (files.length > 0) {
-            // Показываем галочку
-            defaultIcon.style.display = 'none';
-            successIcon.style.display = 'block';
-
-            const file = files[0]; // Берём первый файл
-            uploadText.textContent = file.name;
-            uploadDetailsText.textContent = `${(file.size / 1024 / 1024).toFixed(2)} МБ`;
-
-            const p = document.createElement('p');
-            p.textContent = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
-            selectedFilesContainer.appendChild(p);
-        } else {
-            // Возвращаем дефолт
-            defaultIcon.style.display = 'block';
-            successIcon.style.display = 'none';
-            uploadText.textContent = "Перетягніть файли сюди або клікніть для вибору";
-            uploadDetailsText.textContent = "Підтримуються формати: DWG, PDF, DXF (макс. 10 МБ)";
-        }
-    }
-
-    fileInput.addEventListener('change', () => {
-        updateFileList(fileInput.files);
-    });
-
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        dropZone.addEventListener(eventName, (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-        });
-    });
-
-    ['dragenter', 'dragover'].forEach(eventName => {
-        dropZone.classList.add('drop-zone-hover');
-    });
-
-    ['dragleave', 'drop'].forEach(eventName => {
-        dropZone.classList.remove('drop-zone-hover');
-    });
-
-    dropZone.addEventListener('drop', (e) => {
-        const files = e.dataTransfer.files;
-        const dataTransfer = new DataTransfer();
-        for (const file of files) {
-            dataTransfer.items.add(file);
-        }
-        fileInput.files = dataTransfer.files;
-        updateFileList(fileInput.files);
-    });
-</script>
+<script src="{% static 'core/drawings/script_upload_drawing.js' %}"></script>
 
 {% endblock content %}
