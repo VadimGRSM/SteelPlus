@@ -1,4 +1,5 @@
- /* Скидання стилів тільки для контейнера форми */
+
+   /* Скидання стилів тільки для контейнера форми */
         .drawing-upload-container * {
             margin: 0;
             padding: 0;
@@ -184,6 +185,49 @@
             resize: vertical;
         }
 
+        /* Стилі для процесів */
+        .processes-section {
+            margin-bottom: 20px;
+        }
+
+        .processes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .process-button {
+            padding: 8px 12px;
+            border: 2px solid #ced4da;
+            border-radius: 4px;
+            background: #f8f9fa;
+            color: #6c757d;
+            font-size: 12px;
+            cursor: not-allowed;
+            text-align: center;
+            transition: all 0.2s ease;
+            opacity: 0.6;
+        }
+
+        .process-button.active {
+            background: #fff;
+            color: #495057;
+            border-color: #007bff;
+            cursor: pointer;
+            opacity: 1;
+        }
+
+        .process-button.active:hover {
+            background: #e3f2fd;
+        }
+
+        .process-button.selected {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
         .action-button-row {
             display: flex;
             justify-content: flex-end;
@@ -217,8 +261,14 @@
             transition: background-color 0.15s ease-in-out;
         }
 
-        .primary-action-button:hover {
+        .primary-action-button:hover:not(:disabled) {
             background: #0056b3;
+        }
+
+        .primary-action-button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.6;
         }
 
         .selected-files-display {
@@ -250,6 +300,12 @@
             opacity: 0.8;
         }
 
+        .form-error {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
         @media (max-width: 768px) {
             .drawing-upload-container {
                 margin: 0;
@@ -263,5 +319,10 @@
 
             .action-button-row {
                 flex-direction: column;
+            }
+
+            .processes-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: 8px;
             }
         }

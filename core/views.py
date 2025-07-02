@@ -12,6 +12,8 @@ from .models import Material, Drawing, Order, Detail
 from .forms import DrawingForm
 from .utils import generate_dxf_preview
 
+from django.shortcuts import render
+
 
 def hub(request):
     return render(request, "core/hub.html")
@@ -43,6 +45,10 @@ def order(request):
 @login_required
 def order_pay(request):
     return render(request, 'orders/order_pay.html')
+
+
+def settings_drawing(request):
+    return render(request, 'drawings/settings_drawing.html')
 
 
 @login_required
