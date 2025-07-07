@@ -2,207 +2,310 @@
 {% load static %}
 
 {% block CSS %}
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'core/drawings/style_settings_drawing.css' %}">
 {% endblock CSS %}
 
 {% block title %}
-    Сталь+ Налаштування креслення
+Сталь+ Налаштування креслення
 {% endblock title %}
 
 {% block content %}
-<div class="page-container">
-    <main class="primary-section">
-       <h1 class="page-heading">Налаштування креслення</h1>
-            <p class="page-id">ID: #001</p>
-
+<form method="post">
+{% csrf_token %}
+    {% if form.errors %}
+        <div style="color: red; border: 1px solid red; padding: 10px; margin: 10px;">
+            <h4>Помилки валідації:</h4>
+            {{ form.errors }}
+        </div>
+    {% endif %}
+    <div class="page-container">
+        <main class="primary-section">
+            <h1 class="page-heading">Налаштування креслення</h1>
             <div class="section-header">
                 <div class="section-icon"></div>
-                <h2 class="section-title">Назва креслення</h2>
+                <h2 class="section-title">{{ drawing.name }}</h2>
                 <div class="nav-controls">
-                    <button class="nav-button prev" onclick="previousSlide()"></button>
-                    <button class="nav-button next" onclick="nextSlide()"></button>
-                    <div class="zoom-divider"></div>
-                    <button class="nav-button zoom-out" onclick="zoomOut()" title="Зменшити масштаб"></button>
-                    <div class="zoom-display" id="zoom-display">100%</div>
-                    <button class="nav-button zoom-in" onclick="zoomIn()" title="Збільшити масштаб"></button>
-                    <button class="nav-button zoom-reset" onclick="resetZoom()" title="Скинути масштаб"></button>
+                    <button type="button" class="nav-button prev" onclick="previousSlide()"></button>
+                    <button type="button" class="nav-button next" onclick="nextSlide()"></button>
                 </div>
             </div>
 
             <div class="drawing-area">
-                <div class="layer-label" id="layer-label">Слой 1</div>
-
+                <div class="layer-label" id="layer-label">Шар 1</div>
                 <div class="slider-container">
-                    <div class="slide active-slide">
-                        <div class="drawing-title">Назва креслення - Слайд 1</div>
-                        <div class="step-indicators">
-                            <div class="step-number active">1</div>
-                            <div class="step-number">2</div>
-                        </div>
-                        <div class="step-description">Перегляд слою 1</div>
-                    </div>
-
-                    <div class="slide">
-                        <div class="drawing-title">Назва креслення - Слайд 2</div>
-                        <div class="step-indicators">
-                            <div class="step-number">1</div>
-                            <div class="step-number active">2</div>
-                        </div>
-                        <div class="step-description">Перегляд слою 2</div>
-                    </div>
-
-                    <div class="slide">
-                        <div class="drawing-title">Назва креслення - Слайд 3</div>
-                        <div class="step-indicators">
-                            <div class="step-number active">1</div>
-                            <div class="step-number active">2</div>
-                        </div>
-                        <div class="step-description">Перегляд слою 3</div>
+                    <div class="slider-wrapper">
+                        {% for layer, url in layer_previews %}
+                            <div class="slide">
+                                <img class="target-image" src="{{ url }}" alt="{{ layer }}">
+                                <div class="drawing-title">{{ layer }}</div>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
-
-                <div class="progress-dots">
-                    <div class="progress-dot current" onclick="showSlide(0)"></div>
-                    <div class="progress-dot" onclick="showSlide(1)"></div>
-                    <div class="progress-dot" onclick="showSlide(2)"></div>
-                </div>
-
-                <div class="description-block">
-                    <div class="description-label">Опис</div>
-                    <textarea class="description-textbox" id="description-textbox" placeholder="Введіть загальний опис креслення...">Загальний опис креслення - детальна інформація про всі слої та налаштування</textarea>
-                </div>
             </div>
 
-            <button class="save-button">Зберегти зміни</button>
-
-    </main>
-
-    <aside class="sidebar-panel">
-      <h2 class="info-heading">Загальна інформація</h2>
-
-      <div class="cutting-section">
-        <h3>Налаштування різки</h3>
-        <div class="info-item">
-          <div class="info-label">Оберіть свій слой різки на кресленні <br>Для вибору декількох слоїв затисніть кнопку Ctrl</div>
-          <select class="dropdown-select" id="cutting-layer-select" multiple>
-            <option value="1">Слой 1</option>
-            <option value="2">Слой 2</option>
-            <option value="3">Слой 3</option>
-          </select>
-        </div>
-        <div class="info-item hidden" id="cutting-length-container">
-          <div class="info-label">Довжина різу</div>
-          <input type="text" class="dimension-input" id="cutting-length" placeholder="сама довжина(число)" />
-        </div>
-           <div class="error-message" id="cutting-layer-error">
-                Помилка: Для різки та згинання мають бути вибрані різні слої!
+            <div class="description-block">
+                <div class="description-label">Опис</div>
+                {{ form.description }}
             </div>
-        </div>
 
-      <div class="bending-section">
-        <h3>Налаштування згинання</h3>
-        <div class="info-item">
-          <div class="info-label">Оберіть слой з кутами для згинання на кресленні <br>Для вибору декількох слоїв затисніть кнопку Ctrl</div>
-          <select class="dropdown-select" id="bending-layer-select" multiple>
-            <option value="1">Слой 1</option>
-            <option value="2">Слой 2</option>
-            <option value="3">Слой 3</option>
-          </select>
-        </div>
+            <button type="submit" class="save-button">Зберегти зміни</button>
+        </main>
 
-        <div class="error-message" id="bending-layer-error">
-          Помилка: Для різки та згинання мають бути вибрані різні слої!
-        </div>
+        <aside class="sidebar-panel">
+            <h2 class="info-heading">Загальна інформація</h2>
+            {% for pt in object.processing_types.all %}
+                {% if pt.id == 1 %}
+                    <div class="process-section">
+                        <h3>Налаштування різки</h3>
+                        <div class="info-item">
+                            <div class="info-label">Оберіть шари для різки на кресленні</div>
+                            <select multiple class="dropdown-multiselect" name="cutting" hx-get="{% url 'core:cutting_length' %}?drawing_id={{ drawing.id }}" hx-target="#cutting-length-container" hx-trigger="change">
+                                {% for layer in drawing.layers %}
+                                    <option value="{{ layer }}" {% if layer in saved_cutting_layers %}selected{% endif %}>{{ layer }}</option>
+                                {% endfor %}
+                            </select>
+                            {{ form.length_of_cuts }}
+                        </div>
+                        <div class="info-item" id="cutting-length-container">
+                            <div class="info-label">Довжина різу {{ object.length_of_cuts|default:"..." }} mm</div>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if pt.id == 2 %}
+                    <div class="process-section">
+                        <h3>Налаштування згинання</h3>
+                        <div class="info-item">
+                            <div class="info-label">Оберіть шари з кутами для згинання на кресленні</div>
+                            <select multiple class="dropdown-multiselect" name="bending" hx-get="{% url 'core:bends_setting' %}?drawing_id={{ drawing.id }}" hx-target="#table-bends" hx-trigger="change">
+                                {% for layer in drawing.layers %}
+                                    <option value="{{ layer }}" {% if layer in saved_bending_layers %}selected{% endif %}>{{ layer }}</option>
+                                {% endfor %}
+                            </select>
+                            {{ form.angles }}
+                        </div>
 
-        <div class="hidden" id="corner-config">
-          <h4 style="margin: 20px 0 15px 0; font-size: 14px; font-weight: 500;">Налаштування кутів</h4>
-          <div style="overflow-x: auto;">
-            <table class="corner-table">
-              <thead>
-                <tr>
-                  <th>Кути</th>
-                  <th>Градус кута</th>
-                  <th>Напрямок (Вверх)</th>
-                  <th>
-                    Радіус<br>
-                    <button class="select-all-button" onclick="openRadiusModal(-1)">Обрати для всіх</button>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td><input type="text" class="corner-input" value="90"></td>
-                  <td><input type="checkbox" class="corner-checkbox"></td>
-                  <td><button class="action-button" onclick="openRadiusModal(0)">Обрати</button></td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td><input type="text" class="corner-input" value="90"></td>
-                  <td><input type="checkbox" class="corner-checkbox"></td>
-                  <td><button class="action-button" onclick="openRadiusModal(1)">Обрати</button></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <div class="metadata-section">
-        <h3>Метадані:</h3>
-        <div class="metadata-item">Дата: 2025-06-30</div>
-      </div>
-    </aside>
-  </div>
-
-  <!-- [модальне вікно для вибору градусу] -->
-     <div class="modal-overlay" id="radius-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Оберіть градус заокруглення кута:</h3>
-                <button class="modal-close" onclick="closeRadiusModal()">×</button>
-            </div>
-            <div class="angle-diagram">
-                <svg class="angle-svg" viewBox="0 0 320 320">
-                    <!-- Сітка для кращої візуалізації -->
-                    <defs>
-                        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e0e0e0" stroke-width="0.5"/>
-                        </pattern>
-                    </defs>
-                    <rect width="320" height="320" fill="url(#grid)" opacity="0.3"/>
-
-                    <!-- Основні лінії (продовжені за межі заокруглення) -->
-                    <line id="horizontal-line" x1="50" y1="160" x2="270" y2="160" stroke="#666" stroke-width="2" stroke-dasharray="5,5"/>
-                    <line id="vertical-line" x1="160" y1="50" x2="160" y2="270" stroke="#666" stroke-width="2" stroke-dasharray="5,5"/>
-
-                    <!-- Основні жирні лінії що формують кут -->
-                    <line id="main-horizontal" x1="50" y1="160" x2="160" y2="160" stroke="#333" stroke-width="4"/>
-                    <line id="main-vertical" x1="160" y1="160" x2="160" y2="50" stroke="#333" stroke-width="4"/>
-
-                    <!-- Заокруглений кут -->
-                    <path id="rounded-corner" d="" fill="none" stroke="#ff3b30" stroke-width="4" stroke-linecap="round"/>
-
-                    <!-- Підпис радіуса -->
-                    <text id="radius-text" x="130" y="130" font-family="Arial" font-size="12" fill="#ff3b30" font-weight="bold"></text>
-
-                    <!-- Лінія радіуса (допоміжна) -->
-                    <line id="radius-line" x1="160" y1="160" x2="160" y2="160" stroke="#ff3b30" stroke-width="1" stroke-dasharray="2,2" opacity="0.7"/>
-
-                    <!-- Центральна точка -->
-                    <circle cx="160" cy="160" r="2" fill="#333"/>
-                </svg>
-            </div>
-            <div class="radius-info" id="radius-info">Радіус заокруглення: 1px</div>
-            <div class="angle-value" id="angle-value">1px</div>
-            <input type="range" class="angle-slider" id="angle-slider" min="0" max="3" step="1" value="0">
-            <div class="modal-buttons">
-                <button class="modal-button" onclick="closeRadiusModal()">Відмінити</button>
-                <button class="modal-button primary" onclick="confirmRadius()">Підтвердити</button>
-            </div>
-        </div>
+                        <div id="corner-config">
+                            <h4 style="margin: 20px 0 15px 0; font-size: 14px; font-weight: 500;">Налаштування кутів</h4>
+                            <div style="overflow-x: auto;">
+                                <table class="corner-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Кути (Оберіть на зображені)</th>
+                                            <th>Градус кута</th>
+                                            <th>Напрямок (Вверх)</th>
+                                            <th>
+                                                Радіус<br>
+                                                <button <button type='button' class="select-all-button" onclick="openRadiusModal(-1)">Обрати для всіх</button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table-bends">
+                                    {% if saved_angles %}
+                                    {% for bend in saved_angles %}
+                                        <tr>
+                                            <td>
+                                                <button type='button' class='pick-point-btn picked'>{{ bend.point }}</button>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="corner-input" value="{{ bend.degree }}">
+                                            </td>
+                                            <td>
+                                                <input type="checkbox" class="corner-checkbox" {% if bend.orientation == "Вверх" %}checked{% endif %}>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="action-button" onclick="openRadiusModal({{ forloop.counter0 }})">{{ bend.radius|default:"Обрати" }}</button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="4" style="text-align: center;">Оберіть шари для подальшого налаштування!</td>
+                                        </tr>
+                                    {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </aside>
     </div>
+</form>
 
-  <script src="{% static 'core/drawings/script_settings_drawing.js' %}"></script>
 
+<div class="modal-overlay" id="radius-modal">
+<div class="modal-content">
+<div class="modal-header">
+<h3 class="modal-title">Оберіть градус заокруглення кута:</h3>
+<button class="modal-close" onclick="closeRadiusModal()">×</button>
+</div>
+<div class="angle-diagram">
+<svg class="angle-svg" viewBox="0 0 320 320">
+<defs>
+<pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+<path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e0e0e0" stroke-width="0.5"/>
+</pattern>
+</defs>
+<rect width="320" height="320" fill="url(#grid)" opacity="0.3"/>
+
+<line id="horizontal-line" x1="50" y1="160" x2="270" y2="160" stroke="#666" stroke-width="2" stroke-dasharray="5,5"/>
+<line id="vertical-line" x1="160" y1="50" x2="160" y2="270" stroke="#666" stroke-width="2" stroke-dasharray="5,5"/>
+
+<line id="main-horizontal" x1="50" y1="160" x2="160" y2="160" stroke="#333" stroke-width="4"/>
+<line id="main-vertical" x1="160" y1="160" x2="160" y2="50" stroke="#333" stroke-width="4"/>
+
+<path id="rounded-corner" d="" fill="none" stroke="#ff3b30" stroke-width="4" stroke-linecap="round"/>
+
+<text id="radius-text" x="130" y="130" font-family="Arial" font-size="12" fill="#ff3b30" font-weight="bold"></text>
+
+<line id="radius-line" x1="160" y1="160" x2="160" y2="160" stroke="#ff3b30" stroke-width="1" stroke-dasharray="2,2" opacity="0.7"/>
+
+<circle cx="160" cy="160" r="2" fill="#333"/>
+</svg>
+</div>
+<div class="radius-info" id="radius-info">Радіус заокруглення: 1px</div>
+<div class="angle-value" id="angle-value">1px</div>
+<input type="range" class="angle-slider" id="angle-slider" min="0" max="3" step="1" value="0">
+<div class="modal-buttons">
+<button class="modal-button" onclick="closeRadiusModal()">Відмінити</button>
+<button class="modal-button primary" onclick="confirmRadius()">Підтвердити</button>
+</div>
+</div>
+</div>
+
+<script src="{% static 'core/drawings/script_settings_drawing.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.dropdown-multiselect').select2({
+        placeholder: "Оберіть шари",
+        minimumResultsForSearch: Infinity,
+        width: '100%'
+    });
+});
+
+$('.dropdown-multiselect').on('select2:open', function () {
+    setTimeout(function () {
+        $('.select2-search__field').prop('readonly', true);
+    }, 0);
+});
+let isChangeEventRunning = false;
+
+$('.dropdown-multiselect').on('change', function () {
+    if (isChangeEventRunning) {
+        return;
+    }
+    isChangeEventRunning = true;
+    this.dispatchEvent(new Event('change', { bubbles: true }));
+    isChangeEventRunning = false;
+});
+
+let activeButton = null;
+
+document.addEventListener("click", function (e) {
+    if (e.target && e.target.classList.contains("pick-point-btn")) {
+        if (activeButton) {
+            activeButton.classList.remove("picked");
+        }
+        activeButton = e.target;
+        activeButton.textContent = "Клікніть на зображення...";
+    }
+});
+
+const targetImages = document.querySelectorAll(".target-image");
+
+targetImages.forEach(image => {
+    image.addEventListener("click", function (event) {
+        if (!activeButton) return;
+
+        const rect = this.getBoundingClientRect();
+        const naturalWidth = this.naturalWidth;
+        const naturalHeight = this.naturalHeight;
+        const displayedWidth = rect.width;
+        const displayedHeight = rect.height;
+
+        const scale = Math.min(
+            displayedWidth / naturalWidth,
+            displayedHeight / naturalHeight
+        );
+
+        const fittedWidth = naturalWidth * scale;
+        const fittedHeight = naturalHeight * scale;
+
+        const offsetX = (displayedWidth - fittedWidth) / 2;
+        const offsetY = (displayedHeight - fittedHeight) / 2;
+
+        const clickX = event.clientX - rect.left - offsetX;
+        const clickY = event.clientY - rect.top - offsetY;
+
+        if (clickX < 0 || clickY < 0 || clickX > fittedWidth || clickY > fittedHeight) {
+            console.log("Клік поза зображенням");
+            return;
+        }
+
+        const scaledX = Math.round(clickX / scale);
+        const scaledY = Math.round(clickY / scale);
+
+        activeButton.textContent = `${this.alt} [${scaledX}; ${scaledY}]`;
+        activeButton.classList.add("picked");
+        activeButton = null;
+    });
+});
+
+document.querySelector("form").addEventListener("submit", function (e) {
+    const cuttingLengthLabel = document.querySelector("#cutting-length-container .info-label");
+    const cuttingLengthText = cuttingLengthLabel ? cuttingLengthLabel.textContent.trim() : "0";
+    const lengthValue = cuttingLengthText.match(/[\d\.]+/);
+    document.getElementById("id_length_of_cuts").value = lengthValue ? lengthValue[0] : "0";
+
+    const rows = document.querySelectorAll(".corner-table tbody tr");
+    const bendsData = [];
+
+    rows.forEach(row => {
+        const cells = row.querySelectorAll("td");
+        if (cells.length === 4) {
+            const pointButton = cells[0].querySelector("button");
+            const degreeInput = cells[1].querySelector("input");
+            const orientationCheckbox = cells[2].querySelector("input");
+            const radiusButton = cells[3].querySelector("button");
+
+            if (pointButton && degreeInput && orientationCheckbox && radiusButton) {
+                 bendsData.push({
+                    point: pointButton.textContent.trim(),
+                    degree: degreeInput.value,
+                    orientation: orientationCheckbox.checked ? "Вверх" : "Вниз", // Сохраняем состояние чекбокса
+                    radius: radiusButton.textContent.trim() === "Обрати" ? "" : radiusButton.textContent.trim()
+                });
+            }
+        }
+    });
+
+    document.getElementById("id_angles").value = JSON.stringify(bendsData);
+});
+
+$(document).ready(function() {
+    $('.dropdown-multiselect').select2({
+        placeholder: "Оберіть шари",
+        minimumResultsForSearch: Infinity,
+        width: '100%'
+    });
+
+    const cuttingSelect = $('select[name="cutting"]');
+    if (cuttingSelect.val().length > 0) {
+        htmx.trigger(cuttingSelect[0], 'change');
+    }
+
+    const bendingSelect = $('select[name="bending"]');
+    if (bendingSelect.val().length > 0) {
+        // htmx.trigger(bendingSelect[0], 'change');
+    }
+});
+
+
+</script>
 {% endblock content %}
