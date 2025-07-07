@@ -32,13 +32,21 @@
         <div class="drawings-container">
 
             <div class="drawing-card">
-            <div class="security-warning highlight-warning">
-                        <span class="security-text">Для зазбезпечення необхідно завершити налаштування кресленя</span>
-                        <svg class="shield-icon" fill="currentColor" viewBox="0 0 32 32">
-                            <path d="M16 4.5 C16.8 3.5 17.2 3.5 18 4.5 L28.5 24.5 C29.3 25.5 28.8 26.5 27.5 26.5 L4.5 26.5 C3.2 26.5 2.7 25.5 3.5 24.5 L14 4.5 C14.8 3.5 15.2 3.5 16 4.5 Z" fill="rgba(66, 133, 244, 0.3)" stroke="currentColor" stroke-width="1.5"/>
-                            <path d="M16 11v8M16 21v1.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                {% if not drawing.configured %}
+                    <div class="security-warning highlight-warning">
+                        <span class="security-text">Для замовлення необхідно завершити налаштування креслення</span>
+                        <svg class="shield-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:50px; height:50px;">
+                          <polygon
+                            points="16,10 22,22 10,22"
+                            fill="currentColor"
+                            stroke="currentColor"
+                            stroke-width="1"
+                            stroke-linejoin="round"/>
+                          <rect x="15" y="13" width="2" height="6" fill="white"/>
+                          <circle cx="16" cy="21" r="1" fill="white"/>
                         </svg>
                     </div>
+                {% endif %}
                 <div class="card-header">
                     <div class="card-title">
                         <svg class="file-icon" fill="currentColor" viewBox="0 0 24 24">
@@ -51,8 +59,7 @@
                 </div>
 
                 {% if drawing.description %}
-                    <div class="description">{{ drawing.description }}
-                    </div>
+                    <div class="description">{{ drawing.description }}</div>
                 {% endif %}
 
                 <div class="card-details">
@@ -72,11 +79,8 @@
 
                 </div>
 
-
-
-
                 <div class="card-actions">
-                    <a href="{% url 'core:settings_drawing' %}" style="text-decoration: none;">
+                    <a href="{% url 'core:settings_drawing' drawing.pk %}" style="text-decoration: none;">
                     <button class="action-btn">
                         <svg class="action-icon" fill="currentColor" viewBox="0 0 20 20">
                          <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
@@ -109,7 +113,7 @@
 </div>
 
     <!-- Модальне вікно -->
-<div id="deleteModal" class="modal-overlay" style="display: none;">
+<div id="deleteModal" class="modal-overlay">
     <div class="modal-window">
         <p>Ви впевнені, що хочете видалити креслення?</p>
         <div class="modal-actions">

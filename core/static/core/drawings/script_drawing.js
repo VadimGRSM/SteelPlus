@@ -13,14 +13,18 @@ let deleteUrl = "";
 
 function openModal(url) {
     deleteUrl = url;
-    document.getElementById("deleteModal").style.display = "flex";
+    const modal = document.getElementById("deleteModal");
+    modal.classList.add("show");
 }
 
 function closeModal() {
     deleteUrl = "";
-    document.getElementById("deleteModal").style.display = "none";
+    const modal = document.getElementById("deleteModal");
+    modal.classList.remove("show");
 }
 
-document.getElementById("confirmDelete").addEventListener("click", function () {
-    window.location.href = deleteUrl;
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("confirmDelete").addEventListener("click", function () {
+        window.location.href = deleteUrl;
+    });
 });

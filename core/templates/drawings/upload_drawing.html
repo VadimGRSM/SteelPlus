@@ -16,7 +16,13 @@
         <p class="description-text">Завантажте ваші технічні креслення та додайте необхідну інформацію</p>
     </div>
 
-    <form method="post" enctype="multipart/form-data" id="drawingForm">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            <div class="form-errors">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
         <!-- Панель завантаження файлів -->
         <div class="file-upload-panel">
             <div class="panel-header">
@@ -35,9 +41,10 @@
                 <div class="primary-upload-text" id="uploadText">Перетягніть файли сюди або клікніть для вибору</div>
                 <div class="secondary-upload-text" id="uploadDetailsText">Підтримуються формати: DWG, PDF, DXF (макс. 10 МБ)</div>
 
-                <input type="file" class="hidden-file-input" id="fileInput" name="file_path" accept=".dwg,.pdf,.dxf">
+                <!-- Django поле file_path -->
+                {{ form.file_path }}
 
-                <button class="select-files-button" type="button" onclick="document.getElementById('fileInput').click()">
+                <button class="select-files-button" type="button" onclick="document.getElementById('id_file_path').click()">
                     Обрати файли
                 </button>
 
@@ -52,39 +59,33 @@
             </div>
             <div class="info-panel-content">
                 <div class="input-field-group">
-                    <label class="input-field-label" for="drawingName">
+                    <label class="input-field-label" for="{{ form.name.id_for_label }}">
                         Назва креслення <span class="required-indicator">*</span>
                     </label>
-                    <input type="text" class="text-field" id="drawingName" name="name" placeholder="Введіть назву креслення" required>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        <div class="form-error">{{ form.name.errors }}</div>
+                    {% endif %}
                 </div>
 
-                <div class="input-field-group">
-                    <label class="input-field-label" for="drawingDescription">Опис</label>
-                    <textarea class="text-field multiline-text-field" id="drawingDescription" name="description" placeholder="Опис (необов'язково)"></textarea>
-                </div>
-
-                <!-- Секція процесів -->
                 <div class="processes-section">
                     <label class="input-field-label">
                         Оберіть процеси які мають бути оброблені за вашим кресленням <span class="required-indicator">*</span>
                     </label>
                     <div class="processes-grid">
-                        <button type="button" class="process-button active" data-process="rizkа">Різка</button>
-                        <button type="button" class="process-button active" data-process="gibka">Гібка</button>
-                        <button type="button" class="process-button" data-process="frezuvannуa">Фрезування</button>
-                        <button type="button" class="process-button" data-process="shantazhuvannуa">Шантажування</button>
-                        <button type="button" class="process-button" data-process="process5">Процес ...</button>
-                        <button type="button" class="process-button" data-process="vidmivannуa">Відмивання</button>
-                        <button type="button" class="process-button" data-process="pofraska">Пофраска</button>
-                        <button type="button" class="process-button" data-process="process8">Процес ...</button>
-                        <button type="button" class="process-button" data-process="process9">Процес ...</button>
-                        <button type="button" class="process-button" data-process="process10">Процес ...</button>
-                        <button type="button" class="process-button" data-process="process11">Процес ...</button>
-                        <button type="button" class="process-button" data-process="process12">Процес ...</button>
-                        <button type="button" class="process-button" data-process="process13">Процес ...</button>
-                        <button type="button" class="process-button" data-process="process14">Процес ...</button>
+                        {% for process in process_types %}
+                            <button type="button" data-id="{{ process.id }}" class="process-button {% if process.is_active %}active{% endif %}">{{ process.name }}</button>
+                        {% endfor %}
                     </div>
                     <input type="hidden" id="selectedProcesses" name="processes" value="">
+                </div>
+
+                <div class="input-field-group">
+                    <label class="input-field-label" for="{{ form.description.id_for_label }}">Опис</label>
+                    {{ form.description }}
+                     {% if form.description.errors %}
+                        <div class="form-error">{{ form.description.errors }}</div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -97,5 +98,38 @@
 </div>
 
 <script src="{% static 'core/drawings/script_upload_drawing.js' %}"></script>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    const submitButton = document.getElementById('submitButton');
+    const nameInput = document.getElementById('id_name');
+    const fileInput = document.getElementById('id_file_path');
+    const processButtons = document.querySelectorAll('.process-button');
+
+    function checkFormState() {
+        const isFileSelected = fileInput.files.length > 0;
+        const isNameEntered = nameInput.value.trim() !== '';
+        const isProcessSelected = document.querySelectorAll('.process-button.selected').length > 0;
+
+        if (isFileSelected && isNameEntered && isProcessSelected) {
+            submitButton.disabled = false;
+        } else {
+            submitButton.disabled = true;
+        }
+    }
+
+    fileInput.addEventListener('change', checkFormState);
+    nameInput.addEventListener('input', checkFormState);
+
+    processButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            setTimeout(checkFormState, 0);
+        });
+    });
+
+    checkFormState();
+});
+</script>
 
 {% endblock content %}

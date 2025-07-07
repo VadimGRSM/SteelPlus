@@ -1,19 +1,24 @@
 from django.contrib import admin
-from .models import Drawing, Order, Material, Detail
+from .models import Drawing, Order, Material, Detail, ProcessingType
 
 
 @admin.register(Drawing)
 class DrawingAdmin(admin.ModelAdmin):
     list_display = [
         "user",
+        "get_processing_types",
         "name",
         "file_path",
         "original_filename",
         "file_size",
-        "uploaded_at",
         "description",
     ]
     exclude = ("original_filename", "file_size")
+
+    def get_processing_types(self, obj):
+        return ", ".join([pt.name for pt in obj.processing_types.all()])
+
+    get_processing_types.short_description = "Типи обробки"
 
 
 @admin.register(Order)
@@ -50,12 +55,20 @@ class DetailAdmin(admin.ModelAdmin):
         "drawing",
         "order",
         "material",
-        "length",
-        "width",
         "thickness",
         "quantity",
         "calculated_cost",
-        "created_at",
-        "updated_at",
     ]
     list_filter = ["material"]
+
+
+@admin.register(ProcessingType)
+class ProcessingTypeAdmin(admin.ModelAdmin):
+    list_display = [
+        "name",
+        "base_cost_per_unit",
+        "cost_unit",
+        "unit_name",
+        "description",
+        "is_active",
+    ]
