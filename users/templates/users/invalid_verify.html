@@ -1,0 +1,17 @@
+{% extends "core/base.html" %}
+
+{% block title %}
+    Сталь+ Помилка верифікації
+{% endblock title %}
+
+{% block content %}
+
+<h2 class="form-title">Помилка підтвердження пошти</h2>
+<p>{{ reason }}</p>
+{% if reason_code == "expired" or reason_code == "not_found" %}
+    <a href="{% url 'users:confirm_email' %}" class="btn btn-primary">
+        Надіслати лист повторно
+    </a>
+{% endif %}
+
+{% endblock content %}

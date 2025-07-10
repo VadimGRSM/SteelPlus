@@ -45,18 +45,17 @@
 
 <script>
 function togglePassword() {
-    // Знаходимо поле пароля за його атрибутом name або типом
     const passwordInput = document.querySelector('input[name="password"]');
     const toggleButton = document.querySelector('.password-toggle');
 
     if (passwordInput && toggleButton) {
         if (passwordInput.type === "password") {
             passwordInput.type = "text";
-            toggleButton.textContent = "🔵"; // Синій кружок коли пароль видимий
+            toggleButton.textContent = "🔵";
             toggleButton.style.color = "#4444ff";
         } else {
             passwordInput.type = "password";
-            toggleButton.textContent = "⚪"; // Білий кружок коли пароль прихований
+            toggleButton.textContent = "⚪";
             toggleButton.style.color = "#cccccc";
         }
     }

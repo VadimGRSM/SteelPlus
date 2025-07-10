@@ -1,0 +1,7 @@
+{% autoescape off %}
+
+Добрий день {{ user.get_username }},
+Перейдіть за посиланням, щоб завершити реєстрацію
+http://{{ domain }}{% url 'users:confirm_email_complete' uidb64=uid token=token %}
+
+{% endautoescape %}
