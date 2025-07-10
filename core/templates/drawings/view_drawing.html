@@ -73,10 +73,12 @@
             </div>
 
             <div class="info-block">
-                <div class="description-section">
-                    <div class="description-label">Опис</div>
-                    <div class="description-content">{{ drawing.description }}</div>
-                </div>
+                {% if drawing.description %}
+                    <div class="description-section">
+                        <div class="description-label">Опис</div>
+                        <div class="description-content">{{ drawing.description }}</div>
+                    </div>
+                {% endif %}
 
                 <h3 style="margin-top: 32px;">Метадані</h3>
 

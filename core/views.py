@@ -1,6 +1,6 @@
 import os
 import json
-
+from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -139,22 +139,86 @@ class SettingsDrawing(LoginRequiredMixin, UpdateView):
         context["saved_angles"] = self.object.angles or []
         return context
 
-    def form_valid(self, form):
-        self.object.cutting_layers = self.request.POST.getlist("cutting")
-        self.object.bending_layers = self.request.POST.getlist("bending")
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        if self.request.method == "POST":
+            kwargs["data"] = self.request.POST
+        return kwargs
 
+    def form_valid(self, form):
+        cutting_layers = self.request.POST.getlist("cutting")
+        bending_layers = self.request.POST.getlist("bending")
+
+        validation_errors = []
+
+        overlapping_layers = set(cutting_layers) & set(bending_layers)
+        if overlapping_layers:
+            validation_errors.append(
+                f"Шари не можуть використовуватися одночасно для різання та згинання: {', '.join(overlapping_layers)}"
+            )
+
+        if bending_layers:
+            angles_data = form.cleaned_data.get("angles", [])
+            if not angles_data:
+                validation_errors.append("Для шарів згинання необхідно налаштувати кути.")
+            else:
+                for i, angle in enumerate(angles_data):
+                    point = angle.get("point", "").strip()
+                    if (
+                        not point
+                        or point == "Обрати"
+                        or "Клікніть на зображення" in point
+                    ):
+                        validation_errors.append(
+                            f"Кут {i+1}: не вибрано крапку на зображенні."
+                        )
+
+                    try:
+                        degree = float(angle.get("degree", 0))
+                        if degree < 0 or degree > 360:
+                            validation_errors.append(
+                                f"Кут {i+1}: градус має бути від 0 до 360."
+                            )
+                    except (ValueError, TypeError):
+                        validation_errors.append(
+                            f"Кут {i+1}: некоректне значення градуса."
+                        )
+
+                    radius = angle.get("radius", "").strip()
+                    if not radius or radius == "Обрати":
+                        validation_errors.append(f"Кут {i+1}: не заданий радіус згинання.")
+
+        if validation_errors:
+            for error in validation_errors:
+                messages.error(self.request, error)
+            return self.form_invalid(form)
+
+        self.object.cutting_layers = cutting_layers
+        self.object.bending_layers = bending_layers
         self.object.description = form.cleaned_data["description"]
         self.object.length_of_cuts = form.cleaned_data["length_of_cuts"]
 
         angles_str = form.cleaned_data["angles"]
         if angles_str:
-            self.object.angles = json.loads(angles_str)
+            if isinstance(angles_str, str):
+                self.object.angles = json.loads(angles_str)
+            else:
+                self.object.angles = angles_str
         else:
             self.object.angles = []
 
         self.object.configured = True
         self.object.save()
+
+        messages.success(self.request, "Налаштування креслення успішно збережено!")
         return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{field}: {error}")
+
+        return super().form_invalid(form)
 
 
 def cutting_length(request):
@@ -190,7 +254,7 @@ def bends_setting(request):
             f"<tr><td><button type='button' class='pick-point-btn'>Обрати</button></td>"
             f'<td><input type="text" class="corner-input" value="90"></td>'
             f'<td><input type="checkbox" checked class="corner-checkbox"></td>'
-            f'<td><button <button type="button" class="action-button" onclick="openRadiusModal({i-1})">Обрати</button></td></tr>'
+            f'<td><button type="button" class="action-button" onclick="openRadiusModal({i-1})">Обрати</button></td></tr>'
         )
     bends_html = "".join(rows)
     return HttpResponse(bends_html)

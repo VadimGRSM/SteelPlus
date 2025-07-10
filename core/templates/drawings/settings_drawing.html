@@ -14,10 +14,26 @@
 {% block content %}
 <form method="post">
 {% csrf_token %}
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     {% if form.errors %}
-        <div style="color: red; border: 1px solid red; padding: 10px; margin: 10px;">
-            <h4>Помилки валідації:</h4>
-            {{ form.errors }}
+        <div class="validation-error">
+            <h4>Ошибки валидации:</h4>
+            <ul>
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ field }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
         </div>
     {% endif %}
     <div class="page-container">
@@ -51,7 +67,7 @@
                 {{ form.description }}
             </div>
 
-            <button type="submit" class="save-button">Зберегти зміни</button>
+            <button type="submit" class="save-button" title="">Зберегти зміни</button>
         </main>
 
         <aside class="sidebar-panel">

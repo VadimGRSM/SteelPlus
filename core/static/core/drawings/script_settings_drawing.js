@@ -160,4 +160,228 @@ document.addEventListener('DOMContentLoaded', function () {
     showSlide(0);
 });
 
+// =================== Валідація ===================
 
+function validateLayerSelection() {
+    const cuttingLayers = Array.from(document.querySelectorAll('select[name="cutting"] option:checked')).map(option => option.value);
+    const bendingLayers = Array.from(document.querySelectorAll('select[name="bending"] option:checked')).map(option => option.value);
+
+    const overlapping = cuttingLayers.filter(layer => bendingLayers.includes(layer));
+    if (overlapping.length > 0) {
+        return false;
+    }
+
+    return true;
+}
+
+function validateBendingConfiguration() {
+    const bendingLayers = Array.from(document.querySelectorAll('select[name="bending"] option:checked')).map(option => option.value);
+
+    if (bendingLayers.length === 0) {
+        return { valid: true, errors: [] };
+    }
+
+    const errors = [];
+    const rows = document.querySelectorAll('.corner-table tbody tr');
+
+    if (rows.length === 0 || (rows.length === 1 && rows[0].cells.length === 1)) {
+        errors.push('Немає налаштованих кутів для вибраних шарів згинання.');
+        return { valid: false, errors };
+    }
+
+    rows.forEach((row, index) => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length === 4) {
+            const pointButton = cells[0].querySelector('button');
+            const degreeInput = cells[1].querySelector('input');
+            const radiusButton = cells[3].querySelector('button');
+
+            if (pointButton && degreeInput && radiusButton) {
+                const pointText = pointButton.textContent.trim();
+                const degreeValue = degreeInput.value.trim();
+                const radiusText = radiusButton.textContent.trim();
+
+                if (!pointText || pointText === 'Обрати' || pointText.includes('Клікніть на зображення')) {
+                    errors.push(`Угол ${index + 1}: не выбрана точка на изображении.`);
+                }
+
+                if (!degreeValue) {
+                    errors.push(`Угол ${index + 1}: не задан градус изгиба.`);
+                } else {
+                    const degree = parseFloat(degreeValue);
+                    if (isNaN(degree) || degree < 0 || degree > 360) {
+                        errors.push(`Угол ${index + 1}: градус должен быть от 0 до 360.`);
+                    }
+                }
+
+                if (!radiusText || radiusText === 'Обрати') {
+                    errors.push(`Угол ${index + 1}: не задан радиус изгиба.`);
+                }
+            }
+        }
+    });
+
+    return { valid: errors.length === 0, errors };
+}
+
+function updateSaveButtonState() {
+    const saveButton = document.querySelector('.save-button');
+    if (!saveButton) return;
+
+    const isLayerSelectionValid = validateLayerSelection();
+    const bendingValidation = validateBendingConfiguration();
+
+    const cuttingLayers = Array.from(document.querySelectorAll('select[name="cutting"] option:checked')).map(option => option.value);
+    const bendingLayers = Array.from(document.querySelectorAll('select[name="bending"] option:checked')).map(option => option.value);
+
+    const cuttingSelectExists = document.querySelector('select[name="cutting"]') !== null;
+    const bendingSelectExists = document.querySelector('select[name="bending"]') !== null;
+
+    const allSelectsValid = (!cuttingSelectExists || cuttingLayers.length > 0) &&
+                           (!bendingSelectExists || bendingLayers.length > 0);
+
+    const isValid = isLayerSelectionValid && bendingValidation.valid && allSelectsValid;
+
+    saveButton.disabled = !isValid;
+    saveButton.style.opacity = isValid ? '1' : '0.5';
+    saveButton.style.cursor = isValid ? 'pointer' : 'not-allowed';
+
+    if (!isValid) {
+        let errorMessage = '';
+        if (!isLayerSelectionValid) {
+            errorMessage += 'Шари для різання та згинання не повинні перетинатися.\n';
+        }
+        if (!bendingValidation.valid) {
+            errorMessage += bendingValidation.errors.join('\n');
+        }
+        saveButton.title = errorMessage;
+    } else {
+        saveButton.title = '';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    updateSaveButtonState();
+
+    const selects = document.querySelectorAll('.dropdown-multiselect');
+    selects.forEach(select => {
+        select.addEventListener('change', updateSaveButtonState);
+    });
+
+    document.addEventListener('input', function(e) {
+        if (e.target.classList.contains('corner-input')) {
+            updateSaveButtonState();
+        }
+    });
+
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('pick-point-btn') || e.target.classList.contains('action-button')) {
+            setTimeout(updateSaveButtonState, 100);
+        }
+    });
+
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'childList') {
+                updateSaveButtonState();
+            }
+        });
+    });
+
+    const tableBends = document.getElementById('table-bends');
+    if (tableBends) {
+        observer.observe(tableBends, { childList: true, subtree: true });
+    }
+});
+
+document.querySelector("form").addEventListener("submit", function (e) {
+    const isLayerSelectionValid = validateLayerSelection();
+    const bendingValidation = validateBendingConfiguration();
+
+    if (!isLayerSelectionValid) {
+        e.preventDefault();
+        alert('Помилка: Шари для різання та згинання не повинні перетинатися.');
+        return;
+    }
+
+    if (!bendingValidation.valid) {
+        e.preventDefault();
+        alert('Помилки у налаштуванні кутів:\n' + bendingValidation.errors.join('\n'));
+        return;
+    }
+
+    const cuttingLengthLabel = document.querySelector("#cutting-length-container .info-label");
+    const cuttingLengthText = cuttingLengthLabel ? cuttingLengthLabel.textContent.trim() : "0";
+    const lengthValue = cuttingLengthText.match(/[\d\.]+/);
+    document.getElementById("id_length_of_cuts").value = lengthValue ? lengthValue[0] : "0";
+
+    const rows = document.querySelectorAll(".corner-table tbody tr");
+    const bendsData = [];
+
+    rows.forEach(row => {
+        const cells = row.querySelectorAll("td");
+        if (cells.length === 4) {
+            const pointButton = cells[0].querySelector("button");
+            const degreeInput = cells[1].querySelector("input");
+            const orientationCheckbox = cells[2].querySelector("input");
+            const radiusButton = cells[3].querySelector("button");
+
+            if (pointButton && degreeInput && orientationCheckbox && radiusButton) {
+                 bendsData.push({
+                    point: pointButton.textContent.trim(),
+                    degree: degreeInput.value,
+                    orientation: orientationCheckbox.checked ? "Вверх" : "Вниз",
+                    radius: radiusButton.textContent.trim() === "Обрати" ? "" : radiusButton.textContent.trim()
+                });
+            }
+        }
+    });
+
+    document.getElementById("id_angles").value = JSON.stringify(bendsData);
+});
+
+const originalConfirmRadius = confirmRadius;
+confirmRadius = function() {
+    originalConfirmRadius();
+    updateSaveButtonState();
+};
+
+targetImages.forEach(image => {
+    image.addEventListener("click", function (event) {
+        if (!activeButton) return;
+
+        const rect = this.getBoundingClientRect();
+        const naturalWidth = this.naturalWidth;
+        const naturalHeight = this.naturalHeight;
+        const displayedWidth = rect.width;
+        const displayedHeight = rect.height;
+
+        const scale = Math.min(
+            displayedWidth / naturalWidth,
+            displayedHeight / naturalHeight
+        );
+
+        const fittedWidth = naturalWidth * scale;
+        const fittedHeight = naturalHeight * scale;
+
+        const offsetX = (displayedWidth - fittedWidth) / 2;
+        const offsetY = (displayedHeight - fittedHeight) / 2;
+
+        const clickX = event.clientX - rect.left - offsetX;
+        const clickY = event.clientY - rect.top - offsetY;
+
+        if (clickX < 0 || clickY < 0 || clickX > fittedWidth || clickY > fittedHeight) {
+            console.log("Клік поза зображенням");
+            return;
+        }
+
+        const scaledX = Math.round(clickX / scale);
+        const scaledY = Math.round(clickY / scale);
+
+        activeButton.textContent = `${this.alt} [${scaledX}; ${scaledY}]`;
+        activeButton.classList.add("picked");
+        activeButton = null;
+
+        updateSaveButtonState();
+    });
+});
