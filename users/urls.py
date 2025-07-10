@@ -38,7 +38,7 @@ urlpatterns = [
         name="password_reset",
     ),
     path(
-        "password-reset/done",
+        "password-reset/done/",
         PasswordResetDoneView.as_view(template_name="users/password_reset_done.html"),
         name="password_reset_done",
     ),
@@ -51,10 +51,13 @@ urlpatterns = [
         name="password_reset_confirm",
     ),
     path(
-        "password-reset/complete",
+        "password-reset/complete/",
         PasswordResetCompleteView.as_view(
             template_name="users/password_reset_complete.html"
         ),
         name="password_reset_complete",
     ),
+    path("confirm-email/", views.confirm_email, name="confirm_email"),
+    path("confirm-email-complete/<uidb64>/<token>/", views.ConfirmEmailComplete.as_view(), name="confirm_email_complete"),
+    path("confirm-email/invalid-verify/", views.invalid_verify, name="invalid_verify")
 ]
