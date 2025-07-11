@@ -41,7 +41,8 @@ class MaterialAdmin(admin.ModelAdmin):
     list_display = [
         "material_name",
         "material_type",
-        "price_unit_area",
+        "density",
+        "price_per_kg",
         "properties",
         "available",
     ]
@@ -57,7 +58,9 @@ class DetailAdmin(admin.ModelAdmin):
         "material",
         "thickness",
         "quantity",
-        "calculated_cost",
+        "material_cost",
+        "cutting_cost",
+        "bending_cost",
     ]
     list_filter = ["material"]
 

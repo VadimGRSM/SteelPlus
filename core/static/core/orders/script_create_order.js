@@ -1,123 +1,133 @@
- document.addEventListener('DOMContentLoaded', function() {
-            const container = document.getElementById('drawings-container');
-            const addBtn = document.querySelector('.order-add-drawing-btn');
-            const createBtn = document.querySelector('.order-create-btn');
-            const followBtn = document.querySelector('.order-follow-btn');
+document.addEventListener('DOMContentLoaded', function () {
+    const container = document.getElementById('drawings-container');
+    const addBtn = document.querySelector('.order-add-drawing-btn');
+    const totalFormsInput = document.getElementById('id_form-TOTAL_FORMS');
 
-            // Делегування подій
-            container.addEventListener('click', function(e) {
-                if (e.target.classList.contains('order-collapse-btn')) {
-                    toggleCollapse(e.target);
-                } else if (e.target.classList.contains('order-delete-btn')) {
-                    deleteDrawing(e.target);
-                } else if (e.target.classList.contains('order-processing-option')) {
-                    const checkbox = e.target.querySelector('.order-processing-checkbox');
-                    checkbox.checked = !checkbox.checked;
-                    updateProcessingState(e.target, checkbox.checked);
-                }
-            });
+    container.addEventListener('click', function (e) {
+        if (e.target.classList.contains('order-collapse-btn')) {
+            toggleCollapse(e.target);
+        } else if (e.target.classList.contains('order-delete-btn')) {
+            deleteDrawing(e.target);
+        }
+    });
 
-            // Подія для чекбоксів
-            container.addEventListener('change', function(e) {
-                if (e.target.classList.contains('order-processing-checkbox')) {
-                    const option = e.target.closest('.order-processing-option');
-                    updateProcessingState(option, e.target.checked);
-                } else if (e.target.classList.contains('material-type-select')) {
-                    updateMaterialOptions(e.target);
-                }
-            });
+    container.addEventListener('change', function (e) {
+        if (e.target.classList.contains('material-type-select')) {
+            updateMaterialOptions(e.target);
+        }
+    });
 
-            addBtn.addEventListener('click', addDrawing);
-            createBtn.addEventListener('click', function() {
-                alert('Замовлення створено!');
-            });
-            followBtn.addEventListener('click', function() {
-                alert('Слідування увімкнено!');
-            });
+    addBtn.addEventListener('click', addDrawing);
+
+    function toggleCollapse(button) {
+    const content = button.closest('.order-drawing-block').querySelector('.order-drawing-content');
+    content.classList.toggle('collapsed');
+    button.classList.toggle('collapsed');
+}
+
+function deleteDrawing(button) {
+    const drawingBlock = button.closest('.order-drawing-block');
+    if (container.children.length > 1) {
+        drawingBlock.remove();
+        updateDrawingNumbers();
+        updateFormIndexes();
+    } else {
+        alert('Неможливо видалити останнє креслення');
+    }
+}
+
+function updateDrawingNumbers() {
+    const blocks = container.querySelectorAll('.order-drawing-block');
+    blocks.forEach((block, index) => {
+        const label = block.querySelector('.order-drawing-number-label');
+        label.textContent = `№${index + 1}`;
+    });
+}
+
+function updateFormIndexes() {
+    const blocks = container.querySelectorAll('.order-drawing-block');
+    blocks.forEach((block, index) => {
+        block.setAttribute('data-index', index);
+        const priceDiv = block.querySelector('.order-form-price-result');
+        if (priceDiv) {
+            priceDiv.setAttribute('data-index', index);
+            priceDiv.setAttribute('hx-get', detailPriceUrl + "?index=" + index);
+        }
+        block.querySelectorAll('select, input').forEach(el => {
+            const name = el.name;
+            if (name && name.includes('form-')) {
+                const parts = name.split('-');
+                const field = parts.slice(2).join('-');
+                el.name = `form-${index}-${field}`;
+            }
         });
+    });
+    totalFormsInput.value = blocks.length;
+}
 
-        function toggleCollapse(button) {
-            const content = button.closest('.order-drawing-block').querySelector('.order-drawing-content');
-            content.classList.toggle('collapsed');
-            button.classList.toggle('collapsed');
+function updateMaterialOptions(select) {
+    const block = select.closest('.order-drawing-block');
+    const materialSelect = block.querySelector('.material-select');
+    const selectedType = select.value;
+
+    console.log('selectedType:', selectedType, typeof selectedType);
+    console.log('allMaterials:', allMaterials);
+    console.log('First material type:', allMaterials[0]?.material_type, typeof allMaterials[0]?.material_type);
+
+    materialSelect.innerHTML = '<option value="">Оберіть матеріал</option>';
+
+    allMaterials.forEach(mat => {
+        if (mat.material_type == selectedType) {
+            const option = document.createElement("option");
+            option.value = mat.id;
+            option.textContent = mat.material_name;
+            materialSelect.appendChild(option);
+        }
+    });
+}
+
+function addDrawing() {
+    const blocks = container.querySelectorAll('.order-drawing-block');
+    const index = blocks.length;
+    const firstBlock = blocks[0];
+    const newBlock = firstBlock.cloneNode(true);
+
+    newBlock.setAttribute('data-index', index);
+    newBlock.querySelector('.order-drawing-number-label').textContent = `№${index + 1}`;
+
+    newBlock.querySelectorAll('input, select').forEach(el => {
+        if (el.type === 'checkbox') {
+            el.checked = false;
+        } else {
+            el.value = '';
         }
 
-        function deleteDrawing(button) {
-            const drawingBlock = button.closest('.order-drawing-block');
-            const container = document.getElementById('drawings-container');
-
-            if (container.children.length > 1) {
-                drawingBlock.remove();
-                updateDrawingNumbers();
-            } else {
-                alert('Неможливо видалити останнє креслення');
-            }
+        if (el.classList.contains('material-select')) {
+            el.innerHTML = '<option value="">Спочатку оберіть вид матеріалу</option>';
         }
 
-        function updateDrawingNumbers() {
-            const drawingBlocks = document.querySelectorAll('.order-drawing-block');
-            drawingBlocks.forEach((block, index) => {
-                const numberLabel = block.querySelector('.order-drawing-number-label');
-                numberLabel.textContent = `№${index + 1}`;
-            });
+        if (el.name && el.name.includes('form-')) {
+            const parts = el.name.split('-');
+            const field = parts.slice(2).join('-');
+            el.name = `form-${index}-${field}`;
         }
+    });
 
-        function updateProcessingState(option, isChecked) {
-            option.classList.toggle('active', isChecked);
-        }
+    const priceDiv = newBlock.querySelector(".order-form-price-result");
+    if (priceDiv) {
+        priceDiv.setAttribute("data-index", index);
+        priceDiv.setAttribute("hx-target", "this");
+        priceDiv.setAttribute("hx-trigger", "change from:select,input");
+        priceDiv.setAttribute("hx-include", "closest .order-drawing-block");
+        priceDiv.setAttribute("hx-swap", "outerHTML");
+        priceDiv.setAttribute("hx-get", detailPriceUrl + "?index=" + index);
+        priceDiv.innerHTML = "Вкажіть всі поля для розрахунку";
+    }
 
-        function updateMaterialOptions(select) {
-            const materialSelect = select.closest('.order-drawing-content').querySelector('.material-select');
-            const value = select.value;
+    container.appendChild(newBlock);
+    totalFormsInput.value = index + 1;
 
-            materialSelect.innerHTML = '<option value="">Оберіть матеріал</option>';
+    htmx.process(newBlock);
+}
 
-            if (value === 'metal') {
-                materialSelect.innerHTML += `
-                    <option value="steel">Сталь</option>
-                    <option value="aluminum">Алюміній</option>
-                    <option value="stainless">Нержавіюча сталь</option>
-                `;
-            } else if (value === 'plastic') {
-                materialSelect.innerHTML += `
-                    <option value="abs">ABS</option>
-                    <option value="pvc">ПВХ</option>
-                    <option value="acrylic">Акрил</option>
-                `;
-            } else if (value === 'composite') {
-                materialSelect.innerHTML += `
-                    <option value="carbon">Карбон</option>
-                    <option value="fiberglass">Скловолокно</option>
-                `;
-            }
-        }
-
-        function addDrawing() {
-            const container = document.getElementById('drawings-container');
-            const drawingCount = container.children.length + 1;
-
-            const newDrawing = container.firstElementChild.cloneNode(true);
-            newDrawing.querySelector('.order-drawing-number-label').textContent = `№${drawingCount}`;
-
-            // Очистити значення в новому блоці
-            newDrawing.querySelectorAll('input, select').forEach(element => {
-                if (element.type === 'checkbox') {
-                    element.checked = false;
-                } else {
-                    element.value = '';
-                }
-            });
-
-            // Оновити стан чекбоксів
-            newDrawing.querySelectorAll('.order-processing-option').forEach(option => {
-                option.classList.remove('active');
-            });
-
-            // Розгорнути новий блок
-            const content = newDrawing.querySelector('.order-drawing-content');
-            const collapseBtn = newDrawing.querySelector('.order-collapse-btn');
-            content.classList.remove('collapsed');
-            collapseBtn.classList.remove('collapsed');
-
-            container.appendChild(newDrawing);
-        }
+});

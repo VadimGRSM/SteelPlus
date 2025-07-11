@@ -3,6 +3,7 @@
 
 {% block CSS %}
     <link rel="stylesheet" href="{% static 'core/orders/style_create_order.css' %}">
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
 {% endblock CSS %}
 
 {% block title %}
@@ -10,24 +11,28 @@
 {% endblock title %}
 
 {% block content %}
-  <div class="order-form-wrapper">
+<div class="order-form-wrapper">
+    <form method="POST" id="order-form">
+        {% csrf_token %}
+        <input type="hidden" name="form-TOTAL_FORMS" value="1" id="id_form-TOTAL_FORMS">
+
         <div id="drawings-container">
-            <div class="order-drawing-block">
+            <div class="order-drawing-block" data-index="0">
                 <div class="order-drawing-header">
                     <div class="order-drawing-number-group">
                         <div class="order-drawing-number-label">№1</div>
-                        <select class="order-drawing-number-select">
+                        <select name="form-0-drawing" class="order-drawing-number-select">
                             <option value="">Оберіть креслення</option>
-                            <option value="DRW-001">DRW-001 - Основна деталь</option>
-                            <option value="DRW-002">DRW-002 - Кронштейн</option>
-                            <option value="DRW-003">DRW-003 - Кришка</option>
-                            <option value="DRW-004">DRW-004 - Корпус</option>
-                            <option value="DRW-005">DRW-005 - Пластина</option>
+                            {% for drawing in drawings %}
+                                {% if drawing.configured %}
+                                    <option value="{{ drawing.id }}">{{ drawing }}</option>
+                                {% endif %}
+                            {% endfor %}
                         </select>
                     </div>
                     <div class="order-header-actions">
-                        <button class="order-collapse-btn">∨</button>
-                        <button class="order-delete-btn">×</button>
+                        <button type="button" class="order-collapse-btn">∨</button>
+                        <button type="button" class="order-delete-btn">×</button>
                     </div>
                 </div>
 
@@ -35,16 +40,16 @@
                     <div class="order-form-row">
                         <div class="order-form-group">
                             <div class="order-form-label">Кількість</div>
-                            <input type="number" class="order-form-input" placeholder="Вказати кількість" min="1">
+                            <input type="number" name="form-0-quantity" class="order-form-input" placeholder="Вказати кількість" min="1">
                         </div>
 
                         <div class="order-form-group">
                             <div class="order-form-label">Вид матеріалу</div>
-                            <select class="order-form-select material-type-select">
+                            <select name="form-0-material_type" class="order-form-select material-type-select">
                                 <option value="">Обрати вид матеріалу</option>
-                                <option value="metal">Метал</option>
-                                <option value="plastic">Пластик</option>
-                                <option value="composite">Композит</option>
+                                {% for type in material_type %}
+                                    <option value="{{ type.0 }}">{{ type.1 }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -52,43 +57,47 @@
                     <div class="order-form-row">
                         <div class="order-form-group">
                             <div class="order-form-label">Матеріал</div>
-                            <select class="order-form-select material-select">
+                            <select name="form-0-material" class="order-form-select material-select">
                                 <option value="">Спочатку оберіть вид матеріалу</option>
                             </select>
                         </div>
 
                         <div class="order-form-group">
                             <div class="order-form-label">Товщина (мм)</div>
-                            <input type="number" class="order-form-input" placeholder="Вказати товщину" step="0.1" min="0.1">
+                            <input type="number" name="form-0-thickness" class="order-form-input" placeholder="Вказати товщину" step="0.1" min="0.1">
                         </div>
                     </div>
 
-                    <div class="order-processing-section">
-                        <div class="order-form-label">Види обробки</div>
-                        <div class="order-processing-options">
-                            <div class="order-processing-option">
-                                <input type="checkbox" class="order-processing-checkbox">
-                                <span class="order-processing-label">Лазерна різка</span>
-                            </div>
-                            <div class="order-processing-option">
-                                <input type="checkbox" class="order-processing-checkbox">
-                                <span class="order-processing-label">Згинання</span>
-                            </div>
+                    <div class="order-form-group">
+                        <div class="order-form-label">Орієнтовна ціна</div>
+                        <div class="order-form-price-result"
+                             data-index="0"
+                             hx-get="{% url 'core:detail_price' %}?index=0"
+                             hx-trigger="change from:select,input"
+                             hx-include="closest .order-drawing-block"
+                             hx-target="this"
+                             hx-swap="outerHTML">
+                            Вкажіть всі поля для розрахунку
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
 
-        <button class="order-add-drawing-btn">Додати креслення</button>
+        <button type="button" class="order-add-drawing-btn">Додати креслення</button>
 
         <div class="order-bottom-actions">
-            <button class="order-create-btn">Створити замовлення</button>
-            <button class="order-follow-btn">Скасувати</button>
+            <button type="submit" class="order-create-btn">Створити замовлення</button>
+            <a href="{% url 'core:order' %}" class="order-follow-btn">Скасувати</a>
         </div>
-    </div>
+    </form>
+</div>
 
-    <script src="{% static 'core/orders/script_create_order.js' %}"></script>
+<script>
+    const allMaterials = {{ materials_json|safe }};
+    const detailPriceUrl = "{% url 'core:detail_price' %}";
+</script>
 
-
+<script src="{% static 'core/orders/script_create_order.js' %}"></script>
 {% endblock content %}

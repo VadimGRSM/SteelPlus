@@ -1,4 +1,5 @@
 {% extends "core/base.html" %}
+{% load core_filters %}
 {% load static %}
 
 {% block CSS %}
@@ -10,7 +11,7 @@
 {% endblock title %}
 
 {% block content %}
-        <div class="page-wrapper">
+<div class="page-wrapper">
     <div class="page-title-section" style="display: flex; justify-content: space-between; align-items: center;">
         <h1 style="margin: 0;">Мої замовлення</h1>
         <a href="{% url 'core:create_order' %}">
@@ -18,7 +19,9 @@
         </a>
     </div>
 
-    <p>Детальна інформація про ваші замовлення та їх статус</p>
+    <p>Детальна інформація про ваші замовлення та їх статус</p><br>
+
+{% for order in user_orders  %}
 
     <div class="order-item">
         <div class="order-top-section">
@@ -30,52 +33,57 @@
                     </svg>
                 </div>
                 <div>
-                    <div class="order-id">Замовлення #001</div>
-                    <div class="creation-date">Створено: 2025-01-10</div>
+                    <div class="order-id">Замовлення {{ order.order_number }}</div>
+                    <div class="creation-date">Створено: {{ order.created_at }}</div>
                 </div>
             </div>
-            <div class="progress-indicator">В процесі</div>
+            <div class="progress-indicator">{{ order.get_status_display }}</div>
         </div>
-
-        <div class="item-name">Металева конструкція для будівництва</div>
-        <div class="item-summary">
-            Спеціальна металева рама для промислового будівництва з антикорозійним покриттям
-        </div>
+        {% if order.details.all %}
+            {% for detail in order.details.all %}
+        <div class="item-name">{{ detail.drawing.name }}</div>
+        <div class="item-summary">{{ detail.drawing.description }} </div>
 
         <div class="specifications-grid">
             <div class="spec-row">
                 <div class="spec-indicator"></div>
                 <span class="spec-key">Кількість:</span>
-                <span class="spec-data">2 шт</span>
+                <span class="spec-data">{{ detail.quantity }} шт</span>
+            </div>
+            <div class="spec-row">
+                <div class="spec-indicator"></div>
+                <span class="spec-key">Ціна за деталь:</span>
+                <span class="spec-data">{{ detail_cost|get_item:detail }} грн</span>
             </div>
             <div class="spec-row">
                 <div class="spec-indicator"></div>
                 <span class="spec-key">Матеріал:</span>
-                <span class="spec-data">Сталь St37</span>
+                <span class="spec-data">{{ detail.material }}</span>
             </div>
             <div class="spec-row">
                 <div class="spec-indicator"></div>
-                <span class="spec-key">Розмір:</span>
-                <span class="spec-data">2000x1500x800 мм</span>
-            </div>
-            <div class="spec-row">
-                <div class="spec-indicator"></div>
-                <span class="spec-key">Вага:</span>
-                <span class="spec-data">450 кг</span>
+                <span class="spec-key">Товщина:</span>
+                <span class="spec-data">{{ detail.thickness|floatformat:1 }} мм</span>
             </div>
         </div>
 
+            {% endfor %}
+
         <div class="cost-area">
             <div>
-                <div class="total-cost">15,000 грн</div>
+                <div class="total-cost">{{ order.total_cost }} грн</div>
                 <div class="tax-info">включно з ПДВ</div>
             </div>
             <div class="button-group">
                 <button class="action-btn outline-btn">Комерційна пропозиція</button>
-                <button class="action-btn primary-btn">Відстежити виробництво</button>
+                <a href="{% url 'core:order_pay' %}" class="action-btn primary-btn">Оплатити</a>
             </div>
         </div>
+
+        {% endif %}
     </div>
+{% endfor%}
+
 </div>
 
 {% endblock content %}

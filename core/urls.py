@@ -22,5 +22,7 @@ urlpatterns = [
     ),
     # htmx
     path("drawing/cutting-length", views.cutting_length, name="cutting_length"),
-    path("drawing/bends_setting", views.bends_setting, name="bends_setting"),
+    path("drawing/bends-setting", views.bends_setting, name="bends_setting"),
+
+    path("order/detail-price", views.detail_price, name="detail_price"),
 ]

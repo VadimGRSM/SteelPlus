@@ -3,6 +3,9 @@ import ezdxf
 import io
 import math
 import numpy as np
+from decimal import Decimal
+from shapely.geometry import Polygon, LineString, Point
+from shapely.ops import unary_union
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
@@ -13,21 +16,19 @@ from ezdxf.addons.drawing import Frontend, RenderContext
 from ezdxf.addons.drawing.matplotlib import MatplotlibBackend
 from ezdxf.math import Bezier, BSpline
 
-from .models import Drawing
 
 matplotlib.use("Agg")
 
 
 @shared_task
-def generate_preview_background(drawing_id):
+def generate_preview_background(drawing_id, drawing_path):
     try:
-        drawing = Drawing.objects.get(pk=drawing_id)
-        if not drawing.file_path.name.endswith(".dxf"):
+        if not drawing_path.endswith(".dxf"):
             return
 
-        preview = generate_dxf_preview(drawing.file_path.path)
+        preview = generate_dxf_preview(drawing_path)
         if preview:
-            preview_filename = f"previews/preview_{drawing.pk}.png"
+            preview_filename = f"previews/preview_{drawing_id}.png"
             if default_storage.exists(preview_filename):
                 default_storage.delete(preview_filename)
             default_storage.save(preview_filename, preview)
@@ -200,10 +201,9 @@ def render_layer(dxf_path: str, layer_name: str) -> ContentFile:
 
 
 @shared_task
-def generate_layer_previews(drawing_id, dxf_path=None):
+def generate_layer_previews(dxf_path, drawing_id):
     try:
-        drawing = Drawing.objects.get(pk=drawing_id)
-        dxf_path = dxf_path or drawing.file_path.path
+        dxf_path = dxf_path
 
         layers = get_dxf_layers(dxf_path)
         preview_folder = "previews/"
@@ -245,7 +245,151 @@ def calculate_layer_cut_length(dxf_path: str, layer_name: str) -> float:
     return total_length
 
 
-def generate_dxf_preview(dxf_path: str, output_filename="preview.png") -> ContentFile | None:
+def get_drawing_area_m2(dxf_path: str) -> Decimal:
+    try:
+        doc = ezdxf.readfile(dxf_path)
+        entities = list(doc.modelspace())
+
+        if not entities:
+            print("[INFO] Чертеж пуст.")
+            return Decimal("0.0")
+
+        polygons = []
+
+        for entity in entities:
+            try:
+                if entity.dxftype() == "LWPOLYLINE" and entity.closed:
+                    points = entity.get_points("xy")
+                    points = [(float(x), float(y)) for x, y in points]
+                    if len(points) >= 3:
+                        polygon = Polygon(points)
+                        if polygon.is_valid:
+                            polygons.append(polygon)
+
+                elif entity.dxftype() == "CIRCLE":
+                    center = (float(entity.dxf.center[0]), float(entity.dxf.center[1]))
+                    radius = float(entity.dxf.radius)
+                    angles = np.linspace(0, 2 * np.pi, 64)
+                    points = [
+                        (center[0] + radius * np.cos(a), center[1] + radius * np.sin(a))
+                        for a in angles
+                    ]
+                    polygon = Polygon(points)
+                    if polygon.is_valid:
+                        polygons.append(polygon)
+
+                elif entity.dxftype() == "ELLIPSE":
+                    center = np.array(
+                        [float(entity.dxf.center[0]), float(entity.dxf.center[1])]
+                    )
+                    major = np.array(
+                        [
+                            float(entity.dxf.major_axis[0]),
+                            float(entity.dxf.major_axis[1]),
+                        ]
+                    )
+                    ratio = float(entity.dxf.ratio)
+                    angles = np.linspace(0, 2 * np.pi, 64)
+                    points = [
+                        center
+                        + major * np.cos(a)
+                        + ratio * np.array([-major[1], major[0]]) * np.sin(a)
+                        for a in angles
+                    ]
+                    points = [tuple(p) for p in points]
+                    polygon = Polygon(points)
+                    if polygon.is_valid:
+                        polygons.append(polygon)
+
+                elif entity.dxftype() == "SPLINE":
+                    if hasattr(entity, "closed") and entity.closed:
+                        line_segments = spline_to_lines(entity, segments=100)
+                        if line_segments:
+                            points = [line_segments[0][0]]
+                            for segment in line_segments:
+                                points.append(segment[1])
+
+                            if len(points) >= 3:
+                                polygon = Polygon(points)
+                                if polygon.is_valid:
+                                    polygons.append(polygon)
+
+                elif entity.dxftype() == "HATCH":
+                    if hasattr(entity, "paths"):
+                        for path in entity.paths:
+                            if hasattr(path, "path_vertices"):
+                                points = [
+                                    (float(v[0]), float(v[1]))
+                                    for v in path.path_vertices
+                                ]
+                                if len(points) >= 3:
+                                    polygon = Polygon(points)
+                                    if polygon.is_valid:
+                                        polygons.append(polygon)
+
+                elif entity.dxftype() == "SOLID" or entity.dxftype() == "3DFACE":
+                    if hasattr(entity.dxf, "vtx0"):
+                        points = []
+                        for i in range(4):
+                            vtx_attr = f"vtx{i}"
+                            if hasattr(entity.dxf, vtx_attr):
+                                vtx = getattr(entity.dxf, vtx_attr)
+                                points.append((float(vtx[0]), float(vtx[1])))
+
+                        if len(points) >= 3:
+                            polygon = Polygon(points)
+                            if polygon.is_valid:
+                                polygons.append(polygon)
+
+                elif entity.dxftype() == "POLYLINE":
+                    if entity.is_closed:
+                        vertices = list(entity.vertices)
+                        points = [
+                            (float(v.dxf.location[0]), float(v.dxf.location[1]))
+                            for v in vertices
+                        ]
+                        if len(points) >= 3:
+                            polygon = Polygon(points)
+                            if polygon.is_valid:
+                                polygons.append(polygon)
+
+            except Exception as e:
+                print(f"[WARN] Ошибка обработки {entity.dxftype()}: {e}")
+                continue
+
+        if not polygons:
+            print(f"[INFO] Не найдено замкнутых контуров для вычисления площади")
+            return Decimal("0.0")
+
+        try:
+            if not polygons:
+                return Decimal("0.0")
+
+            max_polygon = max(
+                polygons, key=lambda p: p.area if p.is_valid and not p.is_empty else 0
+            )
+
+            if not max_polygon.is_valid or max_polygon.is_empty:
+                return Decimal("0.0")
+
+            total_area = max_polygon.area
+
+            area_m2 = total_area / 1000000.0  # мм² в м²
+
+            return Decimal(str(round(area_m2, 6)))
+
+        except Exception as e:
+            print(f"[ERROR] Ошибка вычисления площади: {e}")
+            return Decimal("0.0")
+
+    except Exception as e:
+        print(f"[ERROR] Ошибка получения площади чертежа: {e}")
+        return Decimal("0.0")
+
+
+def generate_dxf_preview(
+    dxf_path: str, output_filename="preview.png"
+) -> ContentFile | None:
     try:
         doc = ezdxf.readfile(dxf_path)
         msp = doc.modelspace()

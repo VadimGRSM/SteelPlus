@@ -1,9 +1,12 @@
 import uuid
 import os
+from collections import Counter
+from decimal import Decimal, ROUND_HALF_UP
 from django.db import models
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
+from .utils import get_drawing_area_m2
 
 User = settings.AUTH_USER_MODEL
 
@@ -140,7 +143,8 @@ class Material(models.Model):
         choices=MaterialTypeChoices.choices,
         default=MaterialTypeChoices.METAL,
     )
-    price_unit_area = models.DecimalField(max_digits=10, decimal_places=2)
+    density = models.PositiveIntegerField(default=0)
+    price_per_kg = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     properties = models.TextField(blank=True, null=True)
     available = models.BooleanField(default=True)
 
@@ -162,7 +166,9 @@ class Detail(models.Model):
     )
     thickness = models.DecimalField(max_digits=10, decimal_places=3)
     quantity = models.PositiveIntegerField(default=1)
-    calculated_cost = models.DecimalField(max_digits=10, decimal_places=2)
+    material_cost = models.DecimalField(max_digits=10, decimal_places=2)
+    cutting_cost = models.DecimalField(max_digits=10, decimal_places=2)
+    bending_cost = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return f"Order: {self.order.order_number} - Drawing: {self.drawing.name}"
@@ -170,3 +176,50 @@ class Detail(models.Model):
     class Meta:
         verbose_name = "Деталь"
         verbose_name_plural = "Деталі"
+
+    def get_detail_cost(self):
+        return self.material_cost + self.cutting_cost + self.bending_cost
+
+    def calculate_cost(self):
+        material = self.material
+        drawing = self.drawing
+
+        total_area_m2 = get_drawing_area_m2(drawing.file_path.path)
+        thickness_m = Decimal(self.thickness) / 1000
+
+        volume_m3 = total_area_m2 * thickness_m
+        mass_kg = volume_m3 * material.density
+
+        material_cost = mass_kg * material.price_per_kg
+
+        cutting_type = drawing.processing_types.filter(name="Лазерне різання").first()
+        if cutting_type:
+            cutting_cost = cutting_type.base_cost_per_unit * Decimal(
+                drawing.length_of_cuts
+            )
+        else:
+            cutting_cost = Decimal(0)
+
+        bending_type = drawing.processing_types.filter(name="Згинання").first()
+        price_per_degree = Decimal("0.1")
+        bending_cost = Decimal(0)
+        if drawing.angles and bending_type:
+            degrees = [
+                int(angle.get("degree", 0))
+                for angle in drawing.angles
+                if angle.get("degree")
+            ]
+            for degree in degrees:
+                if 0 < degree <= 180:
+                    cost = bending_type.base_cost_per_unit + (price_per_degree * degree)
+                    bending_cost += cost
+
+        self.material_cost = material_cost.quantize(
+            Decimal("0.01"), rounding=ROUND_HALF_UP
+        )
+        self.cutting_cost = cutting_cost.quantize(
+            Decimal("0.01"), rounding=ROUND_HALF_UP
+        )
+        self.bending_cost = bending_cost.quantize(
+            Decimal("0.01"), rounding=ROUND_HALF_UP
+        )

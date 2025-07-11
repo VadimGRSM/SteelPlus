@@ -1,8 +1,22 @@
 from django import forms
 from django.forms import Textarea
 from django.core.exceptions import ValidationError
-from .models import Drawing
+from .models import Drawing, Material, Detail
 import json
+
+
+class DetailForm(forms.Form):
+    drawing = forms.ModelChoiceField(queryset=Drawing.objects.all(), label="Креслення")
+    quantity = forms.IntegerField(min_value=1, label="Кількість")
+    material_type = forms.ChoiceField(
+        choices=Material.MaterialTypeChoices.choices, label="Тип матеріалу"
+    )
+    material = forms.ModelChoiceField(
+        queryset=Material.objects.none(), label="Матеріал"
+    )
+    thickness = forms.DecimalField(
+        min_value=0.1, decimal_places=1, label="Товщина (мм)"
+    )
 
 
 class SettingsDrawingForm(forms.ModelForm):
