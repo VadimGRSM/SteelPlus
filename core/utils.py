@@ -33,7 +33,7 @@ def generate_preview_background(drawing_id, drawing_path):
                 default_storage.delete(preview_filename)
             default_storage.save(preview_filename, preview)
     except Exception as e:
-        print(f"[ERROR] Ошибка генерации превью: {e}")
+        print(f"[ПОМИЛКА] Помилка генерації прев'ю: {e}")
 
 
 def get_dxf_layers(dxf_path: str) -> list[str]:
@@ -42,7 +42,7 @@ def get_dxf_layers(dxf_path: str) -> list[str]:
         msp = doc.modelspace()
         return sorted({entity.dxf.layer for entity in msp})
     except Exception as e:
-        print(f"[ERROR] Не удалось получить слои: {e}")
+        print(f"[ПОМИЛКА] Не вдалося отримати шари: {e}")
         return []
 
 
@@ -51,7 +51,7 @@ def extract_entities(dxf_path: str, layer_name: str):
         doc = ezdxf.readfile(dxf_path)
         return [entity for entity in doc.modelspace() if entity.dxf.layer == layer_name]
     except Exception as e:
-        print(f"[ERROR] Ошибка извлечения объектов: {e}")
+        print(f"[ПОМИЛКА] Помилка вилучення об'єктів: {e}")
         return []
 
 
@@ -78,7 +78,7 @@ def spline_to_lines(spline, segments=100):
 
         return []
     except Exception as e:
-        print(f"[WARN] Ошибка обработки SPLINE: {e}")
+        print(f"[УВАГА] Помилка обробки SPLINE: {e}")
         return []
 
 
@@ -152,7 +152,7 @@ def entity_to_lines(entity):
             print(f"[WARN] Неподдерживаемый тип объекта: {entity.dxftype()}")
 
     except Exception as e:
-        print(f"[WARN] Ошибка обработки {entity.dxftype()}: {e}")
+        print(f"[УВАГА] Помилка обробки {entity.dxftype()}: {e}")
 
     return lines
 
@@ -196,7 +196,7 @@ def render_layer(dxf_path: str, layer_name: str) -> ContentFile:
         return ContentFile(buffer.read(), name=f"layer_{layer_name}.png")
 
     except Exception as e:
-        print(f"[ERROR] Ошибка рендеринга слоя {layer_name}: {e}")
+        print(f"[ПОМИЛКА] Помилка рендерингу шару {layer_name}: {e}")
         return None
 
 
@@ -219,13 +219,13 @@ def generate_layer_previews(dxf_path, drawing_id):
                 default_storage.save(os.path.join(preview_folder, filename), preview)
 
     except Exception as e:
-        print(f"[ERROR] Ошибка генерации превью слоев: {e}")
+        print(f"[ПОМИЛКА] Помилка генерації прев'ю шарів: {e}")
 
 
 def calculate_layer_cut_length(dxf_path: str, layer_name: str) -> float:
     entities = extract_entities(dxf_path, layer_name)
     if not entities:
-        print(f"[INFO] Слой '{layer_name}' не найден или пуст.")
+        print(f"[ІНФО] Шар '{layer_name}' не знайдено або він порожній.")
         return 0.0
 
     total_length = 0.0
@@ -251,7 +251,7 @@ def get_drawing_area_m2(dxf_path: str) -> Decimal:
         entities = list(doc.modelspace())
 
         if not entities:
-            print("[INFO] Чертеж пуст.")
+            print("[ІНФО] Креслення порожнє.")
             return Decimal("0.0")
 
         polygons = []
@@ -354,11 +354,11 @@ def get_drawing_area_m2(dxf_path: str) -> Decimal:
                                 polygons.append(polygon)
 
             except Exception as e:
-                print(f"[WARN] Ошибка обработки {entity.dxftype()}: {e}")
+                print(f"[УВАГА] Помилка обробки {entity.dxftype()}: {e}")
                 continue
 
         if not polygons:
-            print(f"[INFO] Не найдено замкнутых контуров для вычисления площади")
+            print(f"[ІНФО] Не знайдено замкнутих контурів для обчислення площі")
             return Decimal("0.0")
 
         try:
@@ -379,11 +379,80 @@ def get_drawing_area_m2(dxf_path: str) -> Decimal:
             return Decimal(str(round(area_m2, 6)))
 
         except Exception as e:
-            print(f"[ERROR] Ошибка вычисления площади: {e}")
+            print(f"[ПОМИЛКА] Помилка обчислення площі: {e}")
             return Decimal("0.0")
 
     except Exception as e:
-        print(f"[ERROR] Ошибка получения площади чертежа: {e}")
+        print(f"[ПОМИЛКА] Помилка отримання площі креслення: {e}")
+        return Decimal("0.0")
+
+
+def get_bounding_box_area_m2(dxf_path: str) -> Decimal:
+    try:
+        doc = ezdxf.readfile(dxf_path)
+        entities = list(doc.modelspace())
+        if not entities:
+            return Decimal("0.0")
+        all_points = []
+        for entity in entities:
+            try:
+                if entity.dxftype() == "LINE":
+                    all_points.append((float(entity.dxf.start[0]), float(entity.dxf.start[1])))
+                    all_points.append((float(entity.dxf.end[0]), float(entity.dxf.end[1])))
+                elif entity.dxftype() == "LWPOLYLINE":
+                    points = entity.get_points("xy")
+                    all_points.extend([(float(x), float(y)) for x, y in points])
+                elif entity.dxftype() == "CIRCLE":
+                    center = (float(entity.dxf.center[0]), float(entity.dxf.center[1]))
+                    radius = float(entity.dxf.radius)
+                    all_points.extend([
+                        (center[0] + radius, center[1]),
+                        (center[0] - radius, center[1]),
+                        (center[0], center[1] + radius),
+                        (center[0], center[1] - radius),
+                    ])
+                elif entity.dxftype() == "ARC":
+                    center = (float(entity.dxf.center[0]), float(entity.dxf.center[1]))
+                    radius = float(entity.dxf.radius)
+                    start_angle = float(entity.dxf.start_angle)
+                    end_angle = float(entity.dxf.end_angle)
+                    from math import radians, cos, sin
+                    all_points.append((
+                        center[0] + radius * cos(radians(start_angle)),
+                        center[1] + radius * sin(radians(start_angle)),
+                    ))
+                    all_points.append((
+                        center[0] + radius * cos(radians(end_angle)),
+                        center[1] + radius * sin(radians(end_angle)),
+                    ))
+                elif entity.dxftype() == "ELLIPSE":
+                    center = entity.dxf.center
+                    major = entity.dxf.major_axis
+                    ratio = entity.dxf.ratio
+                    from math import cos, sin, pi
+                    for t in [0, pi/2, pi, 3*pi/2]:
+                        x = center[0] + major[0] * cos(t) + ratio * (-major[1]) * sin(t)
+                        y = center[1] + major[1] * cos(t) + ratio * (major[0]) * sin(t)
+                        all_points.append((x, y))
+                elif entity.dxftype() == "SPLINE":
+                    if hasattr(entity, "fit_points") and entity.fit_points:
+                        all_points.extend([(float(p[0]), float(p[1])) for p in entity.fit_points])
+                elif entity.dxftype() == "POLYLINE":
+                    for v in entity.vertices:
+                        all_points.append((float(v.dxf.location[0]), float(v.dxf.location[1])))
+            except Exception as e:
+                print(f"[УВАГА] Помилка обробки {entity.dxftype()}: {e}")
+                continue
+        if not all_points:
+            return Decimal("0.0")
+        xs, ys = zip(*all_points)
+        min_x, max_x = min(xs), max(xs)
+        min_y, max_y = min(ys), max(ys)
+        area_mm2 = (max_x - min_x) * (max_y - min_y)
+        area_m2 = area_mm2 / 1_000_000.0
+        return Decimal(str(round(area_m2, 6)))
+    except Exception as e:
+        print(f"[ПОМИЛКА] Помилка обчислення bounding box: {e}")
         return Decimal("0.0")
 
 
@@ -412,5 +481,5 @@ def generate_dxf_preview(
         return content
 
     except Exception as e:
-        print(f"[DXF ERROR] Невозможно создать превью: {e}")
+        print(f"[DXF ПОМИЛКА] Неможливо створити прев'ю: {e}")
         return None

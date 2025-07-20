@@ -26,11 +26,11 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractUser):
     username = None
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, verbose_name="Електронна пошта")
 
-    phone_number = models.CharField(max_length=20)
+    phone_number = models.CharField(max_length=20, verbose_name="Номер телефону")
 
-    email_verify = models.BooleanField(default=False)
+    email_verify = models.BooleanField(default=False, verbose_name="Підтвердження електронної пошти")
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []

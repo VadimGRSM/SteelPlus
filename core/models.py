@@ -6,81 +6,113 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
-from .utils import get_drawing_area_m2
+from .utils import get_bounding_box_area_m2
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+from django.contrib import admin
 
 User = settings.AUTH_USER_MODEL
 
 
 class ProcessingType(models.Model):
-    name = models.CharField(max_length=255)
-    base_cost_per_unit = models.DecimalField(max_digits=10, decimal_places=2)
-    cost_unit = models.CharField(max_length=50)
-    unit_name = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    is_active = models.BooleanField(default=True)
+    name = models.CharField(
+        max_length=255, unique=True,
+        verbose_name=_("Назва")
+    )
+    base_cost_per_unit = models.DecimalField(
+        max_digits=10, decimal_places=2,
+        verbose_name=_("Базова вартість за одиницю")
+    )
+    cost_unit = models.CharField(
+        max_length=50,
+        verbose_name=_("Одиниця виміру вартості")
+    )
+    unit_name = models.CharField(
+        max_length=255,
+        verbose_name=_("Назва одиниці")
+    )
+    description = models.TextField(
+        blank=True, null=True,
+        verbose_name=_("Опис")
+    )
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name=_("Активний")
+    )
 
     def __str__(self):
         return self.name
 
     class Meta:
-        verbose_name = "Тип обробки"
-        verbose_name_plural = "Типи обробки"
+        verbose_name = _("Тип обробки")
+        verbose_name_plural = _("Типи обробки")
 
 
 class Consumables(models.Model):
     class UnitChoices(models.TextChoices):
-        PIECE = "шт", "Штука"
-        SET = "комп", "Комплект"
-        PAIR = "пара", "Пара"
-        PACKAGE = "упак", "Упаковка"
-        GRAM = "г", "Грам"
-        KILOGRAM = "кг", "Кілограм"
-        TON = "т", "Тонна"
-        MILLIMETER = "мм", "Міліметр"
-        CENTIMETER = "см", "Сантиметр"
-        METER = "м", "Метр"
-        KILOMETER = "км", "Кілометр"
-        MILLILITER = "мл", "Мілілітр"
-        LITER = "л", "Літр"
-        CUBIC_CM = "см³", "Кубічний сантиметр"
-        CUBIC_M = "м³", "Кубічний метр"
-        SQUARE_MM = "мм²", "Квадратний міліметр"
-        SQUARE_CM = "см²", "Квадратний сантиметр"
-        SQUARE_M = "м²", "Квадратний метр"
+        PIECE = "шт", _( "Штука")
+        SET = "комп", _( "Комплект")
+        PAIR = "пара", _( "Пара")
+        PACKAGE = "упак", _( "Упаковка")
+        GRAM = "г", _( "Грам")
+        KILOGRAM = "кг", _( "Кілограм")
+        TON = "т", _( "Тонна")
+        MILLIMETER = "мм", _( "Міліметр")
+        CENTIMETER = "см", _( "Сантиметр")
+        METER = "м", _( "Метр")
+        KILOMETER = "км", _( "Кілометр")
+        MILLILITER = "мл", _( "Мілілітр")
+        LITER = "л", _( "Літр")
+        CUBIC_CM = "см³", _( "Кубічний сантиметр")
+        CUBIC_M = "м³", _( "Кубічний метр")
+        SQUARE_MM = "мм²", _( "Квадратний міліметр")
+        SQUARE_CM = "см²", _( "Квадратний сантиметр")
+        SQUARE_M = "м²", _( "Квадратний метр")
 
     processing_type = models.ForeignKey(
-        ProcessingType, on_delete=models.PROTECT, related_name="processes"
+        ProcessingType, on_delete=models.PROTECT, related_name="processes",
+        verbose_name=_("Тип обробки")
     )
-    name = models.CharField(max_length=255)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    calculation_unit = models.CharField(max_length=50, choices=UnitChoices.choices)
-    quantity_units = models.PositiveIntegerField(default=0)
-    unit_price = models.DecimalField(max_digits=10, decimal_places=2)
-    available = models.BooleanField(default=True)
+    name = models.CharField(max_length=255, verbose_name=_("Назва"))
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Ціна"))
+    calculation_unit = models.CharField(max_length=50, choices=UnitChoices.choices, verbose_name=_("Одиниця розрахунку"))
+    quantity_units = models.PositiveIntegerField(default=0, verbose_name=_("Кількість одиниць"))
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Ціна за одиницю"))
+    available = models.BooleanField(default=True, verbose_name=_("Доступний"))
 
     def __str__(self):
         return self.name
 
     class Meta:
-        verbose_name = "Розхідні матеріали"
-        verbose_name_plural = "Розхідний матеріал"
+        verbose_name = _( "Розхідний матеріал")
+        verbose_name_plural = _( "Розхідні матеріали")
+
+    def clean(self):
+        if self.quantity_units < 0:
+            raise ValidationError("Quantity units must be non-negative")
+
+    @property
+    def unit_price(self):
+        if self.quantity_units:
+            return self.price / self.quantity_units
+        return 0
 
 
 class Drawing(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="drawings")
-    processing_types = models.ManyToManyField(ProcessingType, related_name="drawings")
-    name = models.CharField(max_length=255)
-    file_path = models.FileField(upload_to="drawings/%Y/%m/%d")
-    original_filename = models.CharField(max_length=255, blank=True, editable=False)
-    file_size = models.PositiveIntegerField(blank=True, editable=False)
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-    description = models.TextField(blank=True, null=True)
-    length_of_cuts = models.FloatField(default=0)
-    angles = models.JSONField(blank=True, null=True, default=list)
-    layers = models.JSONField(blank=True, null=True, default=list)
-    cutting_layers = models.JSONField(blank=True, null=True, default=list)
-    bending_layers = models.JSONField(blank=True, null=True, default=list)
-    configured = models.BooleanField(default=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="drawings", verbose_name=_("Користувач"))
+    processing_types = models.ManyToManyField(ProcessingType, related_name="drawings", verbose_name=_("Типи обробки"))
+    name = models.CharField(max_length=255, verbose_name=_("Назва"))
+    file_path = models.FileField(upload_to="drawings/%Y/%m/%d", verbose_name=_("Файл креслення"))
+    original_filename = models.CharField(max_length=255, blank=True, editable=False, verbose_name=_("Оригінальна назва файлу"))
+    file_size = models.PositiveIntegerField(blank=True, editable=False, verbose_name=_("Розмір файлу (байт)"))
+    uploaded_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Дата завантаження"))
+    description = models.TextField(blank=True, null=True, verbose_name=_("Опис"))
+    length_of_cuts = models.FloatField(default=0, verbose_name=_("Довжина різів (м)"))
+    angles = models.JSONField(blank=True, null=True, default=list, verbose_name=_("Кути"))
+    layers = models.JSONField(blank=True, null=True, default=list, verbose_name=_("Шари"))
+    cutting_layers = models.JSONField(blank=True, null=True, default=list, verbose_name=_("Шари різання"))
+    bending_layers = models.JSONField(blank=True, null=True, default=list, verbose_name=_("Шари згинання"))
+    configured = models.BooleanField(default=False, verbose_name=_("Налаштовано"))
 
     def __str__(self):
         return self.name
@@ -89,13 +121,15 @@ class Drawing(models.Model):
         if self.file_path:
             if not self.original_filename:
                 self.original_filename = os.path.basename(self.file_path.name)
-            if not self.file_size:
+            try:
                 self.file_size = self.file_path.size
+            except Exception:
+                self.file_size = 0
         super().save(*args, **kwargs)
 
     class Meta:
-        verbose_name = "Креслення"
-        verbose_name_plural = "Креслення"
+        verbose_name = _( "Креслення")
+        verbose_name_plural = _( "Креслення")
 
 
 def generate_order_number():
@@ -104,87 +138,119 @@ def generate_order_number():
 
 class Order(models.Model):
     class StatusChoices(models.TextChoices):
-        DRAFT = "draft", "Чернетка"
-        PENDING = "pending", "Очікує обробки"
-        PROCESSING = "processing", "Обробляється"
-        COMPLETED = "completed", "Завершено"
-        CANCELLED = "cancelled", "Скасовано"
+        DRAFT = "draft", _( "Чернетка")
+        PENDING = "pending", _( "Очікує обробки")
+        PROCESSING = "processing", _( "Обробляється")
+        COMPLETED = "completed", _( "Завершено")
+        CANCELLED = "cancelled", _( "Скасовано")
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders", verbose_name=_("Користувач"))
     order_number = models.CharField(
-        max_length=50, unique=True, default=generate_order_number
+        max_length=50, unique=True, default=generate_order_number, verbose_name=_("Номер замовлення")
     )
     status = models.CharField(
-        max_length=20, choices=StatusChoices.choices, default=StatusChoices.DRAFT
+        max_length=20, choices=StatusChoices.choices, default=StatusChoices.DRAFT, db_index=True, verbose_name=_("Статус")
     )
-    total_cost = models.DecimalField(max_digits=12, decimal_places=2, default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    notes = models.TextField(blank=True, null=True)
+    total_cost = models.DecimalField(max_digits=12, decimal_places=2, default=0, verbose_name=_("Загальна вартість"))
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name=_("Дата створення"))
+    updated_at = models.DateTimeField(auto_now=True, verbose_name=_("Дата оновлення"))
+    notes = models.TextField(blank=True, null=True, verbose_name=_("Примітки"))
 
     def __str__(self):
         return self.order_number
 
     class Meta:
-        verbose_name = "Замовлення"
-        verbose_name_plural = "Замовлення"
+        verbose_name = _( "Замовлення")
+        verbose_name_plural = _( "Замовлення")
         ordering = ["-created_at"]
 
 
 class Material(models.Model):
     class MaterialTypeChoices(models.TextChoices):
-        METAL = "metal", "Метал"
-        PLASTIC = "plastic", "Пластик"
-        COMPOSITES = "composites", "Композити"
+        METAL = "metal", _( "Метал")
+        PLASTIC = "plastic", _( "Пластик")
+        COMPOSITES = "composites", _( "Композити")
 
-    material_name = models.CharField(max_length=50, unique=True)
+    material_name = models.CharField(max_length=50, unique=True, verbose_name=_("Назва матеріалу"))
     material_type = models.CharField(
         max_length=20,
         choices=MaterialTypeChoices.choices,
         default=MaterialTypeChoices.METAL,
+        verbose_name=_("Тип матеріалу")
     )
-    density = models.PositiveIntegerField(default=0)
-    price_per_kg = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    properties = models.TextField(blank=True, null=True)
-    available = models.BooleanField(default=True)
+    density = models.PositiveIntegerField(default=0, verbose_name=_("Густина (кг/м³)"))
+    price_per_kg = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name=_("Ціна за кг"))
+    properties = models.TextField(blank=True, null=True, verbose_name=_("Властивості"))
+    available = models.BooleanField(default=True, verbose_name=_("Доступний"))
 
     def __str__(self):
         return self.material_name
 
     class Meta:
-        verbose_name = "Матеріал"
-        verbose_name_plural = "Матеріали"
+        verbose_name = _( "Матеріал")
+        verbose_name_plural = _( "Матеріали")
+
+    def clean(self):
+        if self.density < 0:
+            raise ValidationError("Density must be non-negative")
 
 
 class Detail(models.Model):
     drawing = models.ForeignKey(
-        Drawing, on_delete=models.PROTECT, related_name="details"
+        Drawing, on_delete=models.PROTECT, related_name="details", verbose_name=_("Креслення")
     )
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="details")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="details", verbose_name=_("Замовлення"))
     material = models.ForeignKey(
-        Material, on_delete=models.CASCADE, related_name="details"
+        Material, on_delete=models.CASCADE, related_name="details", verbose_name=_("Матеріал")
     )
-    thickness = models.DecimalField(max_digits=10, decimal_places=3)
-    quantity = models.PositiveIntegerField(default=1)
-    material_cost = models.DecimalField(max_digits=10, decimal_places=2)
-    cutting_cost = models.DecimalField(max_digits=10, decimal_places=2)
-    bending_cost = models.DecimalField(max_digits=10, decimal_places=2)
+    thickness = models.DecimalField(max_digits=10, decimal_places=3, verbose_name=_("Товщина (мм)"))
+    quantity = models.PositiveIntegerField(default=1, verbose_name=_("Кількість"))
+    material_cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Вартість матеріалу"))
+    cutting_cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Вартість різання"))
+    bending_cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Вартість згинання"))
+    drawing_snapshot = models.JSONField(blank=True, null=True, verbose_name=_("Зліпок креслення"))
 
     def __str__(self):
         return f"Order: {self.order.order_number} - Drawing: {self.drawing.name}"
 
     class Meta:
-        verbose_name = "Деталь"
-        verbose_name_plural = "Деталі"
+        verbose_name = _( "Деталь")
+        verbose_name_plural = _( "Деталі")
+
+    def clean(self):
+        if self.thickness <= 0:
+            raise ValidationError("Thickness must be positive")
+        if self.quantity <= 0:
+            raise ValidationError("Quantity must be positive")
 
     def get_detail_cost(self):
         return self.material_cost + self.cutting_cost + self.bending_cost
+
+    def get_drawing_snapshot(self):
+        drawing = self.drawing
+        return {
+            "name": drawing.name,
+            "file_path": str(drawing.file_path),
+            "original_filename": drawing.original_filename,
+            "file_size": drawing.file_size,
+            "description": drawing.description,
+            "length_of_cuts": drawing.length_of_cuts,
+            "angles": drawing.angles,
+            "layers": drawing.layers,
+            "cutting_layers": drawing.cutting_layers,
+            "bending_layers": drawing.bending_layers,
+            "configured": drawing.configured,
+        }
+
+    def save(self, *args, **kwargs):
+        self.drawing_snapshot = self.get_drawing_snapshot()
+        super().save(*args, **kwargs)
 
     def calculate_cost(self):
         material = self.material
         drawing = self.drawing
 
-        total_area_m2 = get_drawing_area_m2(drawing.file_path.path)
+        total_area_m2 = get_bounding_box_area_m2(drawing.file_path.path)
         thickness_m = Decimal(self.thickness) / 1000
 
         volume_m3 = total_area_m2 * thickness_m

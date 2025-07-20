@@ -21,7 +21,7 @@ from .utils import (
     generate_layer_previews,
     calculate_layer_cut_length,
     extract_entities,
-    get_drawing_area_m2,
+    get_bounding_box_area_m2,
 )
 
 from django.shortcuts import render, HttpResponseRedirect
@@ -37,6 +37,11 @@ def drawing(request):
 @login_required
 def delete_drawing(request, pk):
     drawing = get_object_or_404(Drawing, pk=pk, user=request.user)
+
+    # Проверка на связанные детали (Detail)
+    if drawing.details.exists():
+        messages.error(request, "Неможливо видалити креслення, оскільки воно використовується в замовленнях.")
+        return redirect("core:drawing")
 
     preview_filename = f"previews/preview_{drawing.pk}.png"
     if default_storage.exists(preview_filename):
@@ -364,9 +369,9 @@ def create_order(request):
                 try:
                     details_to_create.append(
                         {
-                            "drawing_id": drawing_id,
+                            "drawing_id": int(drawing_id), 
                             "quantity": int(quantity),
-                            "material_id": material_id,
+                            "material_id": int(material_id),
                             "thickness": Decimal(thickness.replace(",", ".")),
                         }
                     )
@@ -492,7 +497,7 @@ def detail_price(request):
 
         thickness_m = Decimal(thickness_clean) / 1000
 
-        total_area_m2 = get_drawing_area_m2(drawing.file_path.path)
+        total_area_m2 = get_bounding_box_area_m2(drawing.file_path.path)
         volume_m3 = total_area_m2 * thickness_m
         mass_kg = volume_m3 * material.density
         material_cost = mass_kg * material.price_per_kg
