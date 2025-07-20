@@ -15,9 +15,61 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.target.classList.contains('material-type-select')) {
             updateMaterialOptions(e.target);
         }
+        
+        if (e.target.name && e.target.name.includes('form-')) {
+            if (e.target.name.includes('-material') && e.target.value) {
+                const block = e.target.closest('.order-drawing-block');
+                const priceDiv = block.querySelector('.order-form-price-result');
+                if (priceDiv) {
+                    sendHtmxRequest(priceDiv, block);
+                }
+            }
+        }
     });
-
+    
+    container.addEventListener('input', function (e) {
+        if (e.target.type === 'number' && e.target.name && e.target.name.includes('form-')) {
+            const block = e.target.closest('.order-drawing-block');
+            const priceDiv = block.querySelector('.order-form-price-result');
+            if (priceDiv) {
+                clearTimeout(priceDiv._timeout);
+                priceDiv._timeout = setTimeout(() => {
+                    sendHtmxRequest(priceDiv, block);
+                }, 500);
+            }
+        }
+    });
+    
     addBtn.addEventListener('click', addDrawing);
+    
+    function sendHtmxRequest(priceDiv, block) {
+        const url = priceDiv.getAttribute('hx-get');
+        
+        const params = new URLSearchParams();
+        params.append('index', block.getAttribute('data-index'));
+        
+        block.querySelectorAll('select, input').forEach(el => {
+            if (el.name && el.value) {
+                params.append(el.name, el.value);
+            }
+        });
+        
+        let fullUrl = url;
+        if (url.includes('?')) {
+            fullUrl += '&' + params.toString();
+        } else {
+            fullUrl += '?' + params.toString();
+        }
+
+        fetch(fullUrl)
+            .then(response => response.text())
+            .then(html => {
+                priceDiv.innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Error sending HTMX request:', error);
+            });
+    }
 
     function toggleCollapse(button) {
     const content = button.closest('.order-drawing-block').querySelector('.order-drawing-content');
@@ -52,6 +104,10 @@ function updateFormIndexes() {
         if (priceDiv) {
             priceDiv.setAttribute('data-index', index);
             priceDiv.setAttribute('hx-get', detailPriceUrl + "?index=" + index);
+            priceDiv.setAttribute('hx-target', 'this');
+            priceDiv.setAttribute('hx-trigger', 'change from:select,input delay:300ms');
+            priceDiv.setAttribute('hx-include', 'closest .order-drawing-block');
+            priceDiv.setAttribute('hx-swap', 'outerHTML');
         }
         block.querySelectorAll('select, input').forEach(el => {
             const name = el.name;
@@ -63,16 +119,16 @@ function updateFormIndexes() {
         });
     });
     totalFormsInput.value = blocks.length;
+    
+    blocks.forEach(block => {
+        htmx.process(block);
+    });
 }
 
 function updateMaterialOptions(select) {
     const block = select.closest('.order-drawing-block');
     const materialSelect = block.querySelector('.material-select');
     const selectedType = select.value;
-
-    console.log('selectedType:', selectedType, typeof selectedType);
-    console.log('allMaterials:', allMaterials);
-    console.log('First material type:', allMaterials[0]?.material_type, typeof allMaterials[0]?.material_type);
 
     materialSelect.innerHTML = '<option value="">Оберіть матеріал</option>';
 
@@ -84,6 +140,8 @@ function updateMaterialOptions(select) {
             materialSelect.appendChild(option);
         }
     });
+    
+    materialSelect.value = '';
 }
 
 function addDrawing() {
@@ -117,7 +175,7 @@ function addDrawing() {
     if (priceDiv) {
         priceDiv.setAttribute("data-index", index);
         priceDiv.setAttribute("hx-target", "this");
-        priceDiv.setAttribute("hx-trigger", "change from:select,input");
+        priceDiv.setAttribute("hx-trigger", "change from:select,input delay:300ms");
         priceDiv.setAttribute("hx-include", "closest .order-drawing-block");
         priceDiv.setAttribute("hx-swap", "outerHTML");
         priceDiv.setAttribute("hx-get", detailPriceUrl + "?index=" + index);

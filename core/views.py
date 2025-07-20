@@ -95,7 +95,7 @@ class UploadDrawing(LoginRequiredMixin, CreateView):
 
 @login_required
 def view_drawing(request, pk):
-    drawing = get_object_or_404(Drawing, pk=pk)
+    drawing = get_object_or_404(Drawing, pk=pk, user=request.user)
 
     img = None
     preview_filename = f"previews/preview_{drawing.pk}.png"
@@ -122,7 +122,7 @@ class SettingsDrawing(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         pk = self.kwargs.get("pk")
-        drawing, created = Drawing.objects.get_or_create(pk=pk)
+        drawing, created = Drawing.objects.get_or_create(pk=pk, user=self.request.user)
         if not drawing.layers:
             drawing.layers = get_dxf_layers(drawing.file_path.path)
             drawing.save()
@@ -131,10 +131,11 @@ class SettingsDrawing(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         previews = []
-        for layer in self.object.layers:
-            preview_filename = f"previews/layer_{self.object.pk}_{layer}.png"
-            if default_storage.exists(preview_filename):
-                previews.append((layer, default_storage.url(preview_filename)))
+        if self.object.layers:
+            for layer in self.object.layers:
+                preview_filename = f"previews/layer_{self.object.pk}_{layer}.png"
+                if default_storage.exists(preview_filename):
+                    previews.append((layer, default_storage.url(preview_filename)))
 
         context["layer_previews"] = previews
         context["saved_cutting_layers"] = self.object.cutting_layers or []
@@ -154,6 +155,10 @@ class SettingsDrawing(LoginRequiredMixin, UpdateView):
 
         validation_errors = []
 
+        MIN_ANGLE = 0
+        MAX_ANGLE = 180
+        DEFAULT_POINT_PLACEHOLDERS = ["Обрати", "Клікніть на зображення"]
+
         overlapping_layers = set(cutting_layers) & set(bending_layers)
         if overlapping_layers:
             validation_errors.append(
@@ -171,8 +176,7 @@ class SettingsDrawing(LoginRequiredMixin, UpdateView):
                     point = angle.get("point", "").strip()
                     if (
                         not point
-                        or point == "Обрати"
-                        or "Клікніть на зображення" in point
+                        or point in DEFAULT_POINT_PLACEHOLDERS
                     ):
                         validation_errors.append(
                             f"Кут {i + 1}: не вибрано крапку на зображенні."
@@ -180,9 +184,9 @@ class SettingsDrawing(LoginRequiredMixin, UpdateView):
 
                     try:
                         degree = float(angle.get("degree", 0))
-                        if degree < 0 or degree > 360:
+                        if degree < MIN_ANGLE or degree > MAX_ANGLE:
                             validation_errors.append(
-                                f"Кут {i + 1}: градус має бути від 0 до 360."
+                                f"Кут {i + 1}: градус має бути від {MIN_ANGLE} до {MAX_ANGLE}."
                             )
                     except (ValueError, TypeError):
                         validation_errors.append(
@@ -208,7 +212,10 @@ class SettingsDrawing(LoginRequiredMixin, UpdateView):
         angles_str = form.cleaned_data["angles"]
         if angles_str:
             if isinstance(angles_str, str):
-                self.object.angles = json.loads(angles_str)
+                try:
+                    self.object.angles = json.loads(angles_str)
+                except json.JSONDecodeError:
+                    self.object.angles = []
             else:
                 self.object.angles = angles_str
         else:
@@ -228,19 +235,35 @@ class SettingsDrawing(LoginRequiredMixin, UpdateView):
         return super().form_invalid(form)
 
 
+@login_required
 def cutting_length(request):
-    drawing = get_object_or_404(Drawing, id=request.GET.get("drawing_id"))
+    drawing_id = request.GET.get("drawing_id")
+    if not drawing_id:
+        return HttpResponse("<div class='info-label'>Помилка: не вказано ID чертежа</div>")
+    
+    drawing = get_object_or_404(Drawing, id=drawing_id, user=request.user)
     selected = request.GET.getlist("cutting")
+
+    if not selected:
+        return HttpResponse("<div class='info-label'>Оберіть шари для розрахунку</div>")
 
     length = 0
     for layer in selected:
         length += calculate_layer_cut_length(drawing.file_path.path, layer)
-    text = "<div class='info-label'>Довжина різу " + str(round(length, 3)) + " mm</div>"
+    
+    text = f"<div class='info-label'>Довжина різу {round(length, 3)} mm</div>"
     return HttpResponse(text)
 
 
+@login_required
 def bends_setting(request):
-    drawing = get_object_or_404(Drawing, id=request.GET.get("drawing_id"))
+    drawing_id = request.GET.get("drawing_id")
+    if not drawing_id:
+        return HttpResponse(
+            '<tr><td colspan="4" style="text-align: center;">Помилка: не вказано ID чертежа</td></tr>'
+        )
+    
+    drawing = get_object_or_404(Drawing, id=drawing_id, user=request.user)
     selected = request.GET.getlist("bending")
 
     if not selected:
@@ -273,6 +296,8 @@ def hub(request):
 
 def about(request):
     return render(request, "core/about.html")
+
+
 @login_required
 def order(request):
     user_orders = (
@@ -293,8 +318,6 @@ def order(request):
     return render(request, "core/order.html", context=context)
 
 
-
-
 @login_required
 def order_pay(request):
     return render(request, "orders/order_pay.html")
@@ -312,32 +335,83 @@ def create_order(request):
             material_id = request.POST.get(f"form-{i}-material")
             thickness = request.POST.get(f"form-{i}-thickness")
 
-            if any([drawing_id, quantity, material_id, thickness]):
+            if drawing_id or quantity or material_id or thickness:
                 if not all([drawing_id, quantity, material_id, thickness]):
+                    missing_fields = []
+                    if not drawing_id:
+                        missing_fields.append("креслення")
+                    if not quantity:
+                        missing_fields.append("кількість")
+                    if not material_id:
+                        missing_fields.append("матеріал")
+                    if not thickness:
+                        missing_fields.append("товщина")
+                    missing_fields_str = ", ".join(missing_fields)
                     messages.error(
-                        request, f"Будь ласка, заповніть усі поля для деталі №{i + 1}."
+                        request,
+                        f"Для деталі №{i + 1} не заповнено такі поля: {missing_fields_str}. Будь ласка, заповніть їх."
                     )
-                    return redirect("core:create_order")
+                    context = {
+                        "drawings": Drawing.objects.filter(user=request.user, configured=True),
+                        "material_type": Material.MaterialTypeChoices.choices,
+                        "materials": Material.objects.filter(available=True),
+                        "materials_json": json.dumps(list(Material.objects.filter(available=True).values("id", "material_name", "material_type")), cls=DjangoJSONEncoder),
+                        "initial_data": request.POST,
+                    }
+                    return render(request, "orders/create_order.html", context)
 
             if all([drawing_id, quantity, material_id, thickness]):
-                details_to_create.append(
-                    {
-                        "drawing_id": drawing_id,
-                        "quantity": int(quantity),
-                        "material_id": material_id,
-                        "thickness": Decimal(thickness),
+                try:
+                    details_to_create.append(
+                        {
+                            "drawing_id": drawing_id,
+                            "quantity": int(quantity),
+                            "material_id": material_id,
+                            "thickness": Decimal(thickness.replace(",", ".")),
+                        }
+                    )
+                except (ValueError, TypeError):
+                    messages.error(
+                        request, f"Некоректні дані для деталі №{i + 1}."
+                    )
+                    context = {
+                        "drawings": Drawing.objects.filter(user=request.user, configured=True),
+                        "material_type": Material.MaterialTypeChoices.choices,
+                        "materials": Material.objects.filter(available=True),
+                        "materials_json": json.dumps(list(Material.objects.filter(available=True).values("id", "material_name", "material_type")), cls=DjangoJSONEncoder),
+                        "initial_data": request.POST,
                     }
-                )
+                    return render(request, "orders/create_order.html", context)
 
         if not details_to_create:
             messages.error(request, "Не додано жодної деталі для створення замовлення.")
-            return redirect("core:create_order")
+            context = {
+                "drawings": Drawing.objects.filter(user=request.user, configured=True),
+                "material_type": Material.MaterialTypeChoices.choices,
+                "materials": Material.objects.filter(available=True),
+                "materials_json": json.dumps(list(Material.objects.filter(available=True).values("id", "material_name", "material_type")), cls=DjangoJSONEncoder),
+                "initial_data": request.POST,
+            }
+            return render(request, "orders/create_order.html", context)
+
+        drawing_ids = [d["drawing_id"] for d in details_to_create]
+        material_ids = [d["material_id"] for d in details_to_create]
+        
+        drawings = {d.id: d for d in Drawing.objects.filter(id__in=drawing_ids)}
+        materials = {m.id: m for m in Material.objects.filter(id__in=material_ids)}
 
         order_cost = 0
         order = Order.objects.create(user=request.user)
+        
         for detail_data in details_to_create:
-            drawing = Drawing.objects.get(id=detail_data["drawing_id"])
-            material = Material.objects.get(id=detail_data["material_id"])
+            drawing = drawings.get(detail_data["drawing_id"])
+            material = materials.get(detail_data["material_id"])
+            
+            if not drawing or not material:
+                messages.error(request, "Не знайдено креслення або матеріал.")
+                order.delete()
+                return redirect("core:create_order")
+                
             detail = Detail.objects.create(
                 drawing=drawing,
                 order=order,
@@ -354,10 +428,11 @@ def create_order(request):
             order_cost += (
                 detail.material_cost + detail.cutting_cost + detail.bending_cost
             ) * detail_data["quantity"]
-            order.total_cost = order_cost
-            order.save()
 
-        messages.success(request, "Замовлення успішн створено!")
+        order.total_cost = order_cost
+        order.save()
+
+        messages.success(request, "Замовлення успішно створено!")
         return redirect("core:order")
 
     materials = Material.objects.filter(available=True)
@@ -369,19 +444,20 @@ def create_order(request):
         "material_type": Material.MaterialTypeChoices.choices,
         "materials": materials,
         "materials_json": materials_json,
+        "initial_data": request.POST,
     }
     return render(request, "orders/create_order.html", context)
 
 
+@login_required
 def detail_price(request):
-    print("GET parameters:", request.GET)
     index = request.GET.get("index")
     if not index:
         for key in request.GET.keys():
             if key.startswith("form-") and key.endswith("-drawing"):
                 index = key.split("-")[1]
                 break
-
+    
     if not index:
         return HttpResponse(
             "<div class='order-form-price-result'>Помилка: не знайдено індекс</div>"
@@ -392,36 +468,47 @@ def detail_price(request):
     thickness = request.GET.get(f"form-{index}-thickness")
     quantity = request.GET.get(f"form-{index}-quantity")
 
-    if thickness:
-        thickness = thickness.replace(",", ".")
-
     if not all([drawing_id, material_id, thickness, quantity]):
         return HttpResponse(
             f"<div class='order-form-price-result' data-index='{index}' hx-get='{request.build_absolute_uri().split('?')[0]}?index={index}' hx-trigger='change from:select,input delay:300ms' hx-include='closest .order-drawing-block' hx-target='this' hx-swap='outerHTML'>Заповніть всі поля для розрахунку</div>"
         )
 
     try:
-        drawing = get_object_or_404(Drawing, id=drawing_id)
+        if not drawing_id.isdigit() or not material_id.isdigit():
+            raise ValueError("Некоректні ID чертежа або матеріалу")
+            
+        if not thickness or not quantity:
+            raise ValueError("Відсутні дані про товщину або кількість")
+
+        # Новая проверка: толщина не может быть 0
+        thickness_clean = thickness.replace(",", ".")
+        if Decimal(thickness_clean) == 0:
+            return HttpResponse(
+                f"<div class='order-form-price-result' data-index='{index}' hx-get='{request.build_absolute_uri().split('?')[0]}?index={index}' hx-trigger='change from:select,input delay:300ms' hx-include='closest .order-drawing-block' hx-target='this' hx-swap='outerHTML'>Товщина повинна бути більше 0</div>"
+            )
+
+        drawing = get_object_or_404(Drawing, id=drawing_id, user=request.user)
         material = get_object_or_404(Material, id=material_id)
 
-        total_area_m2 = get_drawing_area_m2(drawing.file_path.path)
-        thickness_m = Decimal(thickness) / 1000
+        thickness_m = Decimal(thickness_clean) / 1000
 
+        total_area_m2 = get_drawing_area_m2(drawing.file_path.path)
         volume_m3 = total_area_m2 * thickness_m
         mass_kg = volume_m3 * material.density
-
         material_cost = mass_kg * material.price_per_kg
 
+        PRICE_PER_DEGREE = Decimal("0.1")
+        MAX_BEND_ANGLE = 180
+        MIN_BEND_ANGLE = 0
+
         cutting_type = drawing.processing_types.filter(name="Лазерне різання").first()
+        cutting_cost = Decimal(0)
         if cutting_type:
             cutting_cost = cutting_type.base_cost_per_unit * Decimal(
                 drawing.length_of_cuts
             )
-        else:
-            cutting_cost = Decimal(0)
 
         bending_type = drawing.processing_types.filter(name="Згинання").first()
-        price_per_degree = Decimal("0.1")
         bending_cost = Decimal(0)
         if drawing.angles and bending_type:
             degrees = [
@@ -430,14 +517,12 @@ def detail_price(request):
                 if angle.get("degree")
             ]
             for degree in degrees:
-                if 0 < degree <= 180:
-                    cost = bending_type.base_cost_per_unit + (price_per_degree * degree)
+                if MIN_BEND_ANGLE < degree <= MAX_BEND_ANGLE:
+                    cost = bending_type.base_cost_per_unit + (PRICE_PER_DEGREE * degree)
                     bending_cost += cost
 
         quantity = int(quantity)
-
         total_per_piece = material_cost + cutting_cost + bending_cost
-
         total = total_per_piece * quantity
 
         price_html = (
@@ -449,6 +534,10 @@ def detail_price(request):
         response_html = f"<div class='order-form-price-result' data-index='{index}' hx-get='{request.build_absolute_uri().split('?')[0]}?index={index}' hx-trigger='change from:select,input delay:300ms' hx-include='closest .order-drawing-block' hx-target='this' hx-swap='outerHTML'>{price_html}</div>"
         return HttpResponse(response_html)
 
+    except (ValueError, TypeError) as e:
+        return HttpResponse(
+            f"<div class='order-form-price-result' data-index='{index}' hx-get='{request.build_absolute_uri().split('?')[0]}?index={index}' hx-trigger='change from:select,input delay:300ms' hx-include='closest .order-drawing-block' hx-target='this' hx-swap='outerHTML'>Помилка: некоректні дані</div>"
+        )
     except Exception as e:
         return HttpResponse(
             f"<div class='order-form-price-result' data-index='{index}' hx-get='{request.build_absolute_uri().split('?')[0]}?index={index}' hx-trigger='change from:select,input delay:300ms' hx-include='closest .order-drawing-block' hx-target='this' hx-swap='outerHTML'>Помилка: {str(e)}</div>"
