@@ -7,35 +7,13 @@ const successIcon = document.getElementById('successIcon');
 const uploadText = document.getElementById('uploadText');
 const uploadDetailsText = document.getElementById('uploadDetailsText');
 
-const selectedProcessesInput = document.getElementById('selectedProcesses');
-let selectedProcesses = [];
-
-document.querySelectorAll('.process-button').forEach(button => {
-    button.addEventListener('click', function() {
-        if (!this.classList.contains('active')) return;
-
-        const processId = this.dataset.id;
-
-        if (this.classList.contains('selected')) {
-            this.classList.remove('selected');
-            selectedProcesses = selectedProcesses.filter(id => id !== processId);
-        } else {
-            this.classList.add('selected');
-            selectedProcesses.push(processId);
-        }
-
-        selectedProcessesInput.value = selectedProcesses.join(',');
-    });
-});
-
 function updateFileList(files) {
     selectedFilesContainer.innerHTML = '';
     if (files.length > 0) {
-        // Показываем галочку
         defaultIcon.style.display = 'none';
         successIcon.style.display = 'block';
 
-        const file = files[0]; // Берём первый файл
+        const file = files[0]; 
         uploadText.textContent = file.name;
         uploadDetailsText.textContent = `${(file.size / 1024 / 1024).toFixed(2)} МБ`;
 
@@ -43,7 +21,6 @@ function updateFileList(files) {
         p.textContent = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
         selectedFilesContainer.appendChild(p);
     } else {
-        // Возвращаем дефолт
         defaultIcon.style.display = 'block';
         successIcon.style.display = 'none';
         uploadText.textContent = "Перетягніть файли сюди або клікніть для вибору";

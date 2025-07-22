@@ -68,18 +68,6 @@
                     {% endif %}
                 </div>
 
-                <div class="processes-section">
-                    <label class="input-field-label">
-                        Оберіть процеси які мають бути оброблені за вашим кресленням <span class="required-indicator">*</span>
-                    </label>
-                    <div class="processes-grid">
-                        {% for process in process_types %}
-                            <button type="button" data-id="{{ process.id }}" class="process-button {% if process.is_active %}active{% endif %}">{{ process.name }}</button>
-                        {% endfor %}
-                    </div>
-                    <input type="hidden" id="selectedProcesses" name="processes" value="">
-                </div>
-
                 <div class="input-field-group">
                     <label class="input-field-label" for="{{ form.description.id_for_label }}">Опис</label>
                     {{ form.description }}
@@ -105,14 +93,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitButton = document.getElementById('submitButton');
     const nameInput = document.getElementById('id_name');
     const fileInput = document.getElementById('id_file_path');
-    const processButtons = document.querySelectorAll('.process-button');
 
     function checkFormState() {
         const isFileSelected = fileInput.files.length > 0;
         const isNameEntered = nameInput.value.trim() !== '';
-        const isProcessSelected = document.querySelectorAll('.process-button.selected').length > 0;
-
-        if (isFileSelected && isNameEntered && isProcessSelected) {
+        if (isFileSelected && isNameEntered) {
             submitButton.disabled = false;
         } else {
             submitButton.disabled = true;
@@ -121,12 +106,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     fileInput.addEventListener('change', checkFormState);
     nameInput.addEventListener('input', checkFormState);
-
-    processButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            setTimeout(checkFormState, 0);
-        });
-    });
 
     checkFormState();
 });

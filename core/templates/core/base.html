@@ -25,6 +25,9 @@
                     <li><a href="{% url 'core:order' %}">Замовлення</a></li>
                     <li><a href="{% url 'core:drawing' %}">Креслення</a></li>
                     <li><a href="{% url 'users:profile' %}">Профіль</a></li>
+                    {% if user.is_superuser %}
+                    <li><a href="{% url 'admin:index' %}">Адміністратор</a></li>
+                    {% endif %}
                     <li><a onclick="openLogoutModal()">{{user.email}} | Вихід</a></li>
                     {% else %}
                     <li class="nav-align-right"><a href="{% url 'core:about' %}">Про нас</a></li>

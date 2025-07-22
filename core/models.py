@@ -9,7 +9,6 @@ from django.contrib.postgres.fields import ArrayField
 from .utils import get_bounding_box_area_m2
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-from django.contrib import admin
 
 User = settings.AUTH_USER_MODEL
 
@@ -100,18 +99,14 @@ class Consumables(models.Model):
 
 class Drawing(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="drawings", verbose_name=_("Користувач"))
-    processing_types = models.ManyToManyField(ProcessingType, related_name="drawings", verbose_name=_("Типи обробки"))
     name = models.CharField(max_length=255, verbose_name=_("Назва"))
     file_path = models.FileField(upload_to="drawings/%Y/%m/%d", verbose_name=_("Файл креслення"))
     original_filename = models.CharField(max_length=255, blank=True, editable=False, verbose_name=_("Оригінальна назва файлу"))
     file_size = models.PositiveIntegerField(blank=True, editable=False, verbose_name=_("Розмір файлу (байт)"))
     uploaded_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Дата завантаження"))
     description = models.TextField(blank=True, null=True, verbose_name=_("Опис"))
-    length_of_cuts = models.FloatField(default=0, verbose_name=_("Довжина різів (м)"))
-    angles = models.JSONField(blank=True, null=True, default=list, verbose_name=_("Кути"))
     layers = models.JSONField(blank=True, null=True, default=list, verbose_name=_("Шари"))
-    cutting_layers = models.JSONField(blank=True, null=True, default=list, verbose_name=_("Шари різання"))
-    bending_layers = models.JSONField(blank=True, null=True, default=list, verbose_name=_("Шари згинання"))
+    process_settings = models.JSONField(default=dict, blank=True, null=True, verbose_name=_("Налаштування процесів"))
     configured = models.BooleanField(default=False, verbose_name=_("Налаштовано"))
 
     def __str__(self):
@@ -234,11 +229,11 @@ class Detail(models.Model):
             "original_filename": drawing.original_filename,
             "file_size": drawing.file_size,
             "description": drawing.description,
-            "length_of_cuts": drawing.length_of_cuts,
-            "angles": drawing.angles,
+            "length_of_cuts": drawing.process_settings.get("1", {}).get("length_of_cuts", 0),
+            "angles": drawing.process_settings.get("2", {}).get("angles", []),
             "layers": drawing.layers,
-            "cutting_layers": drawing.cutting_layers,
-            "bending_layers": drawing.bending_layers,
+            "cutting_layers": drawing.process_settings.get("1", {}).get("layers", []),
+            "bending_layers": drawing.process_settings.get("2", {}).get("layers", []),
             "configured": drawing.configured,
         }
 
@@ -258,22 +253,24 @@ class Detail(models.Model):
 
         material_cost = mass_kg * material.price_per_kg
 
-        cutting_type = drawing.processing_types.filter(name="Лазерне різання").first()
+        from .models import ProcessingType
+        cutting_type = ProcessingType.objects.filter(id=1).first()
+        cutting_settings = drawing.process_settings.get("1", {})
+        length_of_cuts = Decimal(cutting_settings.get("length_of_cuts", 0) or 0)
         if cutting_type:
-            cutting_cost = cutting_type.base_cost_per_unit * Decimal(
-                drawing.length_of_cuts
-            )
+            cutting_cost = cutting_type.base_cost_per_unit * length_of_cuts
         else:
             cutting_cost = Decimal(0)
 
-        bending_type = drawing.processing_types.filter(name="Згинання").first()
+        bending_type = ProcessingType.objects.filter(id=2).first()
         price_per_degree = Decimal("0.1")
         bending_cost = Decimal(0)
-        if drawing.angles and bending_type:
+        angles = drawing.process_settings.get("2", {}).get("angles", [])
+        if angles and bending_type:
             degrees = [
                 int(angle.get("degree", 0))
-                for angle in drawing.angles
-                if angle.get("degree")
+                for angle in angles
+                    if angle.get("degree")
             ]
             for degree in degrees:
                 if 0 < degree <= 180:

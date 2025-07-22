@@ -5,6 +5,7 @@ from django.utils.html import format_html
 from pygments import highlight
 from pygments.lexers import JsonLexer
 from pygments.formatters import HtmlFormatter
+import json
 
 class DetailInline(admin.TabularInline):
     model = Detail
@@ -14,33 +15,31 @@ class DetailInline(admin.TabularInline):
 
 @admin.register(Drawing)
 class DrawingAdmin(admin.ModelAdmin):
-    list_display = [
-        "user",
-        "get_processing_types",
-        "name",
-        "file_path",
-        "original_filename",
-        "file_size",
-        "description",
-        "uploaded_at",
-        "configured",
-    ]
-    search_fields = ["name", "user__username", "original_filename"]
-    list_filter = ["processing_types", "uploaded_at", "configured"]
-    readonly_fields = ["original_filename", "file_size", "uploaded_at"]
-    inlines = [DetailInline]
+    list_display = ("id", "name", "user", "uploaded_at", "configured")
+    readonly_fields = ("pretty_process_settings", "original_filename", "file_size", "uploaded_at")
+    search_fields = ("name", "user__email")
+    list_filter = ("configured", "uploaded_at")
     fieldsets = (
-        (_("Основна інформація"), {
-            "fields": ("user", "name", "description", "file_path", "original_filename", "file_size", "uploaded_at", "configured")
+        (None, {
+            "fields": ("user", "name", "file_path", "description", "layers", "pretty_process_settings", "configured")
         }),
-        (_("Обробка"), {
-            "fields": ("processing_types", "length_of_cuts", "angles", "layers", "cutting_layers", "bending_layers")
+        ("Службові поля", {
+            "fields": ("original_filename", "file_size", "uploaded_at"),
         }),
     )
 
-    def get_processing_types(self, obj):
-        return ", ".join([pt.name for pt in obj.processing_types.all()])
-    get_processing_types.short_description = _("Типи обробки")
+    def pretty_process_settings(self, obj):
+        if not obj.process_settings:
+            return "—"
+        formatted = json.dumps(obj.process_settings, indent=2, ensure_ascii=False)
+        return format_html(
+            '<pre style="font-family: monospace; font-size: 15px; background: #f4f4f4; color: #222; '
+            'padding: 16px; border-radius: 8px; border: 1px solid #ddd; max-width: 900px; overflow-x: auto;">'
+            '{}'
+            '</pre>',
+            formatted
+        )
+    pretty_process_settings.short_description = "Налаштування процесів (форматовано)"
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
@@ -69,40 +68,14 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(Material)
 class MaterialAdmin(admin.ModelAdmin):
-    list_display = [
-        "material_name",
-        "material_type",
-        "density",
-        "price_per_kg",
-        "properties",
-        "available",
-    ]
-    list_filter = ["available", "material_type"]
-    search_fields = ["material_name"]
-    list_editable = ["available"]
-    fieldsets = (
-        (_("Основна інформація"), {
-            "fields": ("material_name", "material_type", "available")
-        }),
-        (_("Властивості"), {
-            "fields": ("density", "price_per_kg", "properties")
-        }),
-    )
+    list_display = ("id", "material_name", "material_type", "available")
+    search_fields = ("material_name",)
+    list_filter = ("material_type", "available")
 
 @admin.register(Detail)
 class DetailAdmin(admin.ModelAdmin):
-    list_display = [
-        "drawing",
-        "order",
-        "material",
-        "thickness",
-        "quantity",
-        "material_cost",
-        "cutting_cost",
-        "bending_cost",
-    ]
-    list_filter = ["material", "order"]
-    search_fields = ["drawing__name", "order__order_number", "material__material_name"]
+    list_display = ("id", "order", "drawing", "material", "quantity", "thickness")
+    search_fields = ("order__order_number", "drawing__name", "material__material_name")
     readonly_fields = ["drawing_snapshot_pretty"]
 
     fieldsets = (
@@ -128,16 +101,9 @@ class DetailAdmin(admin.ModelAdmin):
 
 @admin.register(ProcessingType)
 class ProcessingTypeAdmin(admin.ModelAdmin):
-    list_display = [
-        "name",
-        "base_cost_per_unit",
-        "cost_unit",
-        "unit_name",
-        "description",
-        "is_active",
-    ]
-    list_filter = ["is_active"]
-    search_fields = ["name"]
+    list_display = ("id", "name", "is_active")
+    search_fields = ("name",)
+    list_filter = ("is_active",)
 
 @admin.register(Consumables)
 class ConsumablesAdmin(admin.ModelAdmin):

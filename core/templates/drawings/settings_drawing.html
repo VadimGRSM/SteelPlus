@@ -1,5 +1,6 @@
 {% extends "core/base.html" %}
 {% load static %}
+{% load dict_extras %}
 
 {% block CSS %}
     <script src="https://unpkg.com/htmx.org@1.9.2"></script>
@@ -24,18 +25,6 @@
         </div>
     {% endif %}
 
-    {% if form.errors %}
-        <div class="validation-error">
-            <h4>Ошибки валидации:</h4>
-            <ul>
-                {% for field, errors in form.errors.items %}
-                    {% for error in errors %}
-                        <li>{{ field }}: {{ error }}</li>
-                    {% endfor %}
-                {% endfor %}
-            </ul>
-        </div>
-    {% endif %}
     <div class="page-container">
         <main class="primary-section">
             <h1 class="page-heading">Налаштування креслення</h1>
@@ -72,35 +61,41 @@
 
         <aside class="sidebar-panel">
             <h2 class="info-heading">Загальна інформація</h2>
-            {% for pt in object.processing_types.all %}
-                {% if pt.id == 1 %}
-                    <div class="process-section">
+            <div class="process-multiselect-block" style="margin-bottom: 20px;">
+                <label for="process-multiselect">Оберіть процеси:</label>
+                <select id="process-multiselect" name="processing_types" multiple="multiple" class="dropdown-multiselect">
+                  {% for pt in all_processing_types %}
+                     <option value="{{ pt.id }}" placeholder="Оберіть процеси" {% if pt.id|stringformat:"s" in process_settings %}selected{% endif %}>{{ pt.name }}</option>
+                  {% endfor %}
+                </select>
+            </div>
+            {% for pt in all_processing_types %}
+                {% with settings=process_settings|get_item:pt.id %}
+                <div class="process-section" data-process-id="{{ pt.id }}" style="{% if not settings %}display:none;{% endif %}">
+                    {% if pt.id == 1 %}
                         <h3>Налаштування різки</h3>
                         <div class="info-item">
                             <div class="info-label">Оберіть шари для різки на кресленні</div>
-                            <select multiple class="dropdown-multiselect" name="cutting" hx-get="{% url 'core:cutting_length' %}?drawing_id={{ drawing.id }}" hx-target="#cutting-length-container" hx-trigger="change">
+                            <select multiple placeholder="Оберіть шари" class="dropdown-multiselect" name="cutting" hx-get="{% url 'core:cutting_length' %}?drawing_id={{ drawing.id }}" hx-target="#cutting-length-container" hx-trigger="change">
                                 {% for layer in drawing.layers %}
-                                    <option value="{{ layer }}" {% if layer in saved_cutting_layers %}selected{% endif %}>{{ layer }}</option>
+                                    <option value="{{ layer }}" {% if settings and layer in settings.layers %}selected{% endif %}>{{ layer }}</option>
                                 {% endfor %}
                             </select>
-                            {{ form.length_of_cuts }}
+                            <input type="hidden" id="id_length_of_cuts" name="length_of_cuts" value="{{ settings.length_of_cuts|default:'' }}">
                         </div>
                         <div class="info-item" id="cutting-length-container">
-                            <div class="info-label">Довжина різу {{ object.length_of_cuts|default:"..." }} mm</div>
+                            <div class="info-label">Довжина різу {{ settings.length_of_cuts|default:"..." }} mm</div>
                         </div>
-                    </div>
-                {% endif %}
-                {% if pt.id == 2 %}
-                    <div class="process-section">
+                    {% elif pt.id == 2 %}
                         <h3>Налаштування згинання</h3>
                         <div class="info-item">
                             <div class="info-label">Оберіть шари з кутами для згинання на кресленні</div>
-                            <select multiple class="dropdown-multiselect" name="bending" hx-get="{% url 'core:bends_setting' %}?drawing_id={{ drawing.id }}" hx-target="#table-bends" hx-trigger="change">
+                            <select multiple placeholder="Оберіть шари" class="dropdown-multiselect" name="bending" hx-get="{% url 'core:bends_setting' %}?drawing_id={{ drawing.id }}" hx-target="#table-bends" hx-trigger="change">
                                 {% for layer in drawing.layers %}
-                                    <option value="{{ layer }}" {% if layer in saved_bending_layers %}selected{% endif %}>{{ layer }}</option>
+                                    <option value="{{ layer }}" {% if settings and layer in settings.layers %}selected{% endif %}>{{ layer }}</option>
                                 {% endfor %}
                             </select>
-                            {{ form.angles }}
+                            <input type="hidden" id="id_angles_{{ pt.id }}" name="angles_{{ pt.id }}" value='{{ settings.angles|default:"[]"|safe }}'>
                         </div>
 
                         <div id="corner-config">
@@ -114,13 +109,13 @@
                                             <th>Напрямок (Вверх)</th>
                                             <th>
                                                 Радіус<br>
-                                                <button <button type='button' class="select-all-button" onclick="openRadiusModal(-1)">Обрати для всіх</button>
+                                                <button type='button' class="select-all-button" onclick="openRadiusModal(-1)">Обрати для всіх</button>
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody id="table-bends">
-                                    {% if saved_angles %}
-                                    {% for bend in saved_angles %}
+                                    {% if settings.angles %}
+                                    {% for bend in settings.angles %}
                                         <tr>
                                             <td>
                                                 <button type='button' class='pick-point-btn picked'>{{ bend.point }}</button>
@@ -145,8 +140,9 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
-                {% endif %}
+                    {% endif %}
+                </div>
+                {% endwith %}
             {% endfor %}
         </aside>
     </div>
@@ -198,10 +194,27 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
 $(document).ready(function() {
+    $('#process-multiselect').select2({
+        width: '100%'
+    });
     $('.dropdown-multiselect').select2({
-        placeholder: "Оберіть шари",
         minimumResultsForSearch: Infinity,
         width: '100%'
+    });
+
+    $('#process-multiselect').on('change', function() {
+        var selected = $(this).val() || [];
+        $('.process-section[data-process-id]').each(function() {
+            var pid = $(this).data('process-id').toString();
+            if (selected.includes(pid)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+        if (typeof updateSaveButtonState === 'function') {
+            updateSaveButtonState();
+        }
     });
 });
 

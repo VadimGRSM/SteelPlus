@@ -38,7 +38,6 @@ def drawing(request):
 def delete_drawing(request, pk):
     drawing = get_object_or_404(Drawing, pk=pk, user=request.user)
 
-    # Проверка на связанные детали (Detail)
     if drawing.details.exists():
         messages.error(request, "Неможливо видалити креслення, оскільки воно використовується в замовленнях.")
         return redirect("core:drawing")
@@ -69,33 +68,12 @@ class UploadDrawing(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         response = super().form_valid(form)
-
-        processes_str = self.request.POST.get("processes", "")
-        if not processes_str:
-            form.add_error(None, "Потрібно вибрати хоча б один процес.")
-            return self.form_invalid(form)
-        if processes_str:
-            process_ids = [
-                int(pid) for pid in processes_str.split(",") if pid.isdigit()
-            ]
-            form.instance.processing_types.set(process_ids)
-        else:
-            form.instance.processing_types.clear()
-
         generate_preview_background.delay(self.object.pk, self.object.file_path.path)
-
         generate_layer_previews.delay(
             dxf_path=self.object.file_path.path, drawing_id=self.object.pk
         )
 
         return response
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["process_types"] = ProcessingType.objects.all().order_by(
-            "-is_active", "name"
-        )
-        return context
 
 
 @login_required
@@ -123,7 +101,7 @@ class SettingsDrawing(LoginRequiredMixin, UpdateView):
     template_name = "drawings/settings_drawing.html"
 
     def get_success_url(self):
-        return reverse_lazy("core:settings_drawing", kwargs={"pk": self.object.pk})
+        return reverse_lazy("core:drawing")
 
     def get_object(self, queryset=None):
         pk = self.kwargs.get("pk")
@@ -143,9 +121,8 @@ class SettingsDrawing(LoginRequiredMixin, UpdateView):
                     previews.append((layer, default_storage.url(preview_filename)))
 
         context["layer_previews"] = previews
-        context["saved_cutting_layers"] = self.object.cutting_layers or []
-        context["saved_bending_layers"] = self.object.bending_layers or []
-        context["saved_angles"] = self.object.angles or []
+        context["all_processing_types"] = ProcessingType.objects.order_by('id') 
+        context["process_settings"] = self.object.process_settings or {}
         return context
 
     def get_form_kwargs(self):
@@ -155,80 +132,31 @@ class SettingsDrawing(LoginRequiredMixin, UpdateView):
         return kwargs
 
     def form_valid(self, form):
-        cutting_layers = self.request.POST.getlist("cutting")
-        bending_layers = self.request.POST.getlist("bending")
-
-        validation_errors = []
-
-        MIN_ANGLE = 0
-        MAX_ANGLE = 180
-        DEFAULT_POINT_PLACEHOLDERS = ["Обрати", "Клікніть на зображення"]
-
-        overlapping_layers = set(cutting_layers) & set(bending_layers)
-        if overlapping_layers:
-            validation_errors.append(
-                f"Шари не можуть використовуватися одночасно для різання та згинання: {', '.join(overlapping_layers)}"
-            )
-
-        if bending_layers:
-            angles_data = form.cleaned_data.get("angles", [])
-            if not angles_data:
-                validation_errors.append(
-                    "Для шарів згинання необхідно налаштувати кути."
-                )
-            else:
-                for i, angle in enumerate(angles_data):
-                    point = angle.get("point", "").strip()
-                    if (
-                        not point
-                        or point in DEFAULT_POINT_PLACEHOLDERS
-                    ):
-                        validation_errors.append(
-                            f"Кут {i + 1}: не вибрано крапку на зображенні."
-                        )
-
+        process_settings = {}
+        for pt in ProcessingType.objects.all():
+            pid = str(pt.id)
+            if pid in self.request.POST.getlist('processing_types'):
+                if pt.id == 1:
+                    process_settings[pid] = {
+                        "type": "cutting",
+                        "layers": self.request.POST.getlist("cutting"),
+                        "length_of_cuts": self.request.POST.get("length_of_cuts"),
+                    }
+                elif pt.id == 2:
+                    angles = self.request.POST.get("angles_2")
                     try:
-                        degree = float(angle.get("degree", 0))
-                        if degree < MIN_ANGLE or degree > MAX_ANGLE:
-                            validation_errors.append(
-                                f"Кут {i + 1}: градус має бути від {MIN_ANGLE} до {MAX_ANGLE}."
-                            )
-                    except (ValueError, TypeError):
-                        validation_errors.append(
-                            f"Кут {i + 1}: некоректне значення градуса."
-                        )
-
-                    radius = angle.get("radius", "").strip()
-                    if not radius or radius == "Обрати":
-                        validation_errors.append(
-                            f"Кут {i + 1}: не заданий радіус згинання."
-                        )
-
-        if validation_errors:
-            for error in validation_errors:
-                messages.error(self.request, error)
-            return self.form_invalid(form)
-
-        self.object.cutting_layers = cutting_layers
-        self.object.bending_layers = bending_layers
+                        angles = json.loads(angles) if angles else []
+                    except Exception:
+                        angles = []
+                    process_settings[pid] = {
+                        "type": "bending",
+                        "layers": self.request.POST.getlist("bending"),
+                        "angles": angles,
+                    }
+        self.object.process_settings = process_settings
         self.object.description = form.cleaned_data["description"]
-        self.object.length_of_cuts = form.cleaned_data["length_of_cuts"]
-
-        angles_str = form.cleaned_data["angles"]
-        if angles_str:
-            if isinstance(angles_str, str):
-                try:
-                    self.object.angles = json.loads(angles_str)
-                except json.JSONDecodeError:
-                    self.object.angles = []
-            else:
-                self.object.angles = angles_str
-        else:
-            self.object.angles = []
-
         self.object.configured = True
         self.object.save()
-
         messages.success(self.request, "Налаштування креслення успішно збережено!")
         return HttpResponseRedirect(self.get_success_url())
 
@@ -236,7 +164,6 @@ class SettingsDrawing(LoginRequiredMixin, UpdateView):
         for field, errors in form.errors.items():
             for error in errors:
                 messages.error(self.request, f"{field}: {error}")
-
         return super().form_invalid(form)
 
 
@@ -485,7 +412,6 @@ def detail_price(request):
         if not thickness or not quantity:
             raise ValueError("Відсутні дані про товщину або кількість")
 
-        # Новая проверка: толщина не может быть 0
         thickness_clean = thickness.replace(",", ".")
         if Decimal(thickness_clean) == 0:
             return HttpResponse(
@@ -496,7 +422,6 @@ def detail_price(request):
         material = get_object_or_404(Material, id=material_id)
 
         thickness_m = Decimal(thickness_clean) / 1000
-
         total_area_m2 = get_bounding_box_area_m2(drawing.file_path.path)
         volume_m3 = total_area_m2 * thickness_m
         mass_kg = volume_m3 * material.density
@@ -506,19 +431,22 @@ def detail_price(request):
         MAX_BEND_ANGLE = 180
         MIN_BEND_ANGLE = 0
 
-        cutting_type = drawing.processing_types.filter(name="Лазерне різання").first()
+        # Вместо drawing.processing_types используем прямой запрос к ProcessingType
+        cutting_type = ProcessingType.objects.filter(id=1).first()
+        cutting_settings = drawing.process_settings.get("1", {})
+        length_of_cuts = Decimal(cutting_settings.get("length_of_cuts", 0) or 0)
         cutting_cost = Decimal(0)
         if cutting_type:
-            cutting_cost = cutting_type.base_cost_per_unit * Decimal(
-                drawing.length_of_cuts
-            )
+            cutting_cost = cutting_type.base_cost_per_unit * length_of_cuts
 
-        bending_type = drawing.processing_types.filter(name="Згинання").first()
+        bending_type = ProcessingType.objects.filter(id=2).first()
+        bending_settings = drawing.process_settings.get("2", {})
         bending_cost = Decimal(0)
-        if drawing.angles and bending_type:
+        angles = bending_settings.get("angles", [])
+        if angles and bending_type:
             degrees = [
                 int(angle.get("degree", 0))
-                for angle in drawing.angles
+                for angle in angles
                 if angle.get("degree")
             ]
             for degree in degrees:

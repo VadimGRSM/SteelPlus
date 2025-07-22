@@ -72,8 +72,6 @@ document.querySelector('.save-button').addEventListener('click', function () {
         alert('Помилка вибору шарів! Шари для різки та згинання не повинні перетинатися.');
         return;
     }
-
-    alert('Зміни збережено успішно!');
 });
 
 // =================== Модальне вікно ===================
@@ -228,36 +226,51 @@ function updateSaveButtonState() {
     const saveButton = document.querySelector('.save-button');
     if (!saveButton) return;
 
+    const selectedProcessIds = Array.from(document.querySelectorAll('#process-multiselect option:checked')).map(opt => opt.value);
+    if (selectedProcessIds.length === 0) {
+        saveButton.disabled = true;
+        saveButton.style.opacity = '0.5';
+        saveButton.style.cursor = 'not-allowed';
+        saveButton.title = 'Оберіть хоча б один процес';
+        return;
+    }
+
+    let isValid = true;
+    let errorMessage = '';
+
+    selectedProcessIds.forEach(pid => {
+        if (pid == '1') { // Різка
+            const cuttingSelect = document.querySelector('.process-section[data-process-id="1"] select[name="cutting"]');
+            if (cuttingSelect && cuttingSelect.selectedOptions.length === 0) {
+                isValid = false;
+                errorMessage += 'Оберіть хоча б один шар для різки.\n';
+            }
+        }
+        if (pid == '2') { // Гибка
+            const bendingSelect = document.querySelector('.process-section[data-process-id="2"] select[name="bending"]');
+            if (bendingSelect && bendingSelect.selectedOptions.length === 0) {
+                isValid = false;
+                errorMessage += 'Оберіть хоча б один шар для згинання.\n';
+            }
+            const bendingValidation = validateBendingConfiguration();
+            if (!bendingValidation.valid) {
+                isValid = false;
+                errorMessage += bendingValidation.errors.join('\n');
+            }
+        }
+        // Можно додати перевірки і для інших процесів
+    });
+
     const isLayerSelectionValid = validateLayerSelection();
-    const bendingValidation = validateBendingConfiguration();
-
-    const cuttingLayers = Array.from(document.querySelectorAll('select[name="cutting"] option:checked')).map(option => option.value);
-    const bendingLayers = Array.from(document.querySelectorAll('select[name="bending"] option:checked')).map(option => option.value);
-
-    const cuttingSelectExists = document.querySelector('select[name="cutting"]') !== null;
-    const bendingSelectExists = document.querySelector('select[name="bending"]') !== null;
-
-    const allSelectsValid = (!cuttingSelectExists || cuttingLayers.length > 0) &&
-                           (!bendingSelectExists || bendingLayers.length > 0);
-
-    const isValid = isLayerSelectionValid && bendingValidation.valid && allSelectsValid;
+    if (!isLayerSelectionValid) {
+        isValid = false;
+        errorMessage += 'Шари для різання та згинання не повинні перетинатися.\n';
+    }
 
     saveButton.disabled = !isValid;
     saveButton.style.opacity = isValid ? '1' : '0.5';
     saveButton.style.cursor = isValid ? 'pointer' : 'not-allowed';
-
-    if (!isValid) {
-        let errorMessage = '';
-        if (!isLayerSelectionValid) {
-            errorMessage += 'Шари для різання та згинання не повинні перетинатися.\n';
-        }
-        if (!bendingValidation.valid) {
-            errorMessage += bendingValidation.errors.join('\n');
-        }
-        saveButton.title = errorMessage;
-    } else {
-        saveButton.title = '';
-    }
+    saveButton.title = isValid ? '' : errorMessage;
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -313,7 +326,9 @@ document.querySelector("form").addEventListener("submit", function (e) {
     const cuttingLengthLabel = document.querySelector("#cutting-length-container .info-label");
     const cuttingLengthText = cuttingLengthLabel ? cuttingLengthLabel.textContent.trim() : "0";
     const lengthValue = cuttingLengthText.match(/[\d\.]+/);
-    document.getElementById("id_length_of_cuts").value = lengthValue ? lengthValue[0] : "0";
+    if (document.getElementById("id_length_of_cuts")) {
+        document.getElementById("id_length_of_cuts").value = lengthValue ? lengthValue[0] : "0";
+    }
 
     const rows = document.querySelectorAll(".corner-table tbody tr");
     const bendsData = [];
@@ -337,7 +352,10 @@ document.querySelector("form").addEventListener("submit", function (e) {
         }
     });
 
-    document.getElementById("id_angles").value = JSON.stringify(bendsData);
+    var anglesInput = document.getElementById("id_angles_2");
+    if (anglesInput) {
+        anglesInput.value = JSON.stringify(bendsData);
+    }
 });
 
 const originalConfirmRadius = confirmRadius;
