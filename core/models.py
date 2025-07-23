@@ -5,8 +5,7 @@ from decimal import Decimal, ROUND_HALF_UP
 from django.db import models
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.postgres.fields import ArrayField
-from .utils import get_bounding_box_area_m2
+from .utils import get_details_area_m2  
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
@@ -245,7 +244,7 @@ class Detail(models.Model):
         material = self.material
         drawing = self.drawing
 
-        total_area_m2 = get_bounding_box_area_m2(drawing.file_path.path)
+        total_area_m2 = get_details_area_m2(drawing.file_path.path)
         thickness_m = Decimal(self.thickness) / 1000
 
         volume_m3 = total_area_m2 * thickness_m
@@ -263,7 +262,7 @@ class Detail(models.Model):
             cutting_cost = Decimal(0)
 
         bending_type = ProcessingType.objects.filter(id=2).first()
-        price_per_degree = Decimal("0.1")
+        price_per_degree = Decimal("0.2")
         bending_cost = Decimal(0)
         angles = drawing.process_settings.get("2", {}).get("angles", [])
         if angles and bending_type:

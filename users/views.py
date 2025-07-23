@@ -11,7 +11,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.urls import reverse, reverse_lazy
 
-from .utils import send_email_for_verify
+from .utils import send_email_for_verify, token_generator
 from .form import (
     LoginUserForm,
     RegisterUserForm,

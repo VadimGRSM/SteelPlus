@@ -61,6 +61,7 @@ class LoginUserForm(AuthenticationForm):
             attrs={
                 "type": "email",
                 "placeholder": "your@email.com",
+                "autocomplete": "new-email",
             }
         ),
     )
@@ -70,6 +71,7 @@ class LoginUserForm(AuthenticationForm):
             attrs={
                 "id": "loginPassword",
                 "placeholder": "Введіть пароль",
+                "autocomplete": "new-password",
             }
         ),
     )
@@ -86,6 +88,7 @@ class RegisterUserForm(forms.ModelForm):
             attrs={
                 "id": "registerPassword",
                 "placeholder": "Створіть пароль",
+                "autocomplete": "new-password",
             }
         ),
     )
@@ -95,6 +98,7 @@ class RegisterUserForm(forms.ModelForm):
             attrs={
                 "id": "confirmPassword",
                 "placeholder": "Повторить пароль",
+                "autocomplete": "new-password",
             }
         ),
     )
@@ -109,11 +113,11 @@ class RegisterUserForm(forms.ModelForm):
             "phone_number": "Номер телефону",
         }
         widgets = {
-            "email": forms.TextInput(attrs={"placeholder": "your@email.com"}),
-            "first_name": forms.TextInput(),
-            "last_name": forms.TextInput(),
+            "email": forms.TextInput(attrs={"placeholder": "your@email.com", "autocomplete": "new-email"}),
+            "first_name": forms.TextInput(attrs={"placeholder": "Введіть ім'я"}),
+            "last_name": forms.TextInput(attrs={"placeholder": "Введіть прізвище"}),
             "phone_number": forms.TextInput(
-                attrs={"type": "tel", "pattern": r"^(\+380\d{9}|0\d{9})$"}
+                attrs={"type": "tel", "pattern": r"^(\+380\d{9}|0\d{9})$", "autocomplete": "new-tel", "placeholder": "+380XXXXXXXXX"}
             ),
         }
 

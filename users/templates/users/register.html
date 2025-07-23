@@ -10,7 +10,7 @@
 <p class="form-subtitle">Заповніть форму для створення нового акаунту</p>
 
 <div style="width: 500px; margin: 0 auto; margin-bottom: 50px;">
-    <form method="post">
+    <form method="post" autocomplete="off">
         {% csrf_token %}
 
         <input type="hidden" name="next" value="{{ next }}">
@@ -66,7 +66,7 @@
             <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
             <div class="input-wrapper">
                 {{ form.password1 }}
-                <button type="button" class="password-toggle" onclick="togglePassword('registerPassword')">⚪</button>
+                <button type="button" class="password-toggle" onclick="togglePassword('registerPassword', this)">⚪</button>
             </div>
             {% if form.password1.errors %}
                 <div class="field-errors">
@@ -79,7 +79,7 @@
             <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
             <div class="input-wrapper">
                 {{ form.password2 }}
-                <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">⚪</button>
+                <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword', this)">⚪</button>
             </div>
             {% if form.password2.errors %}
                 <div class="field-errors">
@@ -93,9 +93,15 @@
 </div>
 
 <script>
-function togglePassword(inputId) {
+function togglePassword(inputId, btn) {
     const input = document.getElementById(inputId);
-    input.type = input.type === "password" ? "text" : "password";
+    if (input.type === "password") {
+        input.type = "text";
+        btn.textContent = "🔵";
+    } else {
+        input.type = "password";
+        btn.textContent = "⚪";
+    }
 }
 </script>
 

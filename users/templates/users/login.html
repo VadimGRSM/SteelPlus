@@ -10,7 +10,7 @@
 <p class="form-subtitle">Введіть ваші дані для входу в систему</p>
 
 <div style="width: 500px; margin: 0 auto;">
-    <form method="post">
+    <form method="post" autocomplete="off">
         {% csrf_token %}
 
         <input type="hidden" name="next" value="{{ next }}">
