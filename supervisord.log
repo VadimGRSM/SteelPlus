@@ -1,0 +1,135 @@
+2025-07-24 15:51:08,047 INFO supervisord started with pid 888469
+2025-07-24 15:51:09,049 INFO spawned: 'celery' with pid 888471
+2025-07-24 15:51:09,051 INFO spawned: 'gunicorn' with pid 888472
+2025-07-24 15:51:10,257 INFO success: celery entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 15:51:10,257 INFO success: gunicorn entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 15:51:33,165 WARN received SIGTERM indicating exit request
+2025-07-24 15:51:33,165 INFO waiting for celery, gunicorn to die
+2025-07-24 15:51:33,165 WARN received SIGTERM indicating exit request
+2025-07-24 15:51:33,380 INFO stopped: gunicorn (exit status 0)
+2025-07-24 15:51:36,384 INFO waiting for celery to die
+2025-07-24 15:51:37,305 INFO stopped: celery (exit status 0)
+2025-07-24 15:51:37,543 INFO supervisord started with pid 888909
+2025-07-24 15:51:38,546 INFO spawned: 'celery' with pid 888911
+2025-07-24 15:51:38,547 INFO spawned: 'gunicorn' with pid 888912
+2025-07-24 15:51:39,697 INFO success: celery entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 15:51:39,697 INFO success: gunicorn entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 16:02:48,222 WARN received SIGTERM indicating exit request
+2025-07-24 16:02:48,222 INFO waiting for celery, gunicorn to die
+2025-07-24 16:02:48,222 WARN received SIGTERM indicating exit request
+2025-07-24 16:02:48,437 INFO stopped: gunicorn (exit status 0)
+2025-07-24 16:02:51,440 INFO waiting for celery to die
+2025-07-24 16:02:52,329 INFO stopped: celery (exit status 0)
+2025-07-24 16:02:52,560 INFO supervisord started with pid 891803
+2025-07-24 16:02:53,562 INFO spawned: 'celery' with pid 891806
+2025-07-24 16:02:53,563 INFO spawned: 'gunicorn' with pid 891807
+2025-07-24 16:02:54,757 INFO success: celery entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 16:02:54,757 INFO success: gunicorn entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 16:03:58,236 WARN received SIGTERM indicating exit request
+2025-07-24 16:03:58,237 INFO waiting for celery, gunicorn to die
+2025-07-24 16:03:58,237 WARN received SIGTERM indicating exit request
+2025-07-24 16:03:58,552 INFO stopped: gunicorn (exit status 0)
+2025-07-24 16:04:01,555 INFO waiting for celery to die
+2025-07-24 16:04:01,933 INFO stopped: celery (exit status 0)
+2025-07-24 16:04:02,169 INFO supervisord started with pid 892420
+2025-07-24 16:04:03,172 INFO spawned: 'celery' with pid 892422
+2025-07-24 16:04:03,173 INFO spawned: 'gunicorn' with pid 892423
+2025-07-24 16:04:04,392 INFO success: celery entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 16:04:04,392 INFO success: gunicorn entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 16:05:31,579 WARN received SIGTERM indicating exit request
+2025-07-24 16:05:31,579 INFO waiting for celery, gunicorn to die
+2025-07-24 16:05:31,579 WARN received SIGTERM indicating exit request
+2025-07-24 16:05:31,793 INFO stopped: gunicorn (exit status 0)
+2025-07-24 16:05:34,798 INFO waiting for celery to die
+2025-07-24 16:05:35,561 INFO stopped: celery (exit status 0)
+2025-07-24 16:05:35,788 INFO supervisord started with pid 893101
+2025-07-24 16:05:36,790 INFO spawned: 'celery' with pid 893105
+2025-07-24 16:05:36,791 INFO spawned: 'gunicorn' with pid 893106
+2025-07-24 16:05:38,057 INFO success: celery entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 16:05:38,057 INFO success: gunicorn entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 16:07:59,280 WARN received SIGTERM indicating exit request
+2025-07-24 16:07:59,281 INFO waiting for celery, gunicorn to die
+2025-07-24 16:07:59,281 WARN received SIGTERM indicating exit request
+2025-07-24 16:07:59,498 INFO stopped: gunicorn (exit status 0)
+2025-07-24 16:08:02,501 INFO waiting for celery to die
+2025-07-24 16:08:03,394 INFO stopped: celery (exit status 0)
+2025-07-24 16:08:03,634 INFO supervisord started with pid 893988
+2025-07-24 16:08:04,636 INFO spawned: 'celery' with pid 893991
+2025-07-24 16:08:04,637 INFO spawned: 'gunicorn' with pid 893992
+2025-07-24 16:08:05,858 INFO success: celery entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 16:08:05,858 INFO success: gunicorn entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 16:43:27,862 WARN received SIGTERM indicating exit request
+2025-07-24 16:43:27,862 INFO waiting for celery, gunicorn to die
+2025-07-24 16:43:27,863 WARN received SIGTERM indicating exit request
+2025-07-24 16:43:28,179 INFO stopped: gunicorn (exit status 0)
+2025-07-24 16:43:31,183 INFO waiting for celery to die
+2025-07-24 16:43:31,513 INFO stopped: celery (exit status 0)
+2025-07-24 16:43:31,751 INFO supervisord started with pid 903533
+2025-07-24 16:43:32,754 INFO spawned: 'celery' with pid 903535
+2025-07-24 16:43:32,755 INFO spawned: 'gunicorn' with pid 903536
+2025-07-24 16:43:33,980 INFO success: celery entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 16:43:33,980 INFO success: gunicorn entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 16:44:47,937 WARN received SIGTERM indicating exit request
+2025-07-24 16:44:47,937 INFO waiting for celery, gunicorn to die
+2025-07-24 16:44:47,937 WARN received SIGTERM indicating exit request
+2025-07-24 16:44:48,151 INFO stopped: gunicorn (exit status 0)
+2025-07-24 16:44:51,099 INFO stopped: celery (exit status 0)
+2025-07-24 16:44:51,338 INFO supervisord started with pid 904014
+2025-07-24 16:44:52,340 INFO spawned: 'celery' with pid 904017
+2025-07-24 16:44:52,341 INFO spawned: 'gunicorn' with pid 904018
+2025-07-24 16:44:53,557 INFO success: celery entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 16:44:53,557 INFO success: gunicorn entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 16:49:50,098 WARN received SIGTERM indicating exit request
+2025-07-24 16:49:50,099 INFO waiting for celery, gunicorn to die
+2025-07-24 16:49:50,099 WARN received SIGTERM indicating exit request
+2025-07-24 16:49:50,214 INFO stopped: gunicorn (exit status 0)
+2025-07-24 16:49:53,218 INFO waiting for celery to die
+2025-07-24 16:49:53,296 INFO stopped: celery (exit status 0)
+2025-07-24 16:49:53,530 INFO supervisord started with pid 905374
+2025-07-24 16:49:54,533 INFO spawned: 'celery' with pid 905376
+2025-07-24 16:49:54,534 INFO spawned: 'gunicorn' with pid 905377
+2025-07-24 16:49:55,757 INFO success: celery entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 16:49:55,757 INFO success: gunicorn entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 16:53:25,448 WARN received SIGTERM indicating exit request
+2025-07-24 16:53:25,448 INFO waiting for celery, gunicorn to die
+2025-07-24 16:53:25,448 WARN received SIGTERM indicating exit request
+2025-07-24 16:53:25,665 INFO stopped: gunicorn (exit status 0)
+2025-07-24 16:53:28,669 INFO waiting for celery to die
+2025-07-24 16:53:29,229 INFO stopped: celery (exit status 0)
+2025-07-24 16:53:29,465 INFO supervisord started with pid 906529
+2025-07-24 16:53:30,468 INFO spawned: 'celery' with pid 906538
+2025-07-24 16:53:30,469 INFO spawned: 'gunicorn' with pid 906539
+2025-07-24 16:53:31,714 INFO success: celery entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 16:53:31,757 INFO success: gunicorn entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 16:57:33,459 WARN received SIGTERM indicating exit request
+2025-07-24 16:57:33,459 INFO waiting for celery, gunicorn to die
+2025-07-24 16:57:33,776 INFO stopped: gunicorn (exit status 0)
+2025-07-24 16:57:36,780 INFO waiting for celery to die
+2025-07-24 16:57:37,185 INFO stopped: celery (exit status 0)
+2025-07-24 16:57:37,431 INFO supervisord started with pid 907789
+2025-07-24 16:57:38,433 INFO spawned: 'celery' with pid 907791
+2025-07-24 16:57:38,434 INFO spawned: 'gunicorn' with pid 907792
+2025-07-24 16:57:39,757 INFO success: celery entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 16:57:39,757 INFO success: gunicorn entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 17:00:54,053 WARN received SIGTERM indicating exit request
+2025-07-24 17:00:54,053 INFO waiting for celery, gunicorn to die
+2025-07-24 17:00:54,053 WARN received SIGTERM indicating exit request
+2025-07-24 17:00:54,167 INFO stopped: gunicorn (exit status 0)
+2025-07-24 17:00:57,170 INFO waiting for celery to die
+2025-07-24 17:00:57,197 INFO stopped: celery (exit status 0)
+2025-07-24 17:00:57,427 INFO supervisord started with pid 909003
+2025-07-24 17:00:58,429 INFO spawned: 'celery' with pid 909008
+2025-07-24 17:00:58,430 INFO spawned: 'gunicorn' with pid 909009
+2025-07-24 17:00:59,582 INFO success: celery entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 17:00:59,582 INFO success: gunicorn entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 17:46:57,515 WARN received SIGTERM indicating exit request
+2025-07-24 17:46:57,515 INFO waiting for celery, gunicorn to die
+2025-07-24 17:46:57,515 WARN received SIGTERM indicating exit request
+2025-07-24 17:46:57,833 INFO stopped: gunicorn (exit status 0)
+2025-07-24 17:47:00,837 INFO waiting for celery to die
+2025-07-24 17:47:01,273 INFO stopped: celery (exit status 0)
+2025-07-24 17:47:01,508 INFO supervisord started with pid 920150
+2025-07-24 17:47:02,510 INFO spawned: 'celery' with pid 920197
+2025-07-24 17:47:02,511 INFO spawned: 'gunicorn' with pid 920198
+2025-07-24 17:47:03,665 INFO success: celery entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-07-24 17:47:03,665 INFO success: gunicorn entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)

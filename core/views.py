@@ -30,6 +30,12 @@ from django.shortcuts import render, HttpResponseRedirect
 @login_required
 def drawing(request):
     user_drawings = request.user.drawings.all().order_by("-uploaded_at")
+    for drawing in user_drawings:
+        preview_filename = f"previews/preview_{drawing.pk}.png"
+        if default_storage.exists(preview_filename):
+            drawing.preview_url = default_storage.url(preview_filename)
+        else:
+            drawing.preview_url = None
     context = {"drawings": user_drawings}
     return render(request, "core/drawing.html", context)
 
@@ -157,7 +163,7 @@ class SettingsDrawing(LoginRequiredMixin, UpdateView):
         self.object.description = form.cleaned_data["description"]
         self.object.configured = True
         self.object.save()
-        messages.success(self.request, "Налаштування креслення успішно збережено!")
+        messages.success(self.request, f"Налаштування креслення {self.object.name} успішно збережено!")
         return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form):

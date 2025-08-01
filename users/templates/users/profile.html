@@ -5,6 +5,10 @@
     <link rel="stylesheet" href="{% static 'users/style_profile.css' %}">
 {% endblock CSS %}
 
+{% block JS %}
+    <script src="{% static 'users/script_profile.js' %}"></script>
+{% endblock JS %}
+
 {% block title %}
     Сталь+ Профіль користувача
 {% endblock title %}
@@ -59,7 +63,7 @@
                     </div>
 
                     <div class="user-actions-row">
-                        <button type="submit" class="user-action-btn user-action-btn-save">Зберегти зміни</button>
+                        <button type="submit" class="user-action-btn user-action-btn-save" disabled>Зберегти зміни</button>
                         <a href="{% url 'users:password_change' %}"><button type="button" class="user-action-btn user-action-btn-change">Змінити пароль</button></a>
                     </div>
                 </form>

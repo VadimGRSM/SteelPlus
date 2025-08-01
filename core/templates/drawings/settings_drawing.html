@@ -56,7 +56,7 @@
                 {{ form.description }}
             </div>
 
-            <button type="submit" class="save-button" title="">Зберегти зміни</button>
+            <button type="submit" disabled="true" class="save-button" title="">Зберегти зміни</button>
         </main>
 
         <aside class="sidebar-panel">
@@ -65,7 +65,7 @@
                 <label for="process-multiselect">Оберіть процеси:</label>
                 <select id="process-multiselect" name="processing_types" multiple="multiple" class="dropdown-multiselect">
                   {% for pt in all_processing_types %}
-                     <option value="{{ pt.id }}" placeholder="Оберіть процеси" {% if pt.id|stringformat:"s" in process_settings %}selected{% endif %}>{{ pt.name }}</option>
+                     <option value="{{ pt.id }}" {% if pt.id|stringformat:"s" in process_settings %}selected{% endif %}>{{ pt.name }}</option>
                   {% endfor %}
                 </select>
             </div>
@@ -319,7 +319,13 @@ document.querySelector("form").addEventListener("submit", function (e) {
 
 $(document).ready(function() {
     $('.dropdown-multiselect').select2({
-        placeholder: "Оберіть шари",
+	placeholder: "Оберіть шари",
+        minimumResultsForSearch: Infinity,
+        width: '100%'
+    });
+
+    $('#process-multiselect').select2({
+        placeholder: "Оберіть процеси",
         minimumResultsForSearch: Infinity,
         width: '100%'
     });

@@ -99,7 +99,12 @@ def entity_to_lines(entity):
                 lines.append([points[i], points[i + 1]])
 
         elif entity.dxftype() == "CIRCLE":
-            center = (float(entity.dxf.center[0]), float(entity.dxf.center[1]))
+            # 1. Отримуємо OCS об'єкта
+            ocs = entity.ocs()
+            # 2. Перетворюємо точку центру з OCS в WCS
+            wcs_center = ocs.to_wcs(entity.dxf.center)
+            
+            center = (wcs_center.x, wcs_center.y) # Використовуємо виправлені WCS координати
             radius = float(entity.dxf.radius)
             angles = np.linspace(0, 2 * np.pi, 33)
             points = [
@@ -110,7 +115,12 @@ def entity_to_lines(entity):
                 lines.append([points[i], points[i + 1]])
 
         elif entity.dxftype() == "ARC":
-            center = (float(entity.dxf.center[0]), float(entity.dxf.center[1]))
+            # 1. Отримуємо OCS об'єкта
+            ocs = entity.ocs()
+            # 2. Перетворюємо точку центру з OCS в WCS
+            wcs_center = ocs.to_wcs(entity.dxf.center)
+
+            center = (wcs_center.x, wcs_center.y) # Використовуємо виправлені WCS координати
             radius = float(entity.dxf.radius)
             start_angle = np.radians(float(entity.dxf.start_angle))
             end_angle = np.radians(float(entity.dxf.end_angle))
@@ -374,7 +384,7 @@ def get_drawing_area_m2(dxf_path: str) -> Decimal:
 
             total_area = max_polygon.area
 
-            area_m2 = total_area / 1000000.0  # мм² в м²
+            area_m2 = total_area / 1000000.0  # мм² у м²
 
             return Decimal(str(round(area_m2, 6)))
 
@@ -555,7 +565,7 @@ def get_details_area_m2(dxf_path: str) -> Decimal:
         detail_area = sum(p.area for p in polygons if p != max_polygon)
         if detail_area == 0:
             detail_area = max_polygon.area
-        area_m2 = detail_area / 1_000_000.0  # мм² в м²
+        area_m2 = detail_area / 1_000_000.0  # мм² у м²
         return Decimal(str(round(area_m2, 6)))
     except Exception as e:
         print(f"[ПОМИЛКА] Помилка отримання площі деталей: {e}")

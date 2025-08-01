@@ -130,7 +130,13 @@ function updateMaterialOptions(select) {
     const materialSelect = block.querySelector('.material-select');
     const selectedType = select.value;
 
-    materialSelect.innerHTML = '<option value="">Оберіть матеріал</option>';
+    materialSelect.innerHTML = '<option value="">Оберіть різновид матеріалу</option>';
+
+    if (!selectedType) {
+        materialSelect.disabled = true;
+        materialSelect.value = '';
+        return;
+    }
 
     allMaterials.forEach(mat => {
         if (mat.material_type == selectedType) {
@@ -140,7 +146,7 @@ function updateMaterialOptions(select) {
             materialSelect.appendChild(option);
         }
     });
-    
+    materialSelect.disabled = false;
     materialSelect.value = '';
 }
 
@@ -162,6 +168,7 @@ function addDrawing() {
 
         if (el.classList.contains('material-select')) {
             el.innerHTML = '<option value="">Спочатку оберіть вид матеріалу</option>';
+            el.disabled = true;
         }
 
         if (el.name && el.name.includes('form-')) {

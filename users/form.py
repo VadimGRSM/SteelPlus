@@ -6,7 +6,7 @@ from django.contrib.auth.forms import (
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
-
+ 
 
 class ProfileUserForm(forms.ModelForm):
     email = forms.CharField(
@@ -55,7 +55,7 @@ class UserPasswordChangeForm(PasswordChangeForm):
 
 
 class LoginUserForm(AuthenticationForm):
-    username = forms.EmailField(
+    username =  forms.EmailField(
         label="Електронна пошта",
         widget=forms.TextInput(
             attrs={

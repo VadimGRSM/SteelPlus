@@ -6,41 +6,43 @@
 
 {% block content %}
 
-<h2 class="form-title">Вхід в акаунт</h2>
-<p class="form-subtitle">Введіть ваші дані для входу в систему</p>
+<div style="width: 100%; height: calc(100vh - 80px);">
+    <h2 class="form-title">Вхід в акаунт</h2>
+    <p class="form-subtitle">Введіть ваші дані для входу в систему</p>
 
-<div style="width: 500px; margin: 0 auto;">
-    <form method="post" autocomplete="off">
-        {% csrf_token %}
+    <div style="width: 500px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, calc(-50% + 40px));">
+        <form method="post" autocomplete="off">
+            {% csrf_token %}
 
-        <input type="hidden" name="next" value="{{ next }}">
+            <input type="hidden" name="next" value="{{ next }}">
 
-        <div class="form-error">{{ form.non_field_errors }}</div>
+            <div class="form-error">{{ form.non_field_errors }}</div>
 
-        <br>
+            <br>
 
-        <div class="form-group">
-            <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
-            {{ form.username }}
-            {{ form.username.errors }}
-        </div>
-
-        <div class="form-group">
-            <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
-            <div class="input-wrapper">
-                {{ form.password }}
-                {{ form.password.errors }}
-                <button type="button" class="password-toggle" onclick="togglePassword()">⚪</button>
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+                {{ form.username }}
+                {{ form.username.errors }}
             </div>
+
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+                <div class="input-wrapper">
+                    {{ form.password }}
+                    {{ form.password.errors }}
+                    <button type="button" title="Показати пароль" class="password-toggle" onclick="togglePassword()">⚪</button>
+                </div>
+            </div>
+
+            <button type="submit" name="login" class="submit-btn">Увійти</button>
+        </form>
+
+        <div class="forgot-password">
+            <a href="{% url 'users:password_reset' %}">Забули пароль?</a>
+            <a href="{% url 'users:register' %}">Немає облікового запису?</a>
         </div>
-
-        <button type="submit" name="login" class="submit-btn">Увійти</button>
-    </form>
-</div>
-
-<div class="forgot-password">
-    <a href="{% url 'users:password_reset' %}">Забули пароль?</a>
-    <a href="{% url 'users:register' %}">Немає облікового запису?</a>
+    </div>
 </div>
 
 <script>
@@ -52,11 +54,13 @@ function togglePassword() {
         if (passwordInput.type === "password") {
             passwordInput.type = "text";
             toggleButton.textContent = "🔵";
+            toggleButton.title = "Приховати пароль";
             toggleButton.style.color = "#4444ff";
         } else {
             passwordInput.type = "password";
             toggleButton.textContent = "⚪";
             toggleButton.style.color = "#cccccc";
+            toggleButton.title = "Показати пароль";
         }
     }
 }
@@ -85,7 +89,6 @@ function togglePassword() {
     opacity: 0.7;
 }
 
-/* Додаємо відступ праворуч для input, щоб текст не перекривався кнопкою */
 .input-wrapper input[type="password"],
 .input-wrapper input[type="text"] {
     padding-right: 40px;

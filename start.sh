@@ -1,0 +1,1 @@
+source /home/lightpro/steel.com.ua/my/SteelPlus/venv/bin/activate && supervisord -c /home/lightpro/steel.com.ua/my/SteelPlus/supervisor.conf

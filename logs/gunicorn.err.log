@@ -1,0 +1,149 @@
+[2025-07-24 15:51:09 +0300] [888472] [INFO] Starting gunicorn 23.0.0
+[2025-07-24 15:51:09 +0300] [888472] [INFO] Listening at: http://127.1.3.248:3000 (888472)
+[2025-07-24 15:51:09 +0300] [888472] [INFO] Using worker: sync
+[2025-07-24 15:51:09 +0300] [888473] [INFO] Booting worker with pid: 888473
+[2025-07-24 15:51:09 +0300] [888474] [INFO] Booting worker with pid: 888474
+[2025-07-24 15:51:09 +0300] [888475] [INFO] Booting worker with pid: 888475
+[2025-07-24 15:51:33 +0300] [888473] [INFO] Worker exiting (pid: 888473)
+[2025-07-24 15:51:33 +0300] [888474] [INFO] Worker exiting (pid: 888474)
+[2025-07-24 15:51:33 +0300] [888472] [INFO] Handling signal: term
+[2025-07-24 15:51:33 +0300] [888475] [INFO] Worker exiting (pid: 888475)
+[2025-07-24 15:51:33 +0300] [888472] [ERROR] Worker (pid:888473) was sent SIGTERM!
+[2025-07-24 15:51:33 +0300] [888472] [INFO] Shutting down: Master
+[2025-07-24 15:51:38 +0300] [888912] [INFO] Starting gunicorn 23.0.0
+[2025-07-24 15:51:38 +0300] [888912] [INFO] Listening at: http://127.1.3.248:3000 (888912)
+[2025-07-24 15:51:38 +0300] [888912] [INFO] Using worker: sync
+[2025-07-24 15:51:38 +0300] [888913] [INFO] Booting worker with pid: 888913
+[2025-07-24 15:51:38 +0300] [888914] [INFO] Booting worker with pid: 888914
+[2025-07-24 15:51:38 +0300] [888915] [INFO] Booting worker with pid: 888915
+[2025-07-24 16:02:48 +0300] [888913] [INFO] Worker exiting (pid: 888913)
+[2025-07-24 16:02:48 +0300] [888912] [INFO] Handling signal: term
+[2025-07-24 16:02:48 +0300] [888915] [INFO] Worker exiting (pid: 888915)
+[2025-07-24 16:02:48 +0300] [888914] [INFO] Worker exiting (pid: 888914)
+[2025-07-24 16:02:48 +0300] [888912] [INFO] Shutting down: Master
+[2025-07-24 16:02:53 +0300] [891807] [INFO] Starting gunicorn 23.0.0
+[2025-07-24 16:02:53 +0300] [891807] [INFO] Listening at: http://127.1.3.248:3000 (891807)
+[2025-07-24 16:02:53 +0300] [891807] [INFO] Using worker: sync
+[2025-07-24 16:02:53 +0300] [891808] [INFO] Booting worker with pid: 891808
+[2025-07-24 16:02:53 +0300] [891809] [INFO] Booting worker with pid: 891809
+[2025-07-24 16:02:53 +0300] [891810] [INFO] Booting worker with pid: 891810
+[2025-07-24 16:03:58 +0300] [891807] [INFO] Handling signal: term
+[2025-07-24 16:03:58 +0300] [891808] [INFO] Worker exiting (pid: 891808)
+[2025-07-24 16:03:58 +0300] [891809] [INFO] Worker exiting (pid: 891809)
+[2025-07-24 16:03:58 +0300] [891810] [INFO] Worker exiting (pid: 891810)
+[2025-07-24 16:03:58 +0300] [891807] [INFO] Shutting down: Master
+[2025-07-24 16:04:03 +0300] [892423] [INFO] Starting gunicorn 23.0.0
+[2025-07-24 16:04:03 +0300] [892423] [INFO] Listening at: http://127.1.3.248:3000 (892423)
+[2025-07-24 16:04:03 +0300] [892423] [INFO] Using worker: sync
+[2025-07-24 16:04:03 +0300] [892424] [INFO] Booting worker with pid: 892424
+[2025-07-24 16:04:03 +0300] [892425] [INFO] Booting worker with pid: 892425
+[2025-07-24 16:04:03 +0300] [892426] [INFO] Booting worker with pid: 892426
+[2025-07-24 16:05:31 +0300] [892426] [INFO] Worker exiting (pid: 892426)
+[2025-07-24 16:05:31 +0300] [892423] [INFO] Handling signal: term
+[2025-07-24 16:05:31 +0300] [892425] [INFO] Worker exiting (pid: 892425)
+[2025-07-24 16:05:31 +0300] [892424] [INFO] Worker exiting (pid: 892424)
+[2025-07-24 16:05:31 +0300] [892423] [ERROR] Worker (pid:892426) was sent SIGTERM!
+[2025-07-24 16:05:31 +0300] [892423] [INFO] Shutting down: Master
+[2025-07-24 16:05:36 +0300] [893106] [INFO] Starting gunicorn 23.0.0
+[2025-07-24 16:05:36 +0300] [893106] [INFO] Listening at: http://127.1.3.248:3000 (893106)
+[2025-07-24 16:05:36 +0300] [893106] [INFO] Using worker: sync
+[2025-07-24 16:05:36 +0300] [893107] [INFO] Booting worker with pid: 893107
+[2025-07-24 16:05:36 +0300] [893108] [INFO] Booting worker with pid: 893108
+[2025-07-24 16:05:36 +0300] [893109] [INFO] Booting worker with pid: 893109
+[2025-07-24 16:07:59 +0300] [893106] [INFO] Handling signal: term
+[2025-07-24 16:07:59 +0300] [893107] [INFO] Worker exiting (pid: 893107)
+[2025-07-24 16:07:59 +0300] [893108] [INFO] Worker exiting (pid: 893108)
+[2025-07-24 16:07:59 +0300] [893109] [INFO] Worker exiting (pid: 893109)
+[2025-07-24 16:07:59 +0300] [893106] [INFO] Shutting down: Master
+[2025-07-24 16:08:04 +0300] [893992] [INFO] Starting gunicorn 23.0.0
+[2025-07-24 16:08:04 +0300] [893992] [INFO] Listening at: http://127.1.3.248:3000 (893992)
+[2025-07-24 16:08:04 +0300] [893992] [INFO] Using worker: sync
+[2025-07-24 16:08:04 +0300] [893993] [INFO] Booting worker with pid: 893993
+[2025-07-24 16:08:04 +0300] [893994] [INFO] Booting worker with pid: 893994
+[2025-07-24 16:08:04 +0300] [893995] [INFO] Booting worker with pid: 893995
+Not Found: /favicon.ico
+[2025-07-24 16:43:27 +0300] [893992] [INFO] Handling signal: term
+[2025-07-24 16:43:27 +0300] [893994] [INFO] Worker exiting (pid: 893994)
+[2025-07-24 16:43:27 +0300] [893993] [INFO] Worker exiting (pid: 893993)
+[2025-07-24 16:43:27 +0300] [893995] [INFO] Worker exiting (pid: 893995)
+[2025-07-24 16:43:28 +0300] [893992] [INFO] Shutting down: Master
+[2025-07-24 16:43:32 +0300] [903536] [INFO] Starting gunicorn 23.0.0
+[2025-07-24 16:43:32 +0300] [903536] [INFO] Listening at: http://127.1.3.248:3000 (903536)
+[2025-07-24 16:43:32 +0300] [903536] [INFO] Using worker: sync
+[2025-07-24 16:43:32 +0300] [903537] [INFO] Booting worker with pid: 903537
+[2025-07-24 16:43:32 +0300] [903538] [INFO] Booting worker with pid: 903538
+[2025-07-24 16:43:32 +0300] [903539] [INFO] Booting worker with pid: 903539
+[2025-07-24 16:44:47 +0300] [903536] [INFO] Handling signal: term
+[2025-07-24 16:44:47 +0300] [903539] [INFO] Worker exiting (pid: 903539)
+[2025-07-24 16:44:47 +0300] [903538] [INFO] Worker exiting (pid: 903538)
+[2025-07-24 16:44:47 +0300] [903537] [INFO] Worker exiting (pid: 903537)
+[2025-07-24 16:44:48 +0300] [903536] [INFO] Shutting down: Master
+[2025-07-24 16:44:52 +0300] [904018] [INFO] Starting gunicorn 23.0.0
+[2025-07-24 16:44:52 +0300] [904018] [INFO] Listening at: http://127.1.3.248:3000 (904018)
+[2025-07-24 16:44:52 +0300] [904018] [INFO] Using worker: sync
+[2025-07-24 16:44:52 +0300] [904019] [INFO] Booting worker with pid: 904019
+[2025-07-24 16:44:52 +0300] [904022] [INFO] Booting worker with pid: 904022
+[2025-07-24 16:44:52 +0300] [904023] [INFO] Booting worker with pid: 904023
+[2025-07-24 16:49:50 +0300] [904019] [INFO] Worker exiting (pid: 904019)
+[2025-07-24 16:49:50 +0300] [904023] [INFO] Worker exiting (pid: 904023)
+[2025-07-24 16:49:50 +0300] [904022] [INFO] Worker exiting (pid: 904022)
+[2025-07-24 16:49:50 +0300] [904018] [INFO] Handling signal: term
+[2025-07-24 16:49:50 +0300] [904018] [ERROR] Worker (pid:904023) was sent SIGTERM!
+[2025-07-24 16:49:50 +0300] [904018] [ERROR] Worker (pid:904019) was sent SIGTERM!
+[2025-07-24 16:49:50 +0300] [904018] [ERROR] Worker (pid:904022) was sent SIGTERM!
+[2025-07-24 16:49:50 +0300] [904018] [INFO] Shutting down: Master
+[2025-07-24 16:49:54 +0300] [905377] [INFO] Starting gunicorn 23.0.0
+[2025-07-24 16:49:54 +0300] [905377] [INFO] Listening at: http://127.1.3.248:3000 (905377)
+[2025-07-24 16:49:54 +0300] [905377] [INFO] Using worker: sync
+[2025-07-24 16:49:54 +0300] [905378] [INFO] Booting worker with pid: 905378
+[2025-07-24 16:49:54 +0300] [905379] [INFO] Booting worker with pid: 905379
+[2025-07-24 16:49:54 +0300] [905380] [INFO] Booting worker with pid: 905380
+[2025-07-24 16:53:25 +0300] [905377] [INFO] Handling signal: term
+[2025-07-24 16:53:25 +0300] [905380] [INFO] Worker exiting (pid: 905380)
+[2025-07-24 16:53:25 +0300] [905379] [INFO] Worker exiting (pid: 905379)
+[2025-07-24 16:53:25 +0300] [905378] [INFO] Worker exiting (pid: 905378)
+[2025-07-24 16:53:25 +0300] [905377] [INFO] Shutting down: Master
+[2025-07-24 16:53:30 +0300] [906539] [INFO] Starting gunicorn 23.0.0
+[2025-07-24 16:53:30 +0300] [906539] [INFO] Listening at: http://127.1.3.248:3000 (906539)
+[2025-07-24 16:53:30 +0300] [906539] [INFO] Using worker: sync
+[2025-07-24 16:53:30 +0300] [906540] [INFO] Booting worker with pid: 906540
+[2025-07-24 16:53:30 +0300] [906541] [INFO] Booting worker with pid: 906541
+[2025-07-24 16:53:30 +0300] [906542] [INFO] Booting worker with pid: 906542
+Not Found: /drawing/settings/\u0456\u0432\u0432\u0430\u0432\u045611/
+Not Found: /favicon.ico
+[2025-07-24 16:57:33 +0300] [906539] [INFO] Handling signal: term
+[2025-07-24 16:57:33 +0300] [906541] [INFO] Worker exiting (pid: 906541)
+[2025-07-24 16:57:33 +0300] [906542] [INFO] Worker exiting (pid: 906542)
+[2025-07-24 16:57:33 +0300] [906540] [INFO] Worker exiting (pid: 906540)
+[2025-07-24 16:57:33 +0300] [906539] [INFO] Shutting down: Master
+[2025-07-24 16:57:38 +0300] [907792] [INFO] Starting gunicorn 23.0.0
+[2025-07-24 16:57:38 +0300] [907792] [INFO] Listening at: http://127.1.3.248:3000 (907792)
+[2025-07-24 16:57:38 +0300] [907792] [INFO] Using worker: sync
+[2025-07-24 16:57:38 +0300] [907793] [INFO] Booting worker with pid: 907793
+[2025-07-24 16:57:38 +0300] [907794] [INFO] Booting worker with pid: 907794
+[2025-07-24 16:57:38 +0300] [907795] [INFO] Booting worker with pid: 907795
+[2025-07-24 17:00:54 +0300] [907793] [INFO] Worker exiting (pid: 907793)
+[2025-07-24 17:00:54 +0300] [907794] [INFO] Worker exiting (pid: 907794)
+[2025-07-24 17:00:54 +0300] [907792] [INFO] Handling signal: term
+[2025-07-24 17:00:54 +0300] [907795] [INFO] Worker exiting (pid: 907795)
+[2025-07-24 17:00:54 +0300] [907792] [ERROR] Worker (pid:907795) was sent SIGTERM!
+[2025-07-24 17:00:54 +0300] [907792] [ERROR] Worker (pid:907794) was sent SIGTERM!
+[2025-07-24 17:00:54 +0300] [907792] [ERROR] Worker (pid:907793) was sent SIGTERM!
+[2025-07-24 17:00:54 +0300] [907792] [INFO] Shutting down: Master
+[2025-07-24 17:00:58 +0300] [909009] [INFO] Starting gunicorn 23.0.0
+[2025-07-24 17:00:58 +0300] [909009] [INFO] Listening at: http://127.1.3.248:3000 (909009)
+[2025-07-24 17:00:58 +0300] [909009] [INFO] Using worker: sync
+[2025-07-24 17:00:58 +0300] [909010] [INFO] Booting worker with pid: 909010
+[2025-07-24 17:00:58 +0300] [909011] [INFO] Booting worker with pid: 909011
+[2025-07-24 17:00:58 +0300] [909012] [INFO] Booting worker with pid: 909012
+[2025-07-24 17:46:57 +0300] [909010] [INFO] Worker exiting (pid: 909010)
+[2025-07-24 17:46:57 +0300] [909011] [INFO] Worker exiting (pid: 909011)
+[2025-07-24 17:46:57 +0300] [909009] [INFO] Handling signal: term
+[2025-07-24 17:46:57 +0300] [909012] [INFO] Worker exiting (pid: 909012)
+[2025-07-24 17:46:57 +0300] [909009] [INFO] Shutting down: Master
+[2025-07-24 17:47:02 +0300] [920198] [INFO] Starting gunicorn 23.0.0
+[2025-07-24 17:47:02 +0300] [920198] [INFO] Listening at: http://127.1.3.248:3000 (920198)
+[2025-07-24 17:47:02 +0300] [920198] [INFO] Using worker: sync
+[2025-07-24 17:47:02 +0300] [920199] [INFO] Booting worker with pid: 920199
+[2025-07-24 17:47:02 +0300] [920200] [INFO] Booting worker with pid: 920200
+[2025-07-24 17:47:02 +0300] [920201] [INFO] Booting worker with pid: 920201

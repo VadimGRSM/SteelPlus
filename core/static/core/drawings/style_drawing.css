@@ -239,90 +239,6 @@
             height: 16px;
         }
 
-        .modal-overlay {
-            display: flex;
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.4);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .modal-overlay.show {
-            opacity: 1;
-            visibility: visible;
-            pointer-events: auto;
-        }
-
-        .modal-window {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-            min-width: 300px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-        }
-
-        .modal-overlay.show .modal-window {
-            transform: scale(1);
-        }
-
-        .modal-window h3 {
-            margin-bottom: 16px;
-            color: #333;
-            font-size: 18px;
-        }
-
-        .modal-window p {
-            color: #666;
-            margin-bottom: 24px;
-        }
-
-        .modal-actions {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        .modal-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .modal-btn.danger {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .modal-btn.danger:hover {
-            background-color: #c62828;
-        }
-
-        .modal-btn.secondary {
-            background-color: #f8f9fa;
-            color: #333;
-            border: 1px solid #dadce0;
-        }
-
-        .modal-btn.secondary:hover {
-            background-color: #e9ecef;
-        }
-
         .no-drawings {
             text-align: center;
             padding: 60px 20px;
@@ -363,3 +279,56 @@
                 align-items: flex-start;
             }
         }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-window {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            padding: 24px;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        .modal-window p {
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .modal-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal-btn.danger {
+            background-color: #999999;
+            color: white;
+        }
+

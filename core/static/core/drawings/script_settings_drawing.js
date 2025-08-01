@@ -222,6 +222,43 @@ function validateBendingConfiguration() {
     return { valid: errors.length === 0, errors };
 }
 
+function getFormState() {
+    const description = document.querySelector('[name="description"]')?.value || "";
+    const processes = Array.from(document.querySelectorAll('#process-multiselect option:checked')).map(opt => opt.value);
+    const cutting = Array.from(document.querySelectorAll('select[name="cutting"] option:checked')).map(opt => opt.value);
+    const bending = Array.from(document.querySelectorAll('select[name="bending"] option:checked')).map(opt => opt.value);
+
+    const bends = [];
+    document.querySelectorAll('.corner-table tbody tr').forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length === 4) {
+            const point = cells[0].querySelector('button')?.textContent.trim() || "";
+            const degree = cells[1].querySelector('input')?.value || "";
+            const orientation = cells[2].querySelector('input')?.checked ? "Вверх" : "Вниз";
+            const radius = cells[3].querySelector('button')?.textContent.trim() || "";
+            bends.push({ point, degree, orientation, radius });
+        }
+    });
+
+    return {
+        description,
+        processes,
+        cutting,
+        bending,
+        bends
+    };
+}
+
+let initialState = null;
+document.addEventListener('DOMContentLoaded', function() {
+    initialState = getFormState();
+});
+
+function isStateChanged() {
+    const current = getFormState();
+    return JSON.stringify(current) !== JSON.stringify(initialState);
+}
+
 function updateSaveButtonState() {
     const saveButton = document.querySelector('.save-button');
     if (!saveButton) return;
@@ -267,6 +304,14 @@ function updateSaveButtonState() {
         errorMessage += 'Шари для різання та згинання не повинні перетинатися.\n';
     }
 
+    if (!isStateChanged()) {
+        saveButton.disabled = true;
+        saveButton.style.opacity = '0.5';
+        saveButton.style.cursor = 'not-allowed';
+        saveButton.title = 'Немає змін для збереження';
+        return;
+    }
+
     saveButton.disabled = !isValid;
     saveButton.style.opacity = isValid ? '1' : '0.5';
     saveButton.style.cursor = isValid ? 'pointer' : 'not-allowed';
@@ -304,6 +349,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const tableBends = document.getElementById('table-bends');
     if (tableBends) {
         observer.observe(tableBends, { childList: true, subtree: true });
+    }
+
+    const descriptionInput = document.querySelector('[name="description"]');
+    if (descriptionInput) {
+        descriptionInput.addEventListener('input', updateSaveButtonState);
     }
 });
 

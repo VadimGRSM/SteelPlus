@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'core/base/style.css' %}">
     <link rel="stylesheet" href="{% static 'core/base/auth_reg_styles.css' %}">
-    <link rel="icon" href="{% static 'core/base/icon.png' %}" type="image/png">.
+    <link rel="icon" href="{% static 'core/base/icon.ico' %}">
     {% block CSS %} {% endblock CSS %}
     <title>{% block title %} {% endblock title %}</title>
 </head>
@@ -28,7 +28,7 @@
                     {% if user.is_superuser and user.is_staff %}
                     <li><a href="{% url 'admin:index' %}">Адміністратор</a></li>
                     {% endif %}
-                    <li><a onclick="openLogoutModal()">{{user.email}} | Вихід</a></li>
+                    <li><a onclick="openLogoutModal()" style="cursor: pointer;">{{user.email}} | Вихід</a></li>
                     {% else %}
                     <li class="nav-align-right"><a href="{% url 'core:about' %}">Про нас</a></li>
                     <li><a href="{% url 'users:login' %}">Вхід</a></li>
@@ -81,14 +81,6 @@
                         <li><a href="#support">Підтримка</a></li>
                     </ul>
                 </div>
-
-                <div class="footer-section">
-                    <h4>Контакти</h4>
-                    <div class="footer-contact">
-                        <p><strong>Email:</strong> example@gmail.com</p>
-                        <p><strong>Телефон:</strong> +380 44 123 45 67</p>
-                    </div>
-                </div>
             </div>
 
             <div class="footer-bottom">
@@ -106,6 +98,8 @@
             document.getElementById("logoutModal").style.display = "none";
         }
     </script>
+    
+    {% block JS %} {% endblock JS %}
 
 </body>
 </html>

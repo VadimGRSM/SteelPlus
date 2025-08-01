@@ -1,0 +1,37 @@
+[33mf6a41e2[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Deploy version of the site(2)
+[33md32ae77[m Deploy version of the site
+[33mfe6cb21[m Updated the drawing process settings page
+[33mb27fd3e[m Setting up and localizing the admin panel. Moving secret data to .env
+[33m3beefca[m Fixed a bug when evaluating a part when creating an order. Error messages have been configured.
+[33m4f5095b[m Orders and their creation
+[33m3f88368[m Improved settings page validation
+[33m85ded9f[m Merge pull request #12 from VadimGRSM/adding_verification
+[33mff76a92[m Adding mandatory verification after registration
+[33m42cec67[m Merge pull request #11 from VadimGRSM/adding_processes
+[33mb43ead5[m Creation and implementation of basic processes
+[33md8161ae[m Merge pull request #10 from VadimGRSM/fin-pages
+[33m8667f4f[m готові всі сторінки
+[33m15553fb[m практично готова сторінка налаштування креслення
+[33mc2920af[m створена сторінка налаштування креслення але не до кінця заливаю для того щоб не зламати те що вже готове
+[33mbd58dae[m Merge pull request #9 from VadimGRSM/error-404-&--refactoring
+[33m592a6f7[m добавлена сторінка error 404 виправлений баг з чекбоксами при створенні замовлення та баг на сторінці авторизації
+[33m8f8e5e1[m Merge pull request #8 from VadimGRSM/order
+[33m368c7d2[m добавлена сторінка створення замовлення та оплати
+[33mb7550f3[m Merge pull request #7 from VadimGRSM/setting_up_buttons
+[33mf6225e2[m Setting up view_drawing buttons
+[33mb920a02[m Merge pull request #6 from VadimGRSM/loading_drawings
+[33mf548576[m Interacting with drawings
+[33m0c4fb3f[m Merge pull request #5 from VadimGRSM/Add-view-drawing-pages
+[33mff6c0ba[m Добавлена сторінка перегляду креслень
+[33m34e471c[m Merge pull request #4 from VadimGRSM/Add-pages
+[33mbee0920[m добавлені стилі а також стоінки завантаження кресленнь а також оформлення замовлення
+[33m5092b4b[m Merge pull request #3 from VadimGRSM/auth_and_templates
+[33m212f3ab[m Authorization and registration (plus new templates)
+[33mc84514d[m Merge pull request #2 from VadimGRSM/add_first_pages
+[33m294f516[m Basic views have been created
+[33mcc2ed29[m Merge pull request #1 from VadimGRSM/create_models
+[33mc22540a[m Created several models (Drawing, Order, Material, Detail), and slightly configured the admin panel
+[33me9eb8c3[m Merge branch 'main' of https://github.com/VadimGRSM/SteelPlus
+[33m482913c[m URL settings and a little refactoring
+[33m551e212[m Update settings.py
+[33mbd74949[m Add Project

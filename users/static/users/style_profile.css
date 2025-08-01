@@ -143,6 +143,18 @@
     background-color: #3182ce;
 }
 
+.user-action-btn-save:disabled,
+.user-action-btn-disabled {
+    background-color: #cbd5e0;
+    color: #a0aec0;
+    cursor: not-allowed;
+}
+
+.user-action-btn-save:disabled:hover,
+.user-action-btn-disabled:hover {
+    background-color: #cbd5e0;
+}
+
 .user-action-btn-change {
     background-color: #e2e8f0;
     color: #4a5568;

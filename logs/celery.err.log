@@ -1,0 +1,206 @@
+[2025-07-24 15:51:11,029: INFO/MainProcess] Connected to sqla+mysql://lightpro_mysteel:**@lightpro.mysql.tools:3306/lightpro_mysteel
+[2025-07-24 15:51:11,047: INFO/MainProcess] celery@business-93.default-host.net ready.
+[2025-07-24 15:51:40,390: INFO/MainProcess] Connected to sqla+mysql://lightpro_mysteel:**@lightpro.mysql.tools:3306/lightpro_mysteel
+[2025-07-24 15:51:40,406: INFO/MainProcess] celery@business-93.default-host.net ready.
+[2025-07-24 16:02:55,555: INFO/MainProcess] Connected to sqla+mysql://lightpro_mysteel:**@lightpro.mysql.tools:3306/lightpro_mysteel
+[2025-07-24 16:02:55,571: INFO/MainProcess] celery@business-93.default-host.net ready.
+[2025-07-24 16:04:05,135: INFO/MainProcess] Connected to sqla+mysql://lightpro_mysteel:**@lightpro.mysql.tools:3306/lightpro_mysteel
+[2025-07-24 16:04:05,153: INFO/MainProcess] celery@business-93.default-host.net ready.
+[2025-07-24 16:05:38,813: INFO/MainProcess] Connected to sqla+mysql://lightpro_mysteel:**@lightpro.mysql.tools:3306/lightpro_mysteel
+[2025-07-24 16:05:38,830: INFO/MainProcess] celery@business-93.default-host.net ready.
+[2025-07-24 16:08:06,586: INFO/MainProcess] Connected to sqla+mysql://lightpro_mysteel:**@lightpro.mysql.tools:3306/lightpro_mysteel
+[2025-07-24 16:08:06,603: INFO/MainProcess] celery@business-93.default-host.net ready.
+[2025-07-24 16:35:05,622: INFO/MainProcess] Task core.utils.generate_preview_background[9427095a-0c61-4fe3-86da-9966d9afc165] received
+[2025-07-24 16:35:05,626: INFO/MainProcess] DXF version upgrade to DXF R2000.
+[2025-07-24 16:35:05,629: INFO/MainProcess] creating ACAD_COLOR dictionary
+[2025-07-24 16:35:05,629: INFO/MainProcess] creating ACAD_LAYOUT dictionary
+[2025-07-24 16:35:05,629: INFO/MainProcess] creating ACAD_MATERIAL dictionary
+[2025-07-24 16:35:05,629: INFO/MainProcess] creating ACAD_MLEADERSTYLE dictionary
+[2025-07-24 16:35:05,629: INFO/MainProcess] creating ACAD_PLOTSETTINGS dictionary
+[2025-07-24 16:35:05,629: INFO/MainProcess] creating ACAD_PLOTSTYLENAME dictionary
+[2025-07-24 16:35:05,629: INFO/MainProcess] creating ACAD_SCALELIST dictionary
+[2025-07-24 16:35:05,629: INFO/MainProcess] creating ACAD_TABLESTYLE dictionary
+[2025-07-24 16:35:05,629: INFO/MainProcess] creating ACAD_VISUALSTYLE dictionary
+[2025-07-24 16:35:05,638: WARNING/MainProcess] no fonts available, not even fallback fonts
+[2025-07-24 16:35:05,722: INFO/MainProcess] Task core.utils.generate_preview_background[9427095a-0c61-4fe3-86da-9966d9afc165] succeeded in 0.09931094502098858s: None
+[2025-07-24 16:35:05,725: INFO/MainProcess] Task core.utils.generate_layer_previews[5b831a2b-a17f-4120-9ea0-55b41e1ddcf8] received
+[2025-07-24 16:35:05,730: INFO/MainProcess] DXF version upgrade to DXF R2000.
+[2025-07-24 16:35:05,733: INFO/MainProcess] creating ACAD_COLOR dictionary
+[2025-07-24 16:35:05,733: INFO/MainProcess] creating ACAD_LAYOUT dictionary
+[2025-07-24 16:35:05,733: INFO/MainProcess] creating ACAD_MATERIAL dictionary
+[2025-07-24 16:35:05,733: INFO/MainProcess] creating ACAD_MLEADERSTYLE dictionary
+[2025-07-24 16:35:05,733: INFO/MainProcess] creating ACAD_PLOTSETTINGS dictionary
+[2025-07-24 16:35:05,733: INFO/MainProcess] creating ACAD_PLOTSTYLENAME dictionary
+[2025-07-24 16:35:05,733: INFO/MainProcess] creating ACAD_SCALELIST dictionary
+[2025-07-24 16:35:05,733: INFO/MainProcess] creating ACAD_TABLESTYLE dictionary
+[2025-07-24 16:35:05,733: INFO/MainProcess] creating ACAD_VISUALSTYLE dictionary
+[2025-07-24 16:35:05,737: INFO/MainProcess] DXF version upgrade to DXF R2000.
+[2025-07-24 16:35:05,739: INFO/MainProcess] creating ACAD_COLOR dictionary
+[2025-07-24 16:35:05,739: INFO/MainProcess] creating ACAD_LAYOUT dictionary
+[2025-07-24 16:35:05,739: INFO/MainProcess] creating ACAD_MATERIAL dictionary
+[2025-07-24 16:35:05,739: INFO/MainProcess] creating ACAD_MLEADERSTYLE dictionary
+[2025-07-24 16:35:05,739: INFO/MainProcess] creating ACAD_PLOTSETTINGS dictionary
+[2025-07-24 16:35:05,739: INFO/MainProcess] creating ACAD_PLOTSTYLENAME dictionary
+[2025-07-24 16:35:05,739: INFO/MainProcess] creating ACAD_SCALELIST dictionary
+[2025-07-24 16:35:05,739: INFO/MainProcess] creating ACAD_TABLESTYLE dictionary
+[2025-07-24 16:35:05,739: INFO/MainProcess] creating ACAD_VISUALSTYLE dictionary
+[2025-07-24 16:35:05,740: WARNING/MainProcess] LINE(#119)
+[2025-07-24 16:35:05,740: WARNING/MainProcess] LINE(#120)
+[2025-07-24 16:35:05,813: INFO/MainProcess] DXF version upgrade to DXF R2000.
+[2025-07-24 16:35:05,816: INFO/MainProcess] creating ACAD_COLOR dictionary
+[2025-07-24 16:35:05,816: INFO/MainProcess] creating ACAD_LAYOUT dictionary
+[2025-07-24 16:35:05,816: INFO/MainProcess] creating ACAD_MATERIAL dictionary
+[2025-07-24 16:35:05,816: INFO/MainProcess] creating ACAD_MLEADERSTYLE dictionary
+[2025-07-24 16:35:05,816: INFO/MainProcess] creating ACAD_PLOTSETTINGS dictionary
+[2025-07-24 16:35:05,816: INFO/MainProcess] creating ACAD_PLOTSTYLENAME dictionary
+[2025-07-24 16:35:05,816: INFO/MainProcess] creating ACAD_SCALELIST dictionary
+[2025-07-24 16:35:05,816: INFO/MainProcess] creating ACAD_TABLESTYLE dictionary
+[2025-07-24 16:35:05,816: INFO/MainProcess] creating ACAD_VISUALSTYLE dictionary
+[2025-07-24 16:35:05,816: WARNING/MainProcess] LINE(#121)
+[2025-07-24 16:35:05,817: WARNING/MainProcess] LINE(#122)
+[2025-07-24 16:35:05,817: WARNING/MainProcess] LINE(#123)
+[2025-07-24 16:35:05,817: WARNING/MainProcess] LINE(#124)
+[2025-07-24 16:35:05,889: INFO/MainProcess] DXF version upgrade to DXF R2000.
+[2025-07-24 16:35:05,892: INFO/MainProcess] creating ACAD_COLOR dictionary
+[2025-07-24 16:35:05,892: INFO/MainProcess] creating ACAD_LAYOUT dictionary
+[2025-07-24 16:35:05,892: INFO/MainProcess] creating ACAD_MATERIAL dictionary
+[2025-07-24 16:35:05,892: INFO/MainProcess] creating ACAD_MLEADERSTYLE dictionary
+[2025-07-24 16:35:05,892: INFO/MainProcess] creating ACAD_PLOTSETTINGS dictionary
+[2025-07-24 16:35:05,892: INFO/MainProcess] creating ACAD_PLOTSTYLENAME dictionary
+[2025-07-24 16:35:05,892: INFO/MainProcess] creating ACAD_SCALELIST dictionary
+[2025-07-24 16:35:05,892: INFO/MainProcess] creating ACAD_TABLESTYLE dictionary
+[2025-07-24 16:35:05,892: INFO/MainProcess] creating ACAD_VISUALSTYLE dictionary
+[2025-07-24 16:35:05,893: WARNING/MainProcess] LWPOLYLINE(#101)
+[2025-07-24 16:35:05,893: WARNING/MainProcess] LWPOLYLINE(#102)
+[2025-07-24 16:35:05,893: WARNING/MainProcess] LWPOLYLINE(#103)
+[2025-07-24 16:35:05,893: WARNING/MainProcess] LWPOLYLINE(#104)
+[2025-07-24 16:35:05,893: WARNING/MainProcess] LWPOLYLINE(#105)
+[2025-07-24 16:35:05,893: WARNING/MainProcess] LWPOLYLINE(#106)
+[2025-07-24 16:35:05,893: WARNING/MainProcess] LWPOLYLINE(#107)
+[2025-07-24 16:35:05,893: WARNING/MainProcess] LWPOLYLINE(#108)
+[2025-07-24 16:35:05,893: WARNING/MainProcess] LWPOLYLINE(#109)
+[2025-07-24 16:35:05,893: WARNING/MainProcess] LWPOLYLINE(#110)
+[2025-07-24 16:35:05,893: WARNING/MainProcess] LWPOLYLINE(#111)
+[2025-07-24 16:35:05,893: WARNING/MainProcess] LWPOLYLINE(#112)
+[2025-07-24 16:35:05,893: WARNING/MainProcess] LWPOLYLINE(#113)
+[2025-07-24 16:35:05,893: WARNING/MainProcess] LWPOLYLINE(#114)
+[2025-07-24 16:35:05,893: WARNING/MainProcess] LWPOLYLINE(#115)
+[2025-07-24 16:35:05,893: WARNING/MainProcess] LWPOLYLINE(#116)
+[2025-07-24 16:35:05,893: WARNING/MainProcess] LWPOLYLINE(#117)
+[2025-07-24 16:35:05,893: WARNING/MainProcess] LWPOLYLINE(#118)
+[2025-07-24 16:35:05,967: INFO/MainProcess] DXF version upgrade to DXF R2000.
+[2025-07-24 16:35:05,969: INFO/MainProcess] creating ACAD_COLOR dictionary
+[2025-07-24 16:35:05,970: INFO/MainProcess] creating ACAD_LAYOUT dictionary
+[2025-07-24 16:35:05,970: INFO/MainProcess] creating ACAD_MATERIAL dictionary
+[2025-07-24 16:35:05,970: INFO/MainProcess] creating ACAD_MLEADERSTYLE dictionary
+[2025-07-24 16:35:05,970: INFO/MainProcess] creating ACAD_PLOTSETTINGS dictionary
+[2025-07-24 16:35:05,970: INFO/MainProcess] creating ACAD_PLOTSTYLENAME dictionary
+[2025-07-24 16:35:05,970: INFO/MainProcess] creating ACAD_SCALELIST dictionary
+[2025-07-24 16:35:05,970: INFO/MainProcess] creating ACAD_TABLESTYLE dictionary
+[2025-07-24 16:35:05,970: INFO/MainProcess] creating ACAD_VISUALSTYLE dictionary
+[2025-07-24 16:35:05,970: WARNING/MainProcess] LWPOLYLINE(#100)
+[2025-07-24 16:35:06,054: INFO/MainProcess] Task core.utils.generate_layer_previews[5b831a2b-a17f-4120-9ea0-55b41e1ddcf8] succeeded in 0.32930529399891384s: None
+[2025-07-24 16:43:34,701: INFO/MainProcess] Connected to sqla+mysql://lightpro_mysteel:**@lightpro.mysql.tools:3306/lightpro_mysteel
+[2025-07-24 16:43:34,719: INFO/MainProcess] celery@business-93.default-host.net ready.
+[2025-07-24 16:44:54,327: INFO/MainProcess] Connected to sqla+mysql://lightpro_mysteel:**@lightpro.mysql.tools:3306/lightpro_mysteel
+[2025-07-24 16:44:54,344: INFO/MainProcess] celery@business-93.default-host.net ready.
+[2025-07-24 16:49:56,489: INFO/MainProcess] Connected to sqla+mysql://lightpro_mysteel:**@lightpro.mysql.tools:3306/lightpro_mysteel
+[2025-07-24 16:49:56,506: INFO/MainProcess] celery@business-93.default-host.net ready.
+[2025-07-24 16:53:32,362: INFO/MainProcess] Connected to sqla+mysql://lightpro_mysteel:**@lightpro.mysql.tools:3306/lightpro_mysteel
+[2025-07-24 16:53:32,381: INFO/MainProcess] celery@business-93.default-host.net ready.
+[2025-07-24 16:57:40,511: INFO/MainProcess] Connected to sqla+mysql://lightpro_mysteel:**@lightpro.mysql.tools:3306/lightpro_mysteel
+[2025-07-24 16:57:40,528: INFO/MainProcess] celery@business-93.default-host.net ready.
+[2025-07-24 17:01:00,285: INFO/MainProcess] Connected to sqla+mysql://lightpro_mysteel:**@lightpro.mysql.tools:3306/lightpro_mysteel
+[2025-07-24 17:01:00,303: INFO/MainProcess] celery@business-93.default-host.net ready.
+[2025-07-24 17:47:04,434: INFO/MainProcess] Connected to sqla+mysql://lightpro_mysteel:**@lightpro.mysql.tools:3306/lightpro_mysteel
+[2025-07-24 17:47:04,451: INFO/MainProcess] celery@business-93.default-host.net ready.
+[2025-07-24 17:47:26,510: INFO/MainProcess] Task core.utils.generate_preview_background[51ca413a-33c8-471b-9e29-fd35f822e821] received
+[2025-07-24 17:47:26,514: INFO/MainProcess] DXF version upgrade to DXF R2000.
+[2025-07-24 17:47:26,517: INFO/MainProcess] creating ACAD_COLOR dictionary
+[2025-07-24 17:47:26,517: INFO/MainProcess] creating ACAD_LAYOUT dictionary
+[2025-07-24 17:47:26,517: INFO/MainProcess] creating ACAD_MATERIAL dictionary
+[2025-07-24 17:47:26,517: INFO/MainProcess] creating ACAD_MLEADERSTYLE dictionary
+[2025-07-24 17:47:26,517: INFO/MainProcess] creating ACAD_PLOTSETTINGS dictionary
+[2025-07-24 17:47:26,517: INFO/MainProcess] creating ACAD_PLOTSTYLENAME dictionary
+[2025-07-24 17:47:26,517: INFO/MainProcess] creating ACAD_SCALELIST dictionary
+[2025-07-24 17:47:26,517: INFO/MainProcess] creating ACAD_TABLESTYLE dictionary
+[2025-07-24 17:47:26,517: INFO/MainProcess] creating ACAD_VISUALSTYLE dictionary
+[2025-07-24 17:47:26,527: WARNING/MainProcess] no fonts available, not even fallback fonts
+[2025-07-24 17:47:26,610: INFO/MainProcess] Task core.utils.generate_preview_background[51ca413a-33c8-471b-9e29-fd35f822e821] succeeded in 0.09974157001124695s: None
+[2025-07-24 17:47:26,613: INFO/MainProcess] Task core.utils.generate_layer_previews[1a91c37e-d1f3-4dec-addc-45ea92eb2c55] received
+[2025-07-24 17:47:26,617: INFO/MainProcess] DXF version upgrade to DXF R2000.
+[2025-07-24 17:47:26,619: INFO/MainProcess] creating ACAD_COLOR dictionary
+[2025-07-24 17:47:26,619: INFO/MainProcess] creating ACAD_LAYOUT dictionary
+[2025-07-24 17:47:26,620: INFO/MainProcess] creating ACAD_MATERIAL dictionary
+[2025-07-24 17:47:26,620: INFO/MainProcess] creating ACAD_MLEADERSTYLE dictionary
+[2025-07-24 17:47:26,620: INFO/MainProcess] creating ACAD_PLOTSETTINGS dictionary
+[2025-07-24 17:47:26,620: INFO/MainProcess] creating ACAD_PLOTSTYLENAME dictionary
+[2025-07-24 17:47:26,620: INFO/MainProcess] creating ACAD_SCALELIST dictionary
+[2025-07-24 17:47:26,620: INFO/MainProcess] creating ACAD_TABLESTYLE dictionary
+[2025-07-24 17:47:26,620: INFO/MainProcess] creating ACAD_VISUALSTYLE dictionary
+[2025-07-24 17:47:26,623: INFO/MainProcess] DXF version upgrade to DXF R2000.
+[2025-07-24 17:47:26,626: INFO/MainProcess] creating ACAD_COLOR dictionary
+[2025-07-24 17:47:26,626: INFO/MainProcess] creating ACAD_LAYOUT dictionary
+[2025-07-24 17:47:26,626: INFO/MainProcess] creating ACAD_MATERIAL dictionary
+[2025-07-24 17:47:26,626: INFO/MainProcess] creating ACAD_MLEADERSTYLE dictionary
+[2025-07-24 17:47:26,626: INFO/MainProcess] creating ACAD_PLOTSETTINGS dictionary
+[2025-07-24 17:47:26,626: INFO/MainProcess] creating ACAD_PLOTSTYLENAME dictionary
+[2025-07-24 17:47:26,626: INFO/MainProcess] creating ACAD_SCALELIST dictionary
+[2025-07-24 17:47:26,626: INFO/MainProcess] creating ACAD_TABLESTYLE dictionary
+[2025-07-24 17:47:26,626: INFO/MainProcess] creating ACAD_VISUALSTYLE dictionary
+[2025-07-24 17:47:26,627: WARNING/MainProcess] LINE(#119)
+[2025-07-24 17:47:26,627: WARNING/MainProcess] LINE(#120)
+[2025-07-24 17:47:26,701: INFO/MainProcess] DXF version upgrade to DXF R2000.
+[2025-07-24 17:47:26,704: INFO/MainProcess] creating ACAD_COLOR dictionary
+[2025-07-24 17:47:26,704: INFO/MainProcess] creating ACAD_LAYOUT dictionary
+[2025-07-24 17:47:26,704: INFO/MainProcess] creating ACAD_MATERIAL dictionary
+[2025-07-24 17:47:26,704: INFO/MainProcess] creating ACAD_MLEADERSTYLE dictionary
+[2025-07-24 17:47:26,704: INFO/MainProcess] creating ACAD_PLOTSETTINGS dictionary
+[2025-07-24 17:47:26,704: INFO/MainProcess] creating ACAD_PLOTSTYLENAME dictionary
+[2025-07-24 17:47:26,704: INFO/MainProcess] creating ACAD_SCALELIST dictionary
+[2025-07-24 17:47:26,704: INFO/MainProcess] creating ACAD_TABLESTYLE dictionary
+[2025-07-24 17:47:26,704: INFO/MainProcess] creating ACAD_VISUALSTYLE dictionary
+[2025-07-24 17:47:26,705: WARNING/MainProcess] LINE(#121)
+[2025-07-24 17:47:26,705: WARNING/MainProcess] LINE(#122)
+[2025-07-24 17:47:26,705: WARNING/MainProcess] LINE(#123)
+[2025-07-24 17:47:26,705: WARNING/MainProcess] LINE(#124)
+[2025-07-24 17:47:26,778: INFO/MainProcess] DXF version upgrade to DXF R2000.
+[2025-07-24 17:47:26,780: INFO/MainProcess] creating ACAD_COLOR dictionary
+[2025-07-24 17:47:26,780: INFO/MainProcess] creating ACAD_LAYOUT dictionary
+[2025-07-24 17:47:26,780: INFO/MainProcess] creating ACAD_MATERIAL dictionary
+[2025-07-24 17:47:26,780: INFO/MainProcess] creating ACAD_MLEADERSTYLE dictionary
+[2025-07-24 17:47:26,780: INFO/MainProcess] creating ACAD_PLOTSETTINGS dictionary
+[2025-07-24 17:47:26,780: INFO/MainProcess] creating ACAD_PLOTSTYLENAME dictionary
+[2025-07-24 17:47:26,780: INFO/MainProcess] creating ACAD_SCALELIST dictionary
+[2025-07-24 17:47:26,781: INFO/MainProcess] creating ACAD_TABLESTYLE dictionary
+[2025-07-24 17:47:26,781: INFO/MainProcess] creating ACAD_VISUALSTYLE dictionary
+[2025-07-24 17:47:26,781: WARNING/MainProcess] LWPOLYLINE(#101)
+[2025-07-24 17:47:26,781: WARNING/MainProcess] LWPOLYLINE(#102)
+[2025-07-24 17:47:26,781: WARNING/MainProcess] LWPOLYLINE(#103)
+[2025-07-24 17:47:26,781: WARNING/MainProcess] LWPOLYLINE(#104)
+[2025-07-24 17:47:26,781: WARNING/MainProcess] LWPOLYLINE(#105)
+[2025-07-24 17:47:26,781: WARNING/MainProcess] LWPOLYLINE(#106)
+[2025-07-24 17:47:26,781: WARNING/MainProcess] LWPOLYLINE(#107)
+[2025-07-24 17:47:26,781: WARNING/MainProcess] LWPOLYLINE(#108)
+[2025-07-24 17:47:26,781: WARNING/MainProcess] LWPOLYLINE(#109)
+[2025-07-24 17:47:26,782: WARNING/MainProcess] LWPOLYLINE(#110)
+[2025-07-24 17:47:26,782: WARNING/MainProcess] LWPOLYLINE(#111)
+[2025-07-24 17:47:26,782: WARNING/MainProcess] LWPOLYLINE(#112)
+[2025-07-24 17:47:26,782: WARNING/MainProcess] LWPOLYLINE(#113)
+[2025-07-24 17:47:26,782: WARNING/MainProcess] LWPOLYLINE(#114)
+[2025-07-24 17:47:26,782: WARNING/MainProcess] LWPOLYLINE(#115)
+[2025-07-24 17:47:26,782: WARNING/MainProcess] LWPOLYLINE(#116)
+[2025-07-24 17:47:26,782: WARNING/MainProcess] LWPOLYLINE(#117)
+[2025-07-24 17:47:26,782: WARNING/MainProcess] LWPOLYLINE(#118)
+[2025-07-24 17:47:26,855: INFO/MainProcess] DXF version upgrade to DXF R2000.
+[2025-07-24 17:47:26,858: INFO/MainProcess] creating ACAD_COLOR dictionary
+[2025-07-24 17:47:26,858: INFO/MainProcess] creating ACAD_LAYOUT dictionary
+[2025-07-24 17:47:26,858: INFO/MainProcess] creating ACAD_MATERIAL dictionary
+[2025-07-24 17:47:26,858: INFO/MainProcess] creating ACAD_MLEADERSTYLE dictionary
+[2025-07-24 17:47:26,858: INFO/MainProcess] creating ACAD_PLOTSETTINGS dictionary
+[2025-07-24 17:47:26,858: INFO/MainProcess] creating ACAD_PLOTSTYLENAME dictionary
+[2025-07-24 17:47:26,858: INFO/MainProcess] creating ACAD_SCALELIST dictionary
+[2025-07-24 17:47:26,858: INFO/MainProcess] creating ACAD_TABLESTYLE dictionary
+[2025-07-24 17:47:26,858: INFO/MainProcess] creating ACAD_VISUALSTYLE dictionary
+[2025-07-24 17:47:26,859: WARNING/MainProcess] LWPOLYLINE(#100)
+[2025-07-24 17:47:26,943: INFO/MainProcess] Task core.utils.generate_layer_previews[1a91c37e-d1f3-4dec-addc-45ea92eb2c55] succeeded in 0.32998141000280157s: None

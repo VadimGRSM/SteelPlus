@@ -58,12 +58,8 @@
                 </div>
 
                 <div class="order-drawing-content">
-                    <div class="order-form-row">
-                        <div class="order-form-group">
-                            <div class="order-form-label">Кількість</div>
-                            <input type="number" name="form-0-quantity" class="order-form-input" placeholder="Вказати кількість" min="1" value="{{ initial_data|get_item:'form-0-quantity'|default:'' }}">
-                        </div>
 
+                    <div class="order-form-row">        
                         <div class="order-form-group">
                             <div class="order-form-label">Вид матеріалу</div>
                             <select name="form-0-material_type" class="order-form-select material-type-select">
@@ -73,13 +69,17 @@
                                 {% endfor %}
                             </select>
                         </div>
+                        <div class="order-form-group">
+                            <div class="order-form-label">Товщина (мм.)</div>
+                            <input type="number" name="form-0-thickness" class="order-form-input" placeholder="Вказати товщину" step="0.1" min="0.1" value="{{ initial_data|get_item:'form-0-thickness'|default:'' }}">
+                        </div>
                     </div>
-
+                    
                     <div class="order-form-row">
                         <div class="order-form-group">
-                            <div class="order-form-label">Матеріал</div>
-                            <select name="form-0-material" class="order-form-select material-select">
-                                <option value="">Спочатку оберіть вид матеріалу</option>
+                            <div class="order-form-label">Різновид матеріалу</div>
+                            <select name="form-0-material" class="order-form-select material-select" disabled>
+                                <option value="">Спочатку оберіть різновид матеріалу</option>
                                 {% for material in materials %}
                                     <option value="{{ material.id }}" {% if initial_data|get_item:'form-0-material' == material.id %}selected{% endif %}>{{ material }}</option>
                                 {% endfor %}
@@ -87,8 +87,8 @@
                         </div>
 
                         <div class="order-form-group">
-                            <div class="order-form-label">Товщина (мм)</div>
-                            <input type="number" name="form-0-thickness" class="order-form-input" placeholder="Вказати товщину" step="0.1" min="0.1" value="{{ initial_data|get_item:'form-0-thickness'|default:'' }}">
+                            <div class="order-form-label">Кількість (шт.)</div>
+                            <input type="number" name="form-0-quantity" class="order-form-input" placeholder="Вказати кількість" min="1" value="{{ initial_data|get_item:'form-0-quantity'|default:'' }}">
                         </div>
                     </div>
 
